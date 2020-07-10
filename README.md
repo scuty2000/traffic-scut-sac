@@ -4,7 +4,9 @@ Traffic è una reimplementazione di un vecchio gioco per Commodore 64.
 
 ## TO-DO
 
-- Scrivere il TO-DO
+- Studiare la documentazione di FXGL 11.9;
+- Strutturare le dinamiche di gioco;
+- Dividere il progetto in parti atomiche.
 
 ## Useful links
 
