@@ -52,7 +52,6 @@ public class BasicGameApp extends GameApplication {
 	 * We use this method to handle input handling code.
 	 */
 	@Override
-	@SuppressWarnings("deprecation") // The tutorial is not updated. Holy shit.
 	protected void initInput() {
 		Input input = FXGL.getInput();
 		int width = FXGL.getSettings().getWidth();
@@ -67,8 +66,8 @@ public class BasicGameApp extends GameApplication {
 					.view(new Rectangle(5,5, Color.BLUE))
 					.buildAndAttach();
 					player.translateX(5);
-					FXGL.getGameState().increment("pixelsMoved", +5);
-					FXGL.getGameState().increment("userX", +5);
+					FXGL.getWorldProperties().increment("pixelsMoved", +5);
+					FXGL.getWorldProperties().increment("userX", +5);
 				}
 			}
 		}, KeyCode.D);
@@ -82,8 +81,8 @@ public class BasicGameApp extends GameApplication {
 					.view(new Rectangle(5,5, Color.BLUE))
 					.buildAndAttach();
 	        		player.translateX(-5);
-	        		FXGL.getGameState().increment("pixelsMoved", +5);
-	        		FXGL.getGameState().increment("userX", -5);
+	        		FXGL.getWorldProperties().increment("pixelsMoved", +5);
+	        		FXGL.getWorldProperties().increment("userX", -5);
 	        	}
 	        }
 	    }, KeyCode.A);
@@ -97,8 +96,8 @@ public class BasicGameApp extends GameApplication {
 					.view(new Rectangle(5,5, Color.BLUE))
 					.buildAndAttach();
 	        		player.translateY(-5);
-	        		FXGL.getGameState().increment("pixelsMoved", +5);
-	        		FXGL.getGameState().increment("userY", -5);
+	        		FXGL.getWorldProperties().increment("pixelsMoved", +5);
+	        		FXGL.getWorldProperties().increment("userY", -5);
 	        	}
 	        }
 	    }, KeyCode.W);
@@ -112,8 +111,8 @@ public class BasicGameApp extends GameApplication {
 					.view(new Rectangle(5,5, Color.BLUE))
 					.buildAndAttach();
 	        		player.translateY(5);
-	        		FXGL.getGameState().increment("pixelsMoved", +5);
-	        		FXGL.getGameState().increment("userY", +5);
+	        		FXGL.getWorldProperties().increment("pixelsMoved", +5);
+	        		FXGL.getWorldProperties().increment("userY", +5);
 	        	}
 	        }
 	    }, KeyCode.S);
@@ -136,7 +135,7 @@ public class BasicGameApp extends GameApplication {
 		Text textPixels = new Text();
 		textPixels.setTranslateX(65);
 		textPixels.setTranslateY(50);
-		textPixels.textProperty().bind(FXGL.getGameState().intProperty("pixelsMoved").asString());
+		textPixels.textProperty().bind(FXGL.getWorldProperties().intProperty("pixelsMoved").asString());
 		FXGL.getGameScene().addUINode(textPixels);
 		
 		Text staticX = new Text();
@@ -148,7 +147,7 @@ public class BasicGameApp extends GameApplication {
 		Text userX = new Text();
 		userX.setTranslateX(65);
 		userX.setTranslateY(70);
-		userX.textProperty().bind(FXGL.getGameState().intProperty("userX").asString());
+		userX.textProperty().bind(FXGL.getWorldProperties().intProperty("userX").asString());
 		FXGL.getGameScene().addUINode(userX);
 		
 		Text staticY = new Text();
@@ -160,7 +159,7 @@ public class BasicGameApp extends GameApplication {
 		Text userY = new Text();
 		userY.setTranslateX(65);
 		userY.setTranslateY(90);
-		userY.textProperty().bind(FXGL.getGameState().intProperty("userY").asString());
+		userY.textProperty().bind(FXGL.getWorldProperties().intProperty("userY").asString());
 		FXGL.getGameScene().addUINode(userY);
 	}
 	
