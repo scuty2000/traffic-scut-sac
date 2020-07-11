@@ -39,13 +39,31 @@ public class BasicGameApp extends GameApplication {
 	 */
 	@Override
 	protected void initGame() {
+		
+		FXGL.entityBuilder()
+		.at(100, 100)
+		.view("gioco-02.png")
+		.scale(0.40, 0.40)
+		.buildAndAttach();
+		FXGL.entityBuilder()
+		.at(200, 100)
+		.view("gioco-02.png")
+		.scale(0.40, 0.40)
+		.buildAndAttach();
+		FXGL.entityBuilder()
+		.at(300, 100)
+		.view("gioco-02.png")
+		.scale(0.40, 0.40)
+		.buildAndAttach();
+		
 		/**
-		 * We use enttyBuilder to create our entity(s).
+		 * We use entityBuilder to create our entity(s).
 		 */
 		player = FXGL.entityBuilder()
 				.at(100, 100)
-				.view(new Rectangle(25,25, Color.ORANGE))
+				.view(new Rectangle(10,10, Color.ORANGE))
 				.buildAndAttach();
+		
 	}
 	
 	/**
@@ -61,10 +79,10 @@ public class BasicGameApp extends GameApplication {
 			@Override
 			protected void onAction() {
 				if(player.getX() < width-25) {
-					FXGL.entityBuilder()
-					.at(player.getX(), player.getY())
-					.view(new Rectangle(5,5, Color.BLUE))
-					.buildAndAttach();
+					//FXGL.entityBuilder()
+					//.at(player.getX(), player.getY())
+					//.view(new Rectangle(5,5, Color.BLUE))
+					//.buildAndAttach();
 					player.translateX(5);
 					FXGL.getWorldProperties().increment("pixelsMoved", +5);
 					FXGL.getWorldProperties().increment("userX", +5);
@@ -76,10 +94,10 @@ public class BasicGameApp extends GameApplication {
 	        @Override
 	        protected void onAction() {
 	        	if(player.getX() > 4) {
-	        		FXGL.entityBuilder()
-					.at(player.getX(), player.getY())
-					.view(new Rectangle(5,5, Color.BLUE))
-					.buildAndAttach();
+	        		//FXGL.entityBuilder()
+					//.at(player.getX(), player.getY())
+					//.view(new Rectangle(5,5, Color.BLUE))
+					//.buildAndAttach();
 	        		player.translateX(-5);
 	        		FXGL.getWorldProperties().increment("pixelsMoved", +5);
 	        		FXGL.getWorldProperties().increment("userX", -5);
@@ -91,10 +109,10 @@ public class BasicGameApp extends GameApplication {
 	        @Override
 	        protected void onAction() {
 	        	if(player.getY() > 4) {
-	        		FXGL.entityBuilder()
-					.at(player.getX(), player.getY())
-					.view(new Rectangle(5,5, Color.BLUE))
-					.buildAndAttach();
+	        		//FXGL.entityBuilder()
+					//.at(player.getX(), player.getY())
+					//.view(new Rectangle(5,5, Color.BLUE))
+					//.buildAndAttach();
 	        		player.translateY(-5);
 	        		FXGL.getWorldProperties().increment("pixelsMoved", +5);
 	        		FXGL.getWorldProperties().increment("userY", -5);
@@ -106,10 +124,10 @@ public class BasicGameApp extends GameApplication {
 	        @Override
 	        protected void onAction() {
 	        	if(player.getY() < height-25) {
-	        		FXGL.entityBuilder()
-					.at(player.getX(), player.getY())
-					.view(new Rectangle(5,5, Color.BLUE))
-					.buildAndAttach();
+	        		//FXGL.entityBuilder()
+					//.at(player.getX(), player.getY())
+					//.view(new Rectangle(5,5, Color.BLUE))
+					//.buildAndAttach();
 	        		player.translateY(5);
 	        		FXGL.getWorldProperties().increment("pixelsMoved", +5);
 	        		FXGL.getWorldProperties().increment("userY", +5);
@@ -122,7 +140,6 @@ public class BasicGameApp extends GameApplication {
 	 * We use this method, you may have guessed, to handle
 	 * the UI control.
 	 */
-	@SuppressWarnings("deprecation") // Same shit here.
 	@Override
 	protected void initUI() {
 		
