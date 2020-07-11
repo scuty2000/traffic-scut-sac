@@ -4,8 +4,13 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.level.Level;
+import com.almasb.fxgl.entity.level.LevelLoader;
+import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.texture.Texture;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -25,8 +30,8 @@ public class BasicGameApp extends GameApplication {
 	 */
 	@Override
 	protected void initSettings(GameSettings settings) {
-		settings.setWidth(800);
-	    settings.setHeight(600);
+		settings.setWidth(10*250);
+	    settings.setHeight(5*250);
 	    settings.setTitle("  Basic Game App  ");
 	    settings.setVersion("0.1");
 	    settings.setDeveloperMenuEnabled(true);
@@ -40,28 +45,16 @@ public class BasicGameApp extends GameApplication {
 	@Override
 	protected void initGame() {
 		
-		FXGL.entityBuilder()
-		.at(100, 100)
-		.view("gioco-02.png")
-		.scale(0.40, 0.40)
-		.buildAndAttach();
-		FXGL.entityBuilder()
-		.at(200, 100)
-		.view("gioco-02.png")
-		.scale(0.40, 0.40)
-		.buildAndAttach();
-		FXGL.entityBuilder()
-		.at(300, 100)
-		.view("gioco-02.png")
-		.scale(0.40, 0.40)
-		.buildAndAttach();
+		FXGL.getGameWorld().addEntityFactory(new BasicGameFactory());
+		
+		FXGL.setLevelFromMap("level0.tmx");
 		
 		/**
 		 * We use entityBuilder to create our entity(s).
 		 */
 		player = FXGL.entityBuilder()
-				.at(100, 100)
-				.view(new Rectangle(10,10, Color.ORANGE))
+				.at(350, 350)
+				.view(new Rectangle(25,25, Color.ORANGE))
 				.buildAndAttach();
 		
 	}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="10" height="5" tilewidth="250" tileheight="250" infinite="0" nextlayerid="3" nextobjectid="8">
+ <tileset firstgid="1" name="traffic_tiles" tilewidth="250" tileheight="250" tilecount="42" columns="7">
+  <image source="../textures/tiles_sheet.png" trans="41ffef" width="1750" height="1500"/>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="10" height="5" locked="1">
+  <data encoding="csv">
+24,5,42,37,37,37,37,42,5,24,
+24,2,6,6,6,6,6,6,4,24,
+40,5,10,10,10,39,10,10,5,24,
+24,2,6,6,6,6,6,6,1,6,
+24,5,24,24,24,24,24,24,24,24
+</data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="2" type="roadBorder" x="501.494" y="-5.57216" width="1498.91" height="250.747"/>
+  <object id="4" type="roadBorder" x="2.78608" y="0" width="247.961" height="1248.16"/>
+  <object id="5" type="roadBorder" x="504.28" y="1000.2" width="1994.83" height="245.175"/>
+  <object id="6" type="roadBorder" x="2251.15" y="0" width="247.961" height="749.455"/>
+  <object id="7" type="roadBorder" x="498.708" y="498.708" width="1498.91" height="253.533"/>
+ </objectgroup>
+</map>
