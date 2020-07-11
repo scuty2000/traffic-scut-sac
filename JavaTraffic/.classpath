@@ -6,6 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="src/lib/fxgl-11.9-uber.jar"/>
+	<classpathentry kind="lib" path="src/lib/fxgl-11.9-uber.jar" sourcepath="src/lib/fxgl-11.9-uber.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
