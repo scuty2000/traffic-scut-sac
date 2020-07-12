@@ -13,26 +13,25 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.texture.Texture;
 
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class AndreaGameApp extends GameApplication{
-	
+
 	public enum EntityType{
-		PLAYER,COIN
+		PLAYER,COIN,WALL
 	}
-	
+
 	/*
 	 * this i sthe field where the player's info are stored.
 	 * It will be initialized in the initSettings() method
 	 */
 	private Entity player;
-	
-	
+	private boolean wallCollision = false;
+
+
 	/*
 	 * Every application in FXGL needs the method initSettings.
 	 * This method is used to initialize settings.
@@ -49,6 +48,8 @@ public class AndreaGameApp extends GameApplication{
 
 	@Override
 	protected void initGame() {
+
+		//Creating the player
 		player = FXGL.entityBuilder()
 				.type(EntityType.PLAYER)
 				.at(100, 100)
@@ -56,92 +57,103 @@ public class AndreaGameApp extends GameApplication{
 				.with(new CollidableComponent(true))
 				.viewWithBBox("gioco-01.png")
 				.buildAndAttach();
-		
-		
+
+
+		//creating a wall
 		FXGL.entityBuilder()
-			.type(EntityType.COIN)
-			.at(500,200)
-			.viewWithBBox(new Circle(15,15,15,Color.YELLOW))
-			.with(new CollidableComponent(true))
-			.buildAndAttach();
+		.type(EntityType.WALL)
+		.at(500,300)
+		.viewWithBBox("aa")
+		.with(new CollidableComponent(true))
+		.buildAndAttach();
+
+		//creating a coin
+		FXGL.entityBuilder()
+		.type(EntityType.COIN)
+		.at(500,200)
+		.viewWithBBox(new Circle(15,15,15,Color.YELLOW))
+		.with(new CollidableComponent(true))
+		.buildAndAttach();
 	}
-	
-	
+
+
 	@Override
 	protected void initPhysics() {
-	    FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.COIN) {
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.COIN) {
 
-	        // order of types is the same as passed into the constructor
-	        @Override
-	        protected void onCollisionBegin(Entity player, Entity coin) {
-	            coin.removeFromWorld();
-	        }
-	    });
+			// order of types is the same as passed into the constructor
+			@Override
+			protected void onCollisionBegin(Entity player, Entity coin) {
+				coin.removeFromWorld();
+			}
+		});
+
+
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.WALL) {
+			//TODO provare a fare wall collision
+		});
 	}
-	
+
 	@Override
 	protected void initInput() {
-	    Input input = FXGL.getInput();
+		Input input = FXGL.getInput();
 
-	    input.addAction(new UserAction("Move Right") {
-	        @Override
-	        protected void onAction() {
-	            player.translateX(5); // move right 5 pixels
-	            
-	            FXGL.getGameState().increment("pixelMoved" , +5);
-	        }
-	    }, KeyCode.D);
+		input.addAction(new UserAction("Move Right") {
+			@Override
+			protected void onAction() {
 
-	    input.addAction(new UserAction("Move Left") {
-	        @Override
-	        protected void onAction() {
-	            player.translateX(-5); // move left 5 pixels
-	            
-	            FXGL.getGameState().increment("pixelMoved" , +5);
-	        }
-	    }, KeyCode.A);
+				player.translateX(+5);
+				FXGL.getGameState().increment("pixelMoved" , +5);
+			}
+		}, KeyCode.D);
 
-	    input.addAction(new UserAction("Move Up") {
-	        @Override
-	        protected void onAction() {
-	            player.translateY(-5); // move up 5 pixels
-	            
-	            FXGL.getGameState().increment("pixelMoved" , +5);
-	        }
-	    }, KeyCode.W);
+		input.addAction(new UserAction("Move Left") {
+			@Override
+			protected void onAction() {
+				player.translateX(-5);
+				FXGL.getGameState().increment("pixelMoved" , +5);
+			}
+		}, KeyCode.A);
 
-	    input.addAction(new UserAction("Move Down") {
-	        @Override
-	        protected void onAction() {
-	            player.translateY(5); // move down 5 pixels
-	            
-	            FXGL.getGameState().increment("pixelMoved" , +5);
-	        }
-	    }, KeyCode.S);
+		input.addAction(new UserAction("Move Up") {
+			@Override
+			protected void onAction() {
+				player.translateY(-5);
+				FXGL.getGameState().increment("pixelMoved" , +5);
+			}
+		}, KeyCode.W);
+
+		input.addAction(new UserAction("Move Down") {
+			@Override
+			protected void onAction() {
+				player.translateY(+5);
+				FXGL.getGameState().increment("pixelMoved" , +5);
+			}
+		}, KeyCode.S);
 	}
-	
-	
+
+
 	@Override
 	protected void initUI() {
-		
+
 		Text textPixels = new Text();
-		
+
 		textPixels.textProperty().bind(FXGL.getGameState().intProperty("pixelMoved").asString());
 		textPixels.setTranslateX(50);
 		textPixels.setTranslateY(100);
-		
+
 		FXGL.getGameScene().addUINode(textPixels);
-		
+
 		Texture testTexture = FXGL.getAssetLoader().loadTexture("gioco-01.png");
 		testTexture.setTranslateX(200);
 		testTexture.setTranslateY(200);
 		FXGL.getGameScene().addUINode(testTexture);
 	}
-	
+
 	protected void initGameVars(Map<String,Object> vars) {
 		vars.put("pixelMoved", 0);
 	}
-		
+
 	/**
 	 * The main method is the method that launch the application.
 	 * @param args the arguments to be used by the launch method
@@ -149,5 +161,5 @@ public class AndreaGameApp extends GameApplication{
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 }
