@@ -49,6 +49,8 @@ public class BasicGameApp extends GameApplication {
 		
 		FXGL.setLevelFromMap("level0.tmx");
 		
+		FXGL.getGameWorld().spawn("roadBorder");
+		
 		/**
 		 * We use entityBuilder to create our entity(s).
 		 */
