@@ -14,21 +14,12 @@ import javafx.scene.shape.Rectangle;
 public class BasicGameFactory implements EntityFactory {
 
 	@Spawns("roadBorder")
-	public Entity newRB(SpawnData data) {	
-		PhysicsComponent physics = new PhysicsComponent();
-		
-		Entity entity = FXGL.entityBuilder()
-		.from(data)
-		.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
-		.build();
-		
-		FixtureDef fd = new FixtureDef();
-		fd.setDensity(0.7f);
-		fd.setRestitution(0.3f);
-		physics.setFixtureDef(fd);
-		
-		entity.addComponent(physics);
-		return entity;
+	public Entity newRoadBorder(SpawnData data) {
+		return FXGL.entityBuilder(data)
+				.type(BasicGameType.WALL)
+			.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"), data.<Integer>get("height"))))
+			.with(new PhysicsComponent())
+            .build();
 	}
 	
 }

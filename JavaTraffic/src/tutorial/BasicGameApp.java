@@ -1,5 +1,6 @@
 package tutorial;
 
+import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
@@ -9,6 +10,7 @@ import com.almasb.fxgl.entity.level.LevelLoader;
 import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.texture.Texture;
 
 import javafx.scene.input.KeyCode;
@@ -36,6 +38,7 @@ public class BasicGameApp extends GameApplication {
 	    settings.setVersion("0.1");
 	    settings.setDeveloperMenuEnabled(true);
 	    settings.setProfilingEnabled(true);
+	    settings.setApplicationMode(ApplicationMode.DEVELOPER);
 	}
 	
 	/**
@@ -49,8 +52,6 @@ public class BasicGameApp extends GameApplication {
 		
 		FXGL.setLevelFromMap("level0.tmx");
 		
-		FXGL.getGameWorld().spawn("roadBorder");
-		
 		/**
 		 * We use entityBuilder to create our entity(s).
 		 */
@@ -58,6 +59,8 @@ public class BasicGameApp extends GameApplication {
 				.at(350, 350)
 				.view(new Rectangle(25,25, Color.ORANGE))
 				.buildAndAttach();
+		
+		player.addComponent(new PhysicsComponent());
 		
 	}
 	
