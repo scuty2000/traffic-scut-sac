@@ -30,10 +30,6 @@ public class AndreaGameApp extends GameApplication{
 	 * It will be initialized in the initSettings() method
 	 */
 	private Entity player;
-	
-	private boolean wallCollision = false;
-
-
 	/*
 	 * Every application in FXGL needs the method initSettings.
 	 * This method is used to initialize settings.
@@ -98,7 +94,7 @@ public class AndreaGameApp extends GameApplication{
 			@Override
 			protected void onCollisionBegin(Entity player, Entity semaforo) {
 				player.getComponent(AndreaSemaforoComponent.class).setColour();
-				System.out.println("collisione");
+				System.out.println(player.getComponent(AndreaSemaforoComponent.class).getColour());
 			}
 			
 		});

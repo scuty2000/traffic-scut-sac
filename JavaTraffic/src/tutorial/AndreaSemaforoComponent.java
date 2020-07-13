@@ -22,7 +22,7 @@ public class AndreaSemaforoComponent extends Component {
 	
 	 @Override
 	    public void onAdded() {
-	        entity.getViewComponent().addChild(node);
+		 	entity.getViewComponent().addChild(texture);
 	    }
 	 
 	 @Override
@@ -33,7 +33,10 @@ public class AndreaSemaforoComponent extends Component {
 	
 	public void setColour() {
 		current = texture.getAnimationChannel().equals(red) ? green : red;
-		
-		getEntity().setScaleX(1);
+		texture.loopAnimationChannel(current == red ? green : red);
+	}
+	
+	public String getColour() {
+		return current == red? "red" : "green";
 	}
 }

@@ -19,8 +19,8 @@ public class AndreaFactory implements EntityFactory{
 		return FXGL.entityBuilder(data)
 					.type(EntityType.SEMAFORO)
 					.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"),data.<Integer>get("height"))))
-					.with(new PhysicsComponent())
 					.view("semaforoRosso-01.png")
+					.with(new CollidableComponent(true))
 					.build();
 	}
 	
@@ -30,11 +30,10 @@ public class AndreaFactory implements EntityFactory{
 			player = FXGL.entityBuilder()
 					.type(EntityType.PLAYER)
 					.at(100, 100)
-					//.view(new Rectangle(10,10, Color.BLACK))
 					.with(new AndreaSemaforoComponent())
+					.view("semaforoRosso-01.png")
 					.with(new CollidableComponent(true))
 					.bbox(new HitBox(BoundingShape.box(50,50)))
-					.view("semaforoRosso-01.png")
 					.build();
 		return player;
 	}
