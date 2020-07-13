@@ -8,6 +8,7 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.components.CollidableComponent;
+import com.almasb.fxgl.entity.level.text.TextLevelLoader;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
@@ -21,7 +22,7 @@ import javafx.scene.text.Text;
 public class AndreaGameApp extends GameApplication{
 
 	public enum EntityType{
-		PLAYER,COIN,WALL
+		PLAYER,COIN,WALL,SEMAFORO
 	}
 
 	/*
@@ -29,6 +30,7 @@ public class AndreaGameApp extends GameApplication{
 	 * It will be initialized in the initSettings() method
 	 */
 	private Entity player;
+	
 	private boolean wallCollision = false;
 
 
@@ -40,8 +42,8 @@ public class AndreaGameApp extends GameApplication{
 	 */
 	@Override
 	protected void initSettings(GameSettings arg0) {
-		arg0.setWidth(600);
-		arg0.setHeight(600);
+		arg0.setWidth(3000);
+		arg0.setHeight(3000);
 		arg0.setTitle("AndreaGameApp");
 		arg0.setVersion("0.1");
 	}
@@ -50,15 +52,16 @@ public class AndreaGameApp extends GameApplication{
 	protected void initGame() {
 
 		//Creating the player
-		player = FXGL.entityBuilder()
-				.type(EntityType.PLAYER)
-				.at(100, 100)
-				//.view(new Rectangle(10,10, Color.BLACK))
-				.with(new CollidableComponent(true))
-				.viewWithBBox("gioco-01.png")
-				.buildAndAttach();
-
-
+		
+		
+		FXGL.getGameWorld().addEntityFactory(new AndreaFactory());
+		
+		FXGL.setLevelFromMap("tutorialMap.tmx");
+		
+		player = FXGL.spawn("player");
+		
+		
+		/*
 		//creating a wall
 		FXGL.entityBuilder()
 		.type(EntityType.WALL)
@@ -74,6 +77,7 @@ public class AndreaGameApp extends GameApplication{
 		.viewWithBBox(new Circle(15,15,15,Color.YELLOW))
 		.with(new CollidableComponent(true))
 		.buildAndAttach();
+		*/
 	}
 
 
@@ -89,8 +93,14 @@ public class AndreaGameApp extends GameApplication{
 		});
 
 
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.WALL) {
-			//TODO provare a fare wall collision
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.PLAYER, EntityType.SEMAFORO) {
+			
+			@Override
+			protected void onCollisionBegin(Entity player, Entity semaforo) {
+				player.getComponent(AndreaSemaforoComponent.class).setColour();
+				System.out.println("collisione");
+			}
+			
 		});
 	}
 
