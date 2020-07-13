@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="250" tileheight="250" infinite="0" nextlayerid="6" nextobjectid="33">
+ <tileset firstgid="1" name="tutorial_tiles" tilewidth="250" tileheight="250" tilecount="42" columns="7">
+  <image source="tiles_sheet.png" width="1750" height="1500"/>
+ </tileset>
+ <layer id="1" name="Livello tile 1" width="10" height="10" locked="1">
+  <data encoding="csv">
+24,24,24,24,5,24,24,24,5,24,
+24,24,24,24,5,24,24,24,5,24,
+24,24,24,24,2,6,6,6,4,24,
+24,24,24,24,5,24,24,24,5,24,
+24,24,24,24,5,24,24,24,5,24,
+24,24,24,24,5,24,24,24,5,24,
+24,24,24,24,5,24,24,24,5,24,
+6,6,6,6,7,6,6,6,7,6,
+24,24,24,24,5,24,24,24,5,24,
+24,24,24,24,5,24,24,24,5,24
+</data>
+ </layer>
+ <objectgroup id="3" name="Semafori">
+  <object id="2" type="semaforo" x="744" y="252" width="252" height="252"/>
+  <object id="3" type="semaforo" x="1252" y="764" width="244" height="224"/>
+  <object id="4" type="semaforo" x="1248" y="256" width="248" height="236"/>
+  <object id="5" type="semaforo" x="1752" y="758" width="248" height="236"/>
+  <object id="6" type="semaforo" x="1748" y="258" width="248" height="236"/>
+  <object id="7" type="semaforo" x="2256" y="758" width="248" height="236"/>
+  <object id="8" type="semaforo" x="1760" y="1518" width="248" height="236"/>
+  <object id="9" type="semaforo" x="1760" y="2014" width="248" height="236"/>
+  <object id="10" type="semaforo" x="2248" y="2018" width="248" height="236"/>
+  <object id="11" type="semaforo" x="2260" y="1510" width="248" height="236"/>
+  <object id="12" type="semaforo" x="1260" y="1506" width="248" height="236"/>
+  <object id="13" type="semaforo" x="756" y="1506" width="248" height="236"/>
+  <object id="14" type="semaforo" x="748" y="2014" width="248" height="236"/>
+  <object id="15" type="semaforo" x="1260" y="2014" width="248" height="236"/>
+ </objectgroup>
+</map>

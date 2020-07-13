@@ -103,7 +103,7 @@ public class AndreaGameApp extends GameApplication{
 			protected void onAction() {
 
 				player.translateX(+5);
-				FXGL.getGameState().increment("pixelMoved" , +5);
+				FXGL.getWorldProperties().increment("pixelMoved" , +5);
 			}
 		}, KeyCode.D);
 
@@ -111,7 +111,7 @@ public class AndreaGameApp extends GameApplication{
 			@Override
 			protected void onAction() {
 				player.translateX(-5);
-				FXGL.getGameState().increment("pixelMoved" , +5);
+				FXGL.getWorldProperties().increment("pixelMoved" , +5);
 			}
 		}, KeyCode.A);
 
@@ -119,7 +119,7 @@ public class AndreaGameApp extends GameApplication{
 			@Override
 			protected void onAction() {
 				player.translateY(-5);
-				FXGL.getGameState().increment("pixelMoved" , +5);
+				FXGL.getWorldProperties().increment("pixelMoved" , +5);
 			}
 		}, KeyCode.W);
 
@@ -127,7 +127,7 @@ public class AndreaGameApp extends GameApplication{
 			@Override
 			protected void onAction() {
 				player.translateY(+5);
-				FXGL.getGameState().increment("pixelMoved" , +5);
+				FXGL.getWorldProperties().increment("pixelMoved" , +5);
 			}
 		}, KeyCode.S);
 	}
@@ -138,7 +138,7 @@ public class AndreaGameApp extends GameApplication{
 
 		Text textPixels = new Text();
 
-		textPixels.textProperty().bind(FXGL.getGameState().intProperty("pixelMoved").asString());
+		textPixels.textProperty().bind(FXGL.getWorldProperties().intProperty("pixelMoved").asString());
 		textPixels.setTranslateX(50);
 		textPixels.setTranslateY(100);
 
