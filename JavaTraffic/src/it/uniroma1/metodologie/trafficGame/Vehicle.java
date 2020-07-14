@@ -31,4 +31,6 @@ public enum Vehicle {
 	
 	public Directions getDirection() { return this.direction; }
 	
+	public Shape getShape() { return shape; }
+	
 }
