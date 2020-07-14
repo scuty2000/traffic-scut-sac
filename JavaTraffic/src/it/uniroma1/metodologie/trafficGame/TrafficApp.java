@@ -9,8 +9,12 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.input.Input;
+import com.almasb.fxgl.input.UserAction;
 
+import it.uniroma1.metodologie.trafficGame.components.PlayerComponent;
 import javafx.geometry.Point2D;
+import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import tutorial.AndreaFactory;
 import tutorial.AndreaGameApp.EntityType;
@@ -57,6 +61,33 @@ public class TrafficApp extends GameApplication {
      */
     private double distance(Entity e) {
     	return Math.sqrt(Math.pow(e.getX(),2) + Math.pow(e.getY(),2));
+    }
+    
+    @Override
+    protected void initInput() {
+    	Input i = FXGL.getInput();
+    	
+    	i.addAction(new UserAction("Move Right") {
+			@Override
+			protected void onAction() {
+
+				if((Integer)(player1.getPropertyOptional("pointerAtIncrociList").orElse(Integer.valueOf(0))) < incrociList.size()) {
+					//TODO far muovere il puntatore
+					
+				}
+					
+			}
+		}, KeyCode.A);
+    	i.addAction(new UserAction("Move Left") {
+			@Override
+			protected void onAction() {
+
+				if((Integer)(player1.getPropertyOptional("pointerAtIncrociList").orElse(Integer.valueOf(0))) > 0) {
+					//TODO far muovere il puntatore
+				}
+					
+			}
+		}, KeyCode.D);
     }
 
     @Override
