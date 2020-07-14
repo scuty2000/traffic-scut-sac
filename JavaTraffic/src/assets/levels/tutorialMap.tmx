@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="250" tileheight="250" infinite="0" nextlayerid="6" nextobjectid="33">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="250" tileheight="250" infinite="0" nextlayerid="11" nextobjectid="44">
  <tileset firstgid="1" name="tutorial_tiles" tilewidth="250" tileheight="250" tilecount="42" columns="7">
   <image source="tiles_sheet.png" width="1750" height="1500"/>
  </tileset>
@@ -17,6 +17,20 @@
 24,24,24,24,5,24,24,24,5,24
 </data>
  </layer>
+ <objectgroup id="6" name="incrocio">
+  <object id="36" type="incrocioA3" x="2000" y="500" width="250" height="250">
+   <properties>
+    <property name="direzione" value="OVEST"/>
+   </properties>
+  </object>
+  <object id="37" type="incrocioA4" x="1000" y="1750" width="250" height="250"/>
+  <object id="38" type="incrocioA4" x="2000" y="1750" width="250" height="250"/>
+  <object id="43" type="incrocioA3" x="1000" y="500" width="250" height="250">
+   <properties>
+    <property name="direzione" value="EST"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="3" name="Semafori">
   <object id="2" type="semaforo" x="744" y="252" width="252" height="252"/>
   <object id="3" type="semaforo" x="1252" y="764" width="244" height="224"/>
@@ -32,5 +46,19 @@
   <object id="13" type="semaforo" x="756" y="1506" width="248" height="236"/>
   <object id="14" type="semaforo" x="748" y="2014" width="248" height="236"/>
   <object id="15" type="semaforo" x="1260" y="2014" width="248" height="236"/>
+ </objectgroup>
+ <objectgroup id="10" name="spawnPoint">
+  <object id="39" type="spawn" x="0" y="1937">
+   <properties>
+    <property name="direzione" value="EST"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="42" type="spawn" x="2500" y="1937">
+   <properties>
+    <property name="direzione" value="OVEST"/>
+   </properties>
+   <point/>
+  </object>
  </objectgroup>
 </map>

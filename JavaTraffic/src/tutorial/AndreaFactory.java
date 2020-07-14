@@ -6,7 +6,6 @@ import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
-import com.almasb.fxgl.physics.PhysicsComponent;
 
 import tutorial.AndreaGameApp.EntityType;
 
@@ -31,11 +30,28 @@ public class AndreaFactory implements EntityFactory{
 					.type(EntityType.PLAYER)
 					.at(100, 100)
 					.with(new AndreaSemaforoComponent())
-					.view("semaforoRosso-01.png")
+					.viewWithBBox("brick.png")
 					.with(new CollidableComponent(true))
-					.bbox(new HitBox(BoundingShape.box(50,50)))
 					.build();
 		return player;
 	}
 	
+	@Spawns("incrocioA4")
+	public Entity getIncrocioA4(SpawnData data) {
+		return FXGL.entityBuilder().bbox(new HitBox(BoundingShape.box(250, 250))).with(new CollidableComponent(true)).build();
+	}
+	
+	@Spawns("incrocioA3")
+	public Entity getIncrocioA3(SpawnData data) {
+		return FXGL.entityBuilder()
+					.bbox(new HitBox(BoundingShape.box(250, 250)))
+					.with("direzione", data.get("direzione"))
+					.with(new CollidableComponent(true))
+					.build();
+	}
+	
+	@Spawns("spawn")
+	public Entity getSpawn(SpawnData data) {
+		return FXGL.entityBuilder(data).build();
+	}
 }

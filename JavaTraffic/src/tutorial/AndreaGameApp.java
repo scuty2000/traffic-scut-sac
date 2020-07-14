@@ -18,7 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
+import javafx.geometry.Point2D;
 public class AndreaGameApp extends GameApplication{
 
 	public enum EntityType{
@@ -55,7 +55,6 @@ public class AndreaGameApp extends GameApplication{
 		FXGL.setLevelFromMap("tutorialMap.tmx");
 		
 		player = FXGL.spawn("player");
-		
 		
 		/*
 		//creating a wall
