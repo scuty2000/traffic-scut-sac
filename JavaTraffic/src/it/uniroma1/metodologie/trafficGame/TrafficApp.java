@@ -1,7 +1,10 @@
 package it.uniroma1.metodologie.trafficGame;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.almasb.fxgl.app.GameApplication;
@@ -34,7 +37,9 @@ public class TrafficApp extends GameApplication {
     private Entity player1;
     private Entity player2;
     
-    private List<Entity> incrociList = new LinkedList<>();
+    private String map = "tutorialMap.tmx";
+    
+    private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
     
     @Override
     protected void initGame() {
@@ -46,12 +51,33 @@ public class TrafficApp extends GameApplication {
 		
 		FXGL.spawn("vehicle", vdata);
 		
-		incrociList = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.INCROCIO)).sorted((s1,s2) ->(int)(distance(s1)-distance(s2))).collect(Collectors.toCollection(LinkedList::new));
-		System.out.println(incrociList);
+		matrixIncroci = parseIncroci();
 		
-		player1 = FXGL.spawn("player",new SpawnData(incrociList.get(0).getPosition()).put("player", "player1"));
+		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
 		
 		System.out.println(player1.getPosition());
+    }
+    
+    private HashMap<Integer, ArrayList<Entity>> parseIncroci() {
+    	List<Entity> list = getListaIncroci();
+    	HashMap<Integer, ArrayList<Entity>> matrix = new HashMap<>();
+    	Double old = null;
+    	int c = 0;
+    	for(Entity elem : list) {														//creating the HashMap with an integer representing Y as key and an ArrayList<Entity> which contains the elements with the same Y  
+    		if(old == elem.getY())
+    				matrix.get(c).add(elem);
+    		else {
+    			matrix.put(++c, new ArrayList<Entity>(List.of(elem)));
+    			old = elem.getY();
+    		}
+    	}
+    	matrix.forEach((k,v) -> v.sort((e1,e2) -> (int)((long)e1.getX() - e2.getX())));	//ordering the Lists
+    	return matrix;
+    }
+    
+    private List<Entity> getListaIncroci(){
+    	return FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.INCROCIO)).sorted((s1,s2) ->(int)(distance(s1)-distance(s2))).collect(Collectors.toCollection(LinkedList::new));
+
     }
     
     /**
@@ -67,27 +93,31 @@ public class TrafficApp extends GameApplication {
     protected void initInput() {
     	Input i = FXGL.getInput();
     	
+    	
+    	
     	i.addAction(new UserAction("Move Right") {
+    		
 			@Override
-			protected void onAction() {
-
-				if((Integer)(player1.getPropertyOptional("pointerAtIncrociList").orElse(Integer.valueOf(0))) < incrociList.size()) {
-					//TODO far muovere il puntatore
-					
-				}
-					
-			}
-		}, KeyCode.A);
-    	i.addAction(new UserAction("Move Left") {
-			@Override
-			protected void onAction() {
-
-				if((Integer)(player1.getPropertyOptional("pointerAtIncrociList").orElse(Integer.valueOf(0))) > 0) {
-					//TODO far muovere il puntatore
+			protected void onActionBegin() {
+				int i = (int) player1.getPropertyOptional("pointerAtIncrociList").orElse(Integer.valueOf(0));
+				if(i < incrociList.size() - 1) {
+					player1.setPosition(incrociList.get(++i).getPosition());
+					player1.setProperty("pointerAtIncrociList", i);;
 				}
 					
 			}
 		}, KeyCode.D);
+    	i.addAction(new UserAction("Move Left") {
+			@Override
+			protected void onActionBegin() {
+				int i = (int) player1.getPropertyOptional("pointerAtIncrociList").orElse(Integer.valueOf(0));
+				if(i > 0) {
+					player1.setPosition(incrociList.get(--i).getPosition());
+					player1.setProperty("pointerAtIncrociList", i);;
+				}
+					
+			}
+		}, KeyCode.A);
     }
 
     @Override
@@ -98,7 +128,7 @@ public class TrafficApp extends GameApplication {
         // 2. add the UI object to game scene (easy way) at 100, 100
         FXGL.addUINode(uiText, 100, 100);
     }
-
+    
     public static void main(String[] args) {
         launch(args);
     }
