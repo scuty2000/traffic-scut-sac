@@ -28,7 +28,8 @@ public class TrafficFactory implements EntityFactory{
 				player1 = FXGL.entityBuilder()
 				.at(data.getX(),data.getY())
 				.type(EntityType.PLAYER)
-				.with("pointerAtIncrociList", 0)
+				.with("pointerX", 0)
+				.with("pointerY", 0)
 				.with(new PlayerComponent())
 				.viewWithBBox(new Rectangle(250,250, Color.YELLOW))
 				.build();
@@ -38,7 +39,8 @@ public class TrafficFactory implements EntityFactory{
 			player2 = FXGL.entityBuilder()
 			.type(EntityType.PLAYER)
 			.at(data.getX(),data.getY())
-			.with("pointerAtIncrociList", 0)
+			.with("pointerX", 0)
+			.with("pointerY", 0)
 			.with(new PlayerComponent())
 			.viewWithBBox(new Rectangle(250,250, Color.RED))
 			.build();
