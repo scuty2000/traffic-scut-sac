@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 
 
 public enum Vehicle {
-	CAR(true, new Rectangle(60,40,Color.YELLOW)),TIR(false, new Rectangle(90,60,Color.YELLOW)),MOTORBIKE(true, new Rectangle(30,15,Color.YELLOW));
+	CAR(true, new Rectangle(60,40,Color.YELLOW)),TIR(false, new Rectangle(190,50,Color.YELLOW)),MOTORBIKE(true, new Rectangle(35,14,Color.YELLOW));
 	
 	private boolean canTurn;
 	

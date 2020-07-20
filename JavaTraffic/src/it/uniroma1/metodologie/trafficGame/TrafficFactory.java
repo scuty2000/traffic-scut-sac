@@ -1,5 +1,7 @@
 package it.uniroma1.metodologie.trafficGame;
 
+import java.util.Random;
+
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
@@ -52,10 +54,9 @@ public class TrafficFactory implements EntityFactory{
 		//TODO a method that spawns cars, tirs and motorbikes based on the data passed (heigh, wdth, direction...)
 		v.setDirection(Directions.valueOf((data.get("direction"))));
 		return FXGL.entityBuilder(data)
-					.type(EntityType.VEHICLE)
+					.type(v)
 					.collidable()
 					.with(new VehicleComponent(v))
-					.with(new CollidableComponent(true))
 					.viewWithBBox(v.getShape())
 					.build();
 	}
@@ -69,8 +70,8 @@ public class TrafficFactory implements EntityFactory{
 	@Spawns("vehicle")
 	public Entity getVehicle(SpawnData data) {
 		Entity vehicle;
-		int random = (int)Math.random() * 7;
-		if(random <= 3)
+		int random = new Random().nextInt(7);
+		if(random <= 7)
 			vehicle = build(data, Vehicle.CAR);
 		else if(random <= 5)
 			vehicle = build(data, Vehicle.MOTORBIKE);
@@ -111,6 +112,7 @@ public class TrafficFactory implements EntityFactory{
 	@Spawns("spawn")
 	public Entity getSpawn(SpawnData data) {
 		return FXGL.entityBuilder(data)
+				.type(EntityType.SPAWN)
 					.build();
 	}
 

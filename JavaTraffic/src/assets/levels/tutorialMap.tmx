@@ -50,13 +50,13 @@
  <objectgroup id="10" name="spawnPoint">
   <object id="39" type="spawn" x="0" y="1937">
    <properties>
-    <property name="direzione" value="EST"/>
+    <property name="direzione" value="RIGHT"/>
    </properties>
    <point/>
   </object>
   <object id="42" type="spawn" x="2500" y="1937">
    <properties>
-    <property name="direzione" value="OVEST"/>
+    <property name="direzione" value="LEFT"/>
    </properties>
    <point/>
   </object>

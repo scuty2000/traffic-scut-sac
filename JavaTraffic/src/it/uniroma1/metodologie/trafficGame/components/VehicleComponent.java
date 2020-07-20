@@ -47,16 +47,18 @@ public class VehicleComponent extends Component{
 	 */
 	@Override
 	public void onUpdate(double tpf) {
-
+		
+		d = ((Vehicle)entity.getType()).getDirection();
+		
 		if(entity.getX() < 0 || entity.getX() > 2500 || entity.getY() < 0 || entity.getY() > 2500) {
 			entity.removeFromWorld();
-			System.out.println("Deleted");
+//			System.out.println("Deleted");
 		}
 		else if(shootTimer.elapsed(Duration.seconds(0.01))) {
 			Point2D velocity = new Point2D(speed * d.getX(), speed * d.getY());
 			entity.translate(velocity);
 			shootTimer.capture();
-			System.out.println("moved");
+//			System.out.println("moved");
 		}
 	}
 
@@ -74,11 +76,13 @@ public class VehicleComponent extends Component{
 	}
 	
 	private double turnRadius;
-	
+	/*
 	private void turnAnimation() {
 		
 	}
+	*/
 	
+	public Directions getDirection() { return this.d; }
 	
 	public Vehicle getVehicle() { return v; }
 }

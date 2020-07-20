@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
@@ -18,15 +17,10 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.sun.javafx.scene.traversal.Direction;
 
-import it.uniroma1.metodologie.trafficGame.components.PlayerComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
-import javafx.scene.text.Text;
-import tutorial.AndreaFactory;
-import tutorial.AndreaSemaforoComponent;
 import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficApp extends GameApplication {
@@ -53,8 +47,14 @@ public class TrafficApp extends GameApplication {
 		FXGL.getGameWorld().addEntityFactory(new TrafficFactory());
 
 		FXGL.setLevelFromMap(map);
-
-		SpawnData vdata = new SpawnData(new Point2D(2000,0)).put("direction", "RIGHT");
+		
+		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
+		
+		System.out.println(e);
+		
+		SpawnData vdata = new SpawnData(e.getPosition());
+		System.out.println(e.getProperties());
+		vdata.put("direzione", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 
 		FXGL.spawn("vehicle", vdata);
 
@@ -146,19 +146,24 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void initPhysics() {
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.INCROCIO) {
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, EntityType.INCROCIO) {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				Vehicle enumv = v.getComponentOptional(VehicleComponent.class).orElse(null).getVehicle();
 				if(enumv.canTurn()) {
+					System.out.println("turn");
 					Optional<String> o = i.getPropertyOptional("direzione");
-					if(o.isEmpty()) 		//if the direction property is empty the incrocio has to be a incrocio4
-						enumv.setDirection(Directions.values()[new Random().nextInt(4)]);
+					if(o.isEmpty()) {		//if the direction property is empty the incrocio has to be a incrocio4
+						int x = new Random().nextInt(4);
+						if(!(Directions.values()[x].equals(enumv.getDirection()) || Directions.values()[x].isOpposite(enumv.getDirection())))
+							enumv.setDirection(Directions.values()[x]);
+					}
 					else {
 						Directions d = Directions.valueOf((String) o.orElse(null));	//d is the direction that can not be used
 						while(d == enumv.getDirection())
 							enumv.setDirection(Directions.values()[new Random().nextInt(4)]);
+						
 					}
 				}
 			}

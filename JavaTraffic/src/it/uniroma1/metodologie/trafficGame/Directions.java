@@ -13,4 +13,8 @@ public enum Directions {
 	
 	public int getX() { return x; }
 	public int getY() { return y; }
+	
+	public boolean isOpposite(Directions d2) {
+		return (this.x - d2.x == 0) || (this.y -d2.y == 0);
+	}
 }
