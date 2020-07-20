@@ -30,8 +30,8 @@ public class TrafficApp extends GameApplication {
     	settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
     	settings.setVersion("Alpha 0.0"); // To update periodically
     	settings.setTitle("  Traffic  ");
-    	settings.setWidth(3000);
-    	settings.setHeight(3000);
+    	settings.setWidth(2500);
+    	settings.setHeight(2500);
     }
     
     
@@ -46,7 +46,7 @@ public class TrafficApp extends GameApplication {
     protected void initGame() {
     	FXGL.getGameWorld().addEntityFactory(new TrafficFactory());
 		
-		FXGL.setLevelFromMap("tutorialMap.tmx");
+		FXGL.setLevelFromMap(map);
 		
 		SpawnData vdata = new SpawnData(new Point2D(300,300)).put("direction", "RIGHT");
 		
@@ -117,9 +117,9 @@ public class TrafficApp extends GameApplication {
     }
     
     private void move(Directions d, Predicate<Integer> p, String pointer) {
-    	int i = (int) player1.getPropertyOptional(pointer).orElse(Integer.valueOf(0));
+    	int i = (int) player1.getPropertyOptional(pointer).orElse(0);
 		if(p.test(i)) {
-			player1.setPosition(matrixIncroci.get((int)player1.getPropertyOptional("poniterY").orElse(0) + d.getY()).get(d.getX() + i).getPosition());
+			player1.setPosition(matrixIncroci.get((int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY()).get(d.getX() + (int) player1.getPropertyOptional("pointerX").orElse(Integer.valueOf(0))).getPosition());
 			player1.setProperty("pointerX", (int)player1.getPropertyOptional("pointerX").orElse(0) + d.getX());
 			player1.setProperty("pointerY", (int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY());
 		}

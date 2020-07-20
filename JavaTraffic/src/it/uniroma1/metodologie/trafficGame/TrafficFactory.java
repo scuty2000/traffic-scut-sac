@@ -10,6 +10,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxglgames.bomberman.components.PlayerComponent;
 
+import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.scene.paint.Color;
 
 import javafx.scene.shape.Rectangle;
@@ -51,9 +52,9 @@ public class TrafficFactory implements EntityFactory{
 		//TODO a method that spawns cars, tirs and motorbikes based on the data passed (heigh, wdth, direction...)
 		v.setDirection(Directions.valueOf((data.get("direction"))));
 		return FXGL.entityBuilder(data)
-					.type(EntityType.VEHICLE)
-					.with("vehicle", v)
+					.type(v)
 					.collidable()
+					.with(new VehicleComponent())
 					.viewWithBBox(v.getShape())
 					.build();
 	}
