@@ -21,15 +21,24 @@ public class VehicleComponent extends Component{
 	 */
 	private double speed = 5.0;
 	
+	private Vehicle v;
+	
+	private boolean turning;
+	
 	private LocalTimer shootTimer;
 
 	Directions d;
+	
+	public VehicleComponent(Vehicle v) {
+		this.v = v;
+	}
 
 	@Override
 	public void onAdded() {
 		shootTimer = FXGL.newLocalTimer();
 		shootTimer.capture();
 		d = ((Vehicle)entity.getType()).getDirection();
+		turnRadius = 0;
 	}
 
 
@@ -52,6 +61,24 @@ public class VehicleComponent extends Component{
 	}
 
 	public void turn(Directions d) {
-		this.d = d; 
+		if(d.getX() != this.d.getX() && d.getY() != this.d.getY()) {  //checks if the new direction is different from the old one
+			turnRadius = 0;
+			switch(this.d) {
+				case UP : turnRadius = d.equals(Directions.LEFT) ? 187 : 63; break;
+				case DOWN : turnRadius = d.equals(Directions.LEFT) ? 63 : 187; break;
+				case RIGHT : turnRadius = d.equals(Directions.UP) ? 187 : 63; break;
+				case LEFT : turnRadius =d.equals(Directions.UP) ? 63 : 187; break;
+			};
+			this.d = d;
+		}
 	}
+	
+	private double turnRadius;
+	
+	private void turnAnimation() {
+		
+	}
+	
+	
+	public Vehicle getVehicle() { return v; }
 }

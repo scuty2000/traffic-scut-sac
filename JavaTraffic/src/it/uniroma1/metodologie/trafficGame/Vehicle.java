@@ -33,4 +33,6 @@ public enum Vehicle {
 	
 	public Shape getShape() { return shape; }
 	
+	public boolean canTurn() { return canTurn; }
+	
 }

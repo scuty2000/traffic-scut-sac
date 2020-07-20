@@ -52,9 +52,10 @@ public class TrafficFactory implements EntityFactory{
 		//TODO a method that spawns cars, tirs and motorbikes based on the data passed (heigh, wdth, direction...)
 		v.setDirection(Directions.valueOf((data.get("direction"))));
 		return FXGL.entityBuilder(data)
-					.type(v)
+					.type(EntityType.VEHICLE)
 					.collidable()
-					.with(new VehicleComponent())
+					.with(new VehicleComponent(v))
+					.with(new CollidableComponent(true))
 					.viewWithBBox(v.getShape())
 					.build();
 	}

@@ -20,14 +20,14 @@
  <objectgroup id="6" name="incrocio">
   <object id="36" type="incrocioA3" x="2000" y="500" width="250" height="250">
    <properties>
-    <property name="direzione" value="OVEST"/>
+    <property name="direzione" value="RIGHT"/>
    </properties>
   </object>
   <object id="37" type="incrocioA4" x="1000" y="1750" width="250" height="250"/>
   <object id="38" type="incrocioA4" x="2000" y="1750" width="250" height="250"/>
   <object id="43" type="incrocioA3" x="1000" y="500" width="250" height="250">
    <properties>
-    <property name="direzione" value="EST"/>
+    <property name="direzione" value="LEFT"/>
    </properties>
   </object>
  </objectgroup>
