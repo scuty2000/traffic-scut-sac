@@ -26,6 +26,8 @@ public class VehicleComponent extends Component{
 	private boolean turning;
 	
 	private LocalTimer shootTimer;
+	
+	private double gapBetweenMove = 0.01;
 
 	Directions d;
 	
@@ -37,7 +39,7 @@ public class VehicleComponent extends Component{
 	public void onAdded() {
 		shootTimer = FXGL.newLocalTimer();
 		shootTimer.capture();
-		d = ((Vehicle)entity.getType()).getDirection();
+		d = Directions.RIGHT;
 		turnRadius = 0;
 	}
 
@@ -48,17 +50,19 @@ public class VehicleComponent extends Component{
 	@Override
 	public void onUpdate(double tpf) {
 		
-		d = ((Vehicle)entity.getType()).getDirection();
-		
 		if(entity.getX() < 0 || entity.getX() > 2500 || entity.getY() < 0 || entity.getY() > 2500) {
 			entity.removeFromWorld();
-//			System.out.println("Deleted");
+			System.out.println("Deleted");
 		}
-		else if(shootTimer.elapsed(Duration.seconds(0.01))) {
-			Point2D velocity = new Point2D(speed * d.getX(), speed * d.getY());
-			entity.translate(velocity);
-			shootTimer.capture();
-//			System.out.println("moved");
+		else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove))) {
+			if(turning)
+				turnAnimation();
+			else {
+				Point2D velocity = new Point2D(speed * d.getX(), speed * d.getY());
+				entity.translate(velocity);
+				shootTimer.capture();
+	//			System.out.println("moved");
+			}
 		}
 	}
 
@@ -72,17 +76,34 @@ public class VehicleComponent extends Component{
 				case LEFT : turnRadius =d.equals(Directions.UP) ? 63 : 187; break;
 			};
 			this.d = d;
+			this.turning = true;
+			gapBetweenMove = 0.05;
 		}
 	}
 	
-	private double turnRadius;
-	/*
+	private double turnRadius; //the radius of the circumference that the vehicle has to follow in order to turn
+	
+	private double xTurn = 0;
+	private double yTurn = 1;
+	
 	private void turnAnimation() {
 		
+		entity.rotateBy(d.getX()*5 + d.getY()*5);
+		entity.translate(new Point2D(10, 10));
+		shootTimer.capture();
+		if(entity.getRotation()%90 == 0) {
+			turning = false;
+			gapBetweenMove = 0.01;
+		}
+
 	}
-	*/
+	
 	
 	public Directions getDirection() { return this.d; }
+	
+	public void setDirection(Directions d) { 
+		turn(d); 
+		}
 	
 	public Vehicle getVehicle() { return v; }
 }

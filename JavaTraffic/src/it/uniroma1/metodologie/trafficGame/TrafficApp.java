@@ -19,7 +19,6 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
-import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import tutorial.AndreaGameApp.EntityType;
 
@@ -36,7 +35,7 @@ public class TrafficApp extends GameApplication {
 
 
 	private Entity player1;
-	private Entity player2;
+	//private Entity player2;
 
 	private String map = "tutorialMap.tmx";
 
@@ -53,8 +52,8 @@ public class TrafficApp extends GameApplication {
 		System.out.println(e);
 		
 		SpawnData vdata = new SpawnData(e.getPosition());
-		System.out.println(e.getProperties());
-		vdata.put("direzione", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
+		System.out.println(e.getPosition());
+		vdata.put("direction", Directions.valueOf("RIGHT"/*(String)e.getPropertyOptional("direzione").orElse("RIGHT")*/));
 
 		FXGL.spawn("vehicle", vdata);
 
@@ -150,19 +149,19 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				Vehicle enumv = v.getComponentOptional(VehicleComponent.class).orElse(null).getVehicle();
-				if(enumv.canTurn()) {
+				VehicleComponent vcomp = v.getComponentOptional(VehicleComponent.class).orElse(null);
+				if(vcomp.getVehicle().canTurn()) {
 					System.out.println("turn");
 					Optional<String> o = i.getPropertyOptional("direzione");
 					if(o.isEmpty()) {		//if the direction property is empty the incrocio has to be a incrocio4
 						int x = new Random().nextInt(4);
-						if(!(Directions.values()[x].equals(enumv.getDirection()) || Directions.values()[x].isOpposite(enumv.getDirection())))
-							enumv.setDirection(Directions.values()[x]);
+						if(!(Directions.values()[x].equals(vcomp.getDirection()) || Directions.values()[x].isOpposite(vcomp.getDirection())))
+							vcomp.setDirection(Directions.values()[x]);
 					}
 					else {
 						Directions d = Directions.valueOf((String) o.orElse(null));	//d is the direction that can not be used
-						while(d == enumv.getDirection())
-							enumv.setDirection(Directions.values()[new Random().nextInt(4)]);
+						while(d == vcomp.getDirection())
+							vcomp.setDirection(Directions.values()[new Random().nextInt(4)]);
 						
 					}
 				}

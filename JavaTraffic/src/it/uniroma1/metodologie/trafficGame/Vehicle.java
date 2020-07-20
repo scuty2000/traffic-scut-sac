@@ -20,16 +20,10 @@ public enum Vehicle {
 	
 	private Shape shape;
 	
-	private Directions direction;
-	
 	Vehicle(boolean canTurn, Shape shape) {
 		this.canTurn = canTurn;
 		this.shape = shape;
 	}
-	
-	public void setDirection(Directions d) { this.direction = d; }
-	
-	public Directions getDirection() { return this.direction; }
 	
 	public Shape getShape() { return shape; }
 	
