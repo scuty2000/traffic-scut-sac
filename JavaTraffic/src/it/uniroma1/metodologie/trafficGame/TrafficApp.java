@@ -49,10 +49,8 @@ public class TrafficApp extends GameApplication {
 		
 		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
 		
-		System.out.println(e);
-		
 		SpawnData vdata = new SpawnData(e.getPosition());
-		System.out.println(e.getPosition());
+		
 		vdata.put("direction", Directions.valueOf("RIGHT"/*(String)e.getPropertyOptional("direzione").orElse("RIGHT")*/));
 
 		FXGL.spawn("vehicle", vdata);
@@ -119,6 +117,20 @@ public class TrafficApp extends GameApplication {
 				move(Directions.DOWN, y -> y < matrixIncroci.size() - 1, "pointerY");	
 			}
 		}, KeyCode.S);
+		
+		i.addAction(new UserAction("Spawn Car") {
+			@Override
+			protected void onActionBegin() {
+				Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
+				
+				SpawnData vdata = new SpawnData(e.getPosition());
+				
+				vdata.put("direction", Directions.valueOf("RIGHT"/*(String)e.getPropertyOptional("direzione").orElse("RIGHT")*/));
+
+				FXGL.spawn("vehicle", vdata);
+
+			}
+		}, KeyCode.SPACE);
 	}
 
 	private void move(Directions d, Predicate<Integer> p, String pointer) {

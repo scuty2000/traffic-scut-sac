@@ -16,6 +16,7 @@ import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.scene.paint.Color;
 
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficFactory implements EntityFactory{
@@ -77,6 +78,8 @@ public class TrafficFactory implements EntityFactory{
 			vehicle = build(data, Vehicle.MOTORBIKE);
 		else
 			vehicle = build(data, Vehicle.TIR);
+		Rectangle s = (Rectangle) ((Vehicle) vehicle.getType()).getShape();
+		vehicle.setAnchoredPosition(vehicle.getPosition().subtract(0, s.getHeight()/2));
 		return vehicle;
 	}
 	

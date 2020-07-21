@@ -70,10 +70,10 @@ public class VehicleComponent extends Component{
 		if(d.getX() != this.d.getX() && d.getY() != this.d.getY()) {  //checks if the new direction is different from the old one
 			turnRadius = 0;
 			switch(this.d) {
-				case UP : turnRadius = d.equals(Directions.LEFT) ? 187 : 63; break;
-				case DOWN : turnRadius = d.equals(Directions.LEFT) ? 63 : 187; break;
-				case RIGHT : turnRadius = d.equals(Directions.UP) ? 187 : 63; break;
-				case LEFT : turnRadius =d.equals(Directions.UP) ? 63 : 187; break;
+				case UP : turnRadius = d.equals(Directions.LEFT) ? 179 : 63; break;
+				case DOWN : turnRadius = d.equals(Directions.LEFT) ? 63 : 179; break;
+				case RIGHT : turnRadius = d.equals(Directions.UP) ? 179 : 63; break;
+				case LEFT : turnRadius =d.equals(Directions.UP) ? 63 : 179; break;
 			};
 			this.d = d;
 			this.turning = true;
@@ -82,14 +82,11 @@ public class VehicleComponent extends Component{
 	}
 	
 	private double turnRadius; //the radius of the circumference that the vehicle has to follow in order to turn
-	
-	private double xTurn = 0;
-	private double yTurn = 1;
-	
+		
 	private void turnAnimation() {
 		
-		entity.rotateBy(d.getX()*5 + d.getY()*5);
-		entity.translate(new Point2D(10, 10));
+		entity.rotateBy(d.getX()*10 + d.getY()*10);
+		entity.translate(new Point2D(((turnRadius)/8)*(d.getX()==1? -1: 1), (turnRadius/8)*(d.getY()==1?1:-1)));
 		shootTimer.capture();
 		if(entity.getRotation()%90 == 0) {
 			turning = false;
