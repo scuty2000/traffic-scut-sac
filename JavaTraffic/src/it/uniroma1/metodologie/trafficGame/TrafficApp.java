@@ -57,7 +57,7 @@ public class TrafficApp extends GameApplication {
 
 		matrixIncroci = parseIncroci();		//gets the grid of the semafori
 
-		//player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
+		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
 
 	}
 

@@ -35,7 +35,8 @@ public class TrafficFactory implements EntityFactory{
 				.with("pointerX", 0)
 				.with("pointerY", 0)
 				.with(new PlayerComponent())
-				.viewWithBBox(new Rectangle(250,250, Color.YELLOW))
+				.viewWithBBox(new Rectangle(250,250, Color.BLUE))
+				.opacity(0.4)
 				.build();
 			return player1;
 		}
@@ -85,12 +86,19 @@ public class TrafficFactory implements EntityFactory{
 	
 	@Spawns("semaforo")
 	public Entity getSemaforo(SpawnData data) {
-		return FXGL.entityBuilder(data)
-					.type(EntityType.SEMAFORO)
-					.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"),data.<Integer>get("height"))))
-					.view("semaforoRosso-01.png")
-					.with(new CollidableComponent(true))
-					.build();
+		
+		int i = (int) data.getData().getOrDefault("rotation", 0);
+		
+		System.out.println(i);
+		
+		Entity e = FXGL.entityBuilder(data)
+				.type(EntityType.SEMAFORO)
+				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"),data.<Integer>get("height"))))
+				.view("semaforoVerde-0"+i+".png")
+				.with(new CollidableComponent(true))
+				.build();
+		
+		return e;
 	}
 	
 	@Spawns("incrocioA4")
