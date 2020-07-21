@@ -186,10 +186,11 @@ public class TrafficApp extends GameApplication {
 			}
 			else {
 				Directions d = Directions.valueOf((String) o.orElse(null));	//d is the direction that can not be used
-				Directions oldDir = vcomp.getDirection();
-				int x = new Random().nextInt(3);
-				if(Directions.values()[x].equals(d))
-					x++;
+				Predicate<Directions> p = vcomp.getDirection().isOpposite(d) ? dir -> dir.isOpposite(d) || dir.equals(d) : dir -> dir.equals(d);
+				int x = new Random().nextInt(4);
+				while(p.test(Directions.values()[x])) {
+					x = new Random().nextInt(4);
+				}
 				vcomp.setDirection(Directions.values()[x]);
 			}
 		}
