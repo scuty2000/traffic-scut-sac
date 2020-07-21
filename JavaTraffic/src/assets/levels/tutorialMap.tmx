@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="250" tileheight="250" infinite="0" nextlayerid="13" nextobjectid="63">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="250" tileheight="250" infinite="0" nextlayerid="13" nextobjectid="68">
  <tileset firstgid="1" name="tutorial_tiles" tilewidth="250" tileheight="250" tilecount="42" columns="7">
   <image source="tiles_sheet.png" width="1750" height="1500"/>
  </tileset>
@@ -104,21 +104,45 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="spawnPoint" locked="1">
+ <objectgroup id="10" name="spawnPoint">
   <object id="39" type="spawn" x="0" y="1909">
    <properties>
     <property name="direzione" value="RIGHT"/>
    </properties>
    <point/>
   </object>
-  <object id="42" type="spawn" x="2500" y="1909">
+  <object id="42" type="spawn" x="2498.67" y="1799">
    <properties>
     <property name="direzione" value="LEFT"/>
    </properties>
    <point/>
   </object>
+  <object id="63" type="spawn" x="1164" y="2500.67">
+   <properties>
+    <property name="direzione" value="UP"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="65" type="spawn" x="2176" y="2502">
+   <properties>
+    <property name="direzione" value="UP"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="66" type="spawn" x="2050.17" y="-0.666667">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="67" type="spawn" x="1059.58" y="2.90909">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+   </properties>
+   <point/>
+  </object>
  </objectgroup>
- <objectgroup id="12" name="SemaforiRossi">
+ <objectgroup id="12" name="SemaforiRossi" locked="1">
   <object id="49" type="semaforoR" x="750" y="250" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="1"/>

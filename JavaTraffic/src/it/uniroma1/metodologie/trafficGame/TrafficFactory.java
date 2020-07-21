@@ -58,8 +58,9 @@ public class TrafficFactory implements EntityFactory{
 		return FXGL.entityBuilder(data)
 					.type(v)
 					.collidable()
-					.with(new VehicleComponent(v))
+					.with(new VehicleComponent(v,data.<Directions>get("direction")))
 					.viewWithBBox(v.getShape())
+					.rotate(data.<Directions>get("direction").getStartingRotation())
 					.build();
 	}
 	
@@ -80,7 +81,7 @@ public class TrafficFactory implements EntityFactory{
 		else
 			vehicle = build(data, Vehicle.TIR);
 		Rectangle s = (Rectangle) ((Vehicle) vehicle.getType()).getShape();
-		vehicle.setAnchoredPosition(vehicle.getPosition().subtract(0, s.getHeight()/2));
+		vehicle.setAnchoredPosition(vehicle.getPosition().subtract(s.getWidth()/2, s.getHeight()/2 ));
 		//vehicle.addComponent(new HitBox());
 		return vehicle;
 	}
@@ -88,7 +89,7 @@ public class TrafficFactory implements EntityFactory{
 	@Spawns("semaforo")
 	public Entity getSemaforo(SpawnData data) {
 		
-		int i = (int) data.getData().getOrDefault("rotation", 0);
+		int i = (int) data.getData().getOrDefault("rotation", 1);
 		
 		Entity e = FXGL.entityBuilder(data)
 				.type(EntityType.SEMAFORO)

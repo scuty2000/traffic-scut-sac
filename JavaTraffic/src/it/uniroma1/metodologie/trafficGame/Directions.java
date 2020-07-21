@@ -1,14 +1,16 @@
 package it.uniroma1.metodologie.trafficGame;
 
 public enum Directions {
-	UP(0,-1),DOWN(0,1),LEFT(-1,0),RIGHT(1,0);
+	UP(0,-1,90),DOWN(0,1,-90),LEFT(-1,0,180),RIGHT(1,0,0);
 	
 	private int x;
 	private int y;
+	private int startRotation;
 	
-	Directions(int x, int y){
+	Directions(int x, int y, int sr){
 		this.x = x;
 		this.y = y;
+		this.startRotation = sr;
 	}
 	
 	public int getX() { return x; }
@@ -17,4 +19,6 @@ public enum Directions {
 	public boolean isOpposite(Directions d2) {
 		return (this.x - d2.x == 0) || (this.y -d2.y == 0);
 	}
+	
+	public int getStartingRotation() { return startRotation; }
 }

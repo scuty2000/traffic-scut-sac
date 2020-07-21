@@ -138,11 +138,11 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Spawn Car") {
 			@Override
 			protected void onActionBegin() {
-				Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
+				Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
 
 				SpawnData vdata = new SpawnData(e.getPosition());
 
-				vdata.put("direction", Directions.valueOf("RIGHT"/*(String)e.getPropertyOptional("direzione").orElse("RIGHT")*/));
+				vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 
 				FXGL.getGameWorld().spawn("vehicle", vdata);
 

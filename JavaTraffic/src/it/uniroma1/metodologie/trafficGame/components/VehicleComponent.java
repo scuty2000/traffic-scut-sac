@@ -31,15 +31,15 @@ public class VehicleComponent extends Component{
 
 	Directions d;
 
-	public VehicleComponent(Vehicle v) {
+	public VehicleComponent(Vehicle v, Directions d) {
 		this.v = v;
+		this.d = d;
 	}
 
 	@Override
 	public void onAdded() {
 		shootTimer = FXGL.newLocalTimer();
 		shootTimer.capture();
-		d = Directions.RIGHT;
 		turnRadius = 0;
 	}
 
@@ -50,19 +50,18 @@ public class VehicleComponent extends Component{
 	@Override
 	public void onUpdate(double tpf) {
 
-		if(entity.getX() < 0 || entity.getX() > 2500 || entity.getY() < 0 || entity.getY() > 2500) {
+		if(entity.getX() < -100 || entity.getX() > 2600 || entity.getY() < -100 || entity.getY() > 2600) {
 			entity.removeFromWorld();
 			System.out.println("Deleted");
 		}
 		else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove))) {
 			if(turning)
 				turnAnimation();
-			else {
-				Point2D velocity = new Point2D(speed * d.getX(), speed * d.getY());
-				entity.translate(velocity);
-				shootTimer.capture();
+			else 
+				entity.translate(new Point2D(speed * d.getX(), speed * d.getY()));
+				
 				//			System.out.println("moved");
-			}
+			shootTimer.capture();
 		}
 	}
 	
@@ -72,7 +71,7 @@ public class VehicleComponent extends Component{
 	private double mul;
 	private int rot;
 	
-	public void turn(Directions d) {
+	private void turn(Directions d) {
 		if(!(d.equals(this.d) || d.isOpposite(this.d))) {  //checks if the new direction is different from the old one
 			turnRadius = 0;
 			switch(this.d) {
@@ -149,12 +148,10 @@ public class VehicleComponent extends Component{
 
 		entity.rotateBy(rot*mul);
 		entity.translate(new Point2D(xMovement*mul, yMovement*mul));
-		shootTimer.capture();
 		if(entity.getRotation()%90 == 0) {
 			turning = false;
 			gapBetweenMove = 0.01;
 		}
-
 	}
 
 
