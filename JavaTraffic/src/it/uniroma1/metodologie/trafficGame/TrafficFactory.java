@@ -81,7 +81,7 @@ public class TrafficFactory implements EntityFactory{
 			vehicle = build(data, Vehicle.TIR);
 		Rectangle s = (Rectangle) ((Vehicle) vehicle.getType()).getShape();
 		vehicle.setAnchoredPosition(vehicle.getPosition().subtract(0, s.getHeight()/2));
-		vehicle.addComponent(new HitBox());
+		//vehicle.addComponent(new HitBox());
 		return vehicle;
 	}
 	
