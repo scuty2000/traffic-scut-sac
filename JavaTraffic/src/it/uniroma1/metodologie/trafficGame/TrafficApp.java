@@ -161,26 +161,37 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				VehicleComponent vcomp = v.getComponentOptional(VehicleComponent.class).orElse(null);
-				if(vcomp.getVehicle().canTurn()) {
-
-					Optional<String> o = i.getPropertyOptional("direzione");
-					if(o.isEmpty()) {		//if the direction property is empty the incrocio has to be a incrocio4
-						int x = new Random().nextInt(4);
-						if(!(Directions.values()[x].equals(vcomp.getDirection()) || Directions.values()[x].isOpposite(vcomp.getDirection())))
-							vcomp.setDirection(Directions.values()[x]);
-					}
-					else {
-						Directions d = Directions.valueOf((String) o.orElse(null));	//d is the direction that can not be used
-						Directions oldDir = vcomp.getDirection();
-						int x = new Random().nextInt(3);
-						if(Directions.values()[x].equals(d))
-							x++;
-						vcomp.setDirection(Directions.values()[x]);
-					}
-				}
+				turnVehicle(v, i);
 			}
-
 		});
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, EntityType.INCROCIO) {
+
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				turnVehicle(v, i);
+			}
+		});
+	}
+	
+	private void turnVehicle(Entity v, Entity i) {
+		VehicleComponent vcomp = v.getComponentOptional(VehicleComponent.class).orElse(null);
+		if(vcomp.getVehicle().canTurn()) {
+
+			Optional<String> o = i.getPropertyOptional("direzione");
+			if(o.isEmpty()) {		//if the direction property is empty the incrocio has to be a incrocio4
+				int x = new Random().nextInt(4);
+				if(!(Directions.values()[x].equals(vcomp.getDirection()) || Directions.values()[x].isOpposite(vcomp.getDirection())))
+					vcomp.setDirection(Directions.values()[x]);
+			}
+			else {
+				Directions d = Directions.valueOf((String) o.orElse(null));	//d is the direction that can not be used
+				Directions oldDir = vcomp.getDirection();
+				int x = new Random().nextInt(3);
+				if(Directions.values()[x].equals(d))
+					x++;
+				vcomp.setDirection(Directions.values()[x]);
+			}
+		}
 	}
 }
