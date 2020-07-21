@@ -51,7 +51,7 @@ public class TrafficApp extends GameApplication {
 
 		SpawnData vdata = new SpawnData(e.getPosition());
 
-		vdata.put("direction", Directions.valueOf("RIGHT"/*(String)e.getPropertyOptional("direzione").orElse("RIGHT")*/));
+		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 
 		FXGL.spawn("vehicle", vdata);
 
