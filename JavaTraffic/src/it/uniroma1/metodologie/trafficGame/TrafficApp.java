@@ -17,6 +17,7 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.sun.javafx.geom.Point2D;
 
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.scene.input.KeyCode;
@@ -87,7 +88,23 @@ public class TrafficApp extends GameApplication {
 	protected void initInput() {
 		Input i = FXGL.getInput();
 
-
+		i.addAction(new UserAction("Change trafficlight status") {
+			@Override
+			protected void onActionBegin() {
+				ArrayList<Entity> semafori = (ArrayList<Entity>) FXGL.getGameWorld()
+																		.getEntitiesByType(EntityType.SEMAFORO)
+																		.stream()
+																		.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354 && x.getPropertyOptional("status").orElse("green").equals("red"))
+																		.collect(Collectors.toList());
+				
+				System.out.println("Semafori che verranno cambiati:");
+				for (Entity entity : semafori) {
+					System.out.println(entity.getProperties().getValue("id").toString());
+					entity.setVisible(!entity.isVisible());
+				}
+				
+			}
+		}, KeyCode.F);
 
 		i.addAction(new UserAction("Move Right") {
 
