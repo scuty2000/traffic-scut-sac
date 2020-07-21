@@ -72,7 +72,7 @@ public class TrafficFactory implements EntityFactory{
 	public Entity getVehicle(SpawnData data) {
 		Entity vehicle;
 		int random = new Random().nextInt(7);
-		if(random <= 7)
+		if(random <= 3)
 			vehicle = build(data, Vehicle.CAR);
 		else if(random <= 5)
 			vehicle = build(data, Vehicle.MOTORBIKE);
@@ -95,7 +95,7 @@ public class TrafficFactory implements EntityFactory{
 	
 	@Spawns("incrocioA4")
 	public Entity getIncrocioA4(SpawnData data) {
-		return FXGL.entityBuilder()
+		return FXGL.entityBuilder(data)
 					.type(EntityType.INCROCIO)
 					.bbox(new HitBox(BoundingShape.box(250, 250)))
 					.with(new CollidableComponent(true))
@@ -104,7 +104,7 @@ public class TrafficFactory implements EntityFactory{
 	
 	@Spawns("incrocioA3")
 	public Entity getIncrocioA3(SpawnData data) {
-		return FXGL.entityBuilder()
+		return FXGL.entityBuilder(data)
 					.type(EntityType.INCROCIO)
 					.bbox(new HitBox(BoundingShape.box(250, 250)))
 					.with("direzione", data.get("direzione"))

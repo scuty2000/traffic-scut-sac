@@ -46,11 +46,11 @@ public class TrafficApp extends GameApplication {
 		FXGL.getGameWorld().addEntityFactory(new TrafficFactory());
 
 		FXGL.setLevelFromMap(map);
-		
+
 		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
-		
+
 		SpawnData vdata = new SpawnData(e.getPosition());
-		
+
 		vdata.put("direction", Directions.valueOf("RIGHT"/*(String)e.getPropertyOptional("direzione").orElse("RIGHT")*/));
 
 		FXGL.spawn("vehicle", vdata);
@@ -117,17 +117,17 @@ public class TrafficApp extends GameApplication {
 				move(Directions.DOWN, y -> y < matrixIncroci.size() - 1, "pointerY");	
 			}
 		}, KeyCode.S);
-		
+
 		i.addAction(new UserAction("Spawn Car") {
 			@Override
 			protected void onActionBegin() {
 				Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
-				
+
 				SpawnData vdata = new SpawnData(e.getPosition());
-				
+
 				vdata.put("direction", Directions.valueOf("RIGHT"/*(String)e.getPropertyOptional("direzione").orElse("RIGHT")*/));
 
-				FXGL.spawn("vehicle", vdata);
+				FXGL.getGameWorld().spawn("vehicle", vdata);
 
 			}
 		}, KeyCode.SPACE);
@@ -163,7 +163,7 @@ public class TrafficApp extends GameApplication {
 			protected void onCollisionBegin(Entity v, Entity i) {
 				VehicleComponent vcomp = v.getComponentOptional(VehicleComponent.class).orElse(null);
 				if(vcomp.getVehicle().canTurn()) {
-					System.out.println("turn");
+
 					Optional<String> o = i.getPropertyOptional("direzione");
 					if(o.isEmpty()) {		//if the direction property is empty the incrocio has to be a incrocio4
 						int x = new Random().nextInt(4);
@@ -172,9 +172,14 @@ public class TrafficApp extends GameApplication {
 					}
 					else {
 						Directions d = Directions.valueOf((String) o.orElse(null));	//d is the direction that can not be used
-						while(d == vcomp.getDirection())
-							vcomp.setDirection(Directions.values()[new Random().nextInt(4)]);
-						
+						int x = new Random().nextInt(4);
+						vcomp.setDirection(Directions.values()[x]);
+						while(d == vcomp.getDirection()) {
+							int j = new Random().nextInt(4);
+							if(!(Directions.values()[j].equals(vcomp.getDirection()) || Directions.values()[j].isOpposite(vcomp.getDirection())))
+								vcomp.setDirection(Directions.values()[j]);
+						}
+
 					}
 				}
 			}

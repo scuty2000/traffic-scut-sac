@@ -70,10 +70,10 @@ public class VehicleComponent extends Component{
 		if(d.getX() != this.d.getX() && d.getY() != this.d.getY()) {  //checks if the new direction is different from the old one
 			turnRadius = 0;
 			switch(this.d) {
-				case UP : turnRadius = d.equals(Directions.LEFT) ? 179 : 63; break;
-				case DOWN : turnRadius = d.equals(Directions.LEFT) ? 63 : 179; break;
-				case RIGHT : turnRadius = d.equals(Directions.UP) ? 179 : 63; break;
-				case LEFT : turnRadius =d.equals(Directions.UP) ? 63 : 179; break;
+				case UP : turnRadius = d.equals(Directions.LEFT) ? 179 : 73; break;
+				case DOWN : turnRadius = d.equals(Directions.LEFT) ? 73 : 179; break;
+				case RIGHT : turnRadius = d.equals(Directions.UP) ? 179 : 73; break;
+				case LEFT : turnRadius =d.equals(Directions.UP) ? 73 : 179; break;
 			};
 			this.d = d;
 			this.turning = true;

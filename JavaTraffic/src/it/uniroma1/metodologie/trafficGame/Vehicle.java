@@ -14,18 +14,21 @@ import javafx.scene.paint.Color;
 
 
 public enum Vehicle {
-	CAR(true, new Rectangle(60,40,Color.YELLOW)),TIR(false, new Rectangle(190,50,Color.YELLOW)),MOTORBIKE(true, new Rectangle(35,14,Color.YELLOW));
+	CAR(true, 60, 40),TIR(false,195, 50),MOTORBIKE(true, 35, 14);
 	
 	private boolean canTurn;
 	
-	private Shape shape;
+	private int width;
 	
-	Vehicle(boolean canTurn, Shape shape) {
+	private int heigh;
+	
+	Vehicle(boolean canTurn, int width, int heigh) {
 		this.canTurn = canTurn;
-		this.shape = shape;
+		this.width = width;
+		this.heigh = heigh;
 	}
 	
-	public Shape getShape() { return shape; }
+	public Shape getShape() { return new Rectangle(width, heigh, Color.YELLOW); }
 	
 	public boolean canTurn() { return canTurn; }
 	
