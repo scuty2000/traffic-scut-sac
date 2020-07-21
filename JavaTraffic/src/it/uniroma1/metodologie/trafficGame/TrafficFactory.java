@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.TriangleMesh;
 import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficFactory implements EntityFactory{
