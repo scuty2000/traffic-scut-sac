@@ -57,7 +57,7 @@ public class TrafficApp extends GameApplication {
 
 		matrixIncroci = parseIncroci();		//gets the grid of the semafori
 
-		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
+		//player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
 
 	}
 
@@ -172,14 +172,11 @@ public class TrafficApp extends GameApplication {
 					}
 					else {
 						Directions d = Directions.valueOf((String) o.orElse(null));	//d is the direction that can not be used
-						int x = new Random().nextInt(4);
+						Directions oldDir = vcomp.getDirection();
+						int x = new Random().nextInt(3);
+						if(Directions.values()[x].equals(d))
+							x++;
 						vcomp.setDirection(Directions.values()[x]);
-						while(d == vcomp.getDirection()) {
-							int j = new Random().nextInt(4);
-							if(!(Directions.values()[j].equals(vcomp.getDirection()) || Directions.values()[j].isOpposite(vcomp.getDirection())))
-								vcomp.setDirection(Directions.values()[j]);
-						}
-
 					}
 				}
 			}

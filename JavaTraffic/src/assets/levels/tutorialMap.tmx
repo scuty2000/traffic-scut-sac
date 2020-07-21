@@ -30,12 +30,6 @@
     <property name="direzione" value="LEFT"/>
    </properties>
   </object>
-  <object id="47" x="1000" y="2000">
-   <point/>
-  </object>
-  <object id="48" x="1179" y="2000">
-   <point/>
-  </object>
  </objectgroup>
  <objectgroup id="3" name="Semafori">
   <object id="2" type="semaforo" x="744" y="252" width="252" height="252"/>
