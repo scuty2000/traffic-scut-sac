@@ -1,6 +1,7 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
@@ -150,8 +151,7 @@ public class VehicleComponent extends Component{
 	private void turnAnimation() {
 
 		entity.rotateBy(rot*mul);
-		entity.translate(new Point2D(xMovement*mul, yMovement*mul));
-		
+		entity.translate(xMovement*mul, yMovement*mul);
 		//niceTraslation(entity, new Point2D(xMovement*mul, yMovement*mul));
 		
 		if(entity.getRotation()%90 == 0) {
@@ -160,6 +160,7 @@ public class VehicleComponent extends Component{
 		}
 		
 	}
+	
 	
 	private void niceTraslation(Entity vehicle, Point2D destinationPoint) {
 		
@@ -202,4 +203,11 @@ public class VehicleComponent extends Component{
 	}
 
 	public Vehicle getVehicle() { return v; }
+	
+	/* 
+	 * y = sqrt(r^2 - x^2)      semicircle's formula
+	 */
+	private double getPointOfRotation(double x) {
+		return Math.sqrt(Math.pow(turnRadius,2) - Math.pow(x, 2));
+	}
 }
