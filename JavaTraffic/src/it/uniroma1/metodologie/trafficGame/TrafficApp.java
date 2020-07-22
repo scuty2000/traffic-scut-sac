@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
@@ -32,6 +33,8 @@ public class TrafficApp extends GameApplication {
 		settings.setTitle("  Traffic  ");
 		settings.setWidth(2500);
 		settings.setHeight(2500);
+		settings.setApplicationMode(ApplicationMode.DEVELOPER);
+		settings.setProfilingEnabled(true);
 	}
 
 

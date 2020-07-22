@@ -1,6 +1,9 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
+import java.util.ArrayList;
+
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.time.LocalTimer;
 
@@ -148,12 +151,49 @@ public class VehicleComponent extends Component{
 
 		entity.rotateBy(rot*mul);
 		entity.translate(new Point2D(xMovement*mul, yMovement*mul));
+		
+		//niceTraslation(entity, new Point2D(xMovement*mul, yMovement*mul));
+		
 		if(entity.getRotation()%90 == 0) {
 			turning = false;
 			gapBetweenMove = 0.01;
 		}
+		
 	}
-
+	
+	private void niceTraslation(Entity vehicle, Point2D destinationPoint) {
+		
+		ArrayList<Integer> xTranslations = new ArrayList<>();
+		ArrayList<Integer> yTranslations = new ArrayList<>();
+		
+		for(int i = (int) vehicle.getX(); i != (int) destinationPoint.getX()+vehicle.getX();) {
+			if(i < (int) destinationPoint.getX()+vehicle.getX()) {
+				xTranslations.add(i++);
+			} else if ((int) i > (int) destinationPoint.getX()+vehicle.getX()) {
+				xTranslations.add(i--);
+			}
+			System.out.println("neither "+i+":"+(int) destinationPoint.getX()+vehicle.getX());
+		}
+		
+		for(int i = (int) vehicle.getY(); (int) i != (int) destinationPoint.getY()+vehicle.getY();) {
+			if(i< (int) destinationPoint.getY()+vehicle.getY()) {
+				yTranslations.add(i);
+				i = i + 1;
+			} else if(i> (int) destinationPoint.getY()+vehicle.getY()) {
+				yTranslations.add(i);
+				i = i - 1;
+			}
+		}
+		
+		System.out.println("xCoords: "+xTranslations.toString()+" yCoords: "+yTranslations.toString()+" destX: "+ (int) destinationPoint.getX()+vehicle.getX()+" destY: "+ (int) destinationPoint.getY()+vehicle.getY());
+		
+		while (entity.getX() != destinationPoint.getX() && !xTranslations.isEmpty() && !yTranslations.isEmpty()) {
+			entity.translate(new Point2D(xTranslations.get(0), yTranslations.get(0)));
+			xTranslations.remove(0);
+			yTranslations.remove(0);
+		}
+		System.out.println("should be translated");
+	}
 
 	public Directions getDirection() { return this.d; }
 
