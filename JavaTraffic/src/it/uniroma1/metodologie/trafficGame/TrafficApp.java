@@ -14,6 +14,7 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
@@ -25,6 +26,8 @@ import javafx.scene.input.KeyCode;
 import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficApp extends GameApplication {
+	
+	private ArrayList<Entity> incroci;
 
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -47,11 +50,14 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void initGame() {
-		FXGL.getGameWorld().addEntityFactory(new TrafficFactory());
+		
+		GameWorld gw = FXGL.getGameWorld();
+		
+		gw.addEntityFactory(new TrafficFactory());
 
 		FXGL.setLevelFromMap(map);
 
-		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
+		Entity e = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
 
 		SpawnData vdata = new SpawnData(e.getPosition());
 
@@ -62,7 +68,14 @@ public class TrafficApp extends GameApplication {
 		matrixIncroci = parseIncroci();		//gets the grid of the semafori
 
 		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
-
+		
+		incroci = (ArrayList<Entity>) gw.getEntitiesByType(EntityType.INCROCIO);
+		
+		for (Entity semaforo : FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO)) {
+			if((semaforo.getProperties().getInt("rotation") == 1 || semaforo.getProperties().getInt("rotation") == 3) && semaforo.getPropertyOptional("status").orElse("Verde").equals("Rosso"))
+				semaforo.setVisible(!semaforo.isVisible());
+		}
+		
 	}
 
 	private HashMap<Integer, ArrayList<Entity>> parseIncroci() {
@@ -97,12 +110,12 @@ public class TrafficApp extends GameApplication {
 				ArrayList<Entity> semafori = (ArrayList<Entity>) FXGL.getGameWorld()
 																		.getEntitiesByType(EntityType.SEMAFORO)
 																		.stream()
-																		.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354 && x.getPropertyOptional("status").orElse("green").equals("red"))
+																		.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354 && x.getPropertyOptional("status").orElse("Verde").equals("Rosso"))
 																		.collect(Collectors.toList());
 				
-				System.out.println("Semafori che verranno cambiati:");
+				//System.out.println("Semafori che verranno cambiati:");
 				for (Entity entity : semafori) {
-					System.out.println(entity.getProperties().getValue("id").toString());
+					//System.out.println(entity.getProperties().getValue("id").toString());
 					entity.setVisible(!entity.isVisible());
 				}
 				

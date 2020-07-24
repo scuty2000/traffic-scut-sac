@@ -142,90 +142,90 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="12" name="SemaforiRossi" locked="1">
-  <object id="49" type="semaforoR" x="750" y="250" width="250" height="250">
+ <objectgroup id="12" name="SemaforiRossi">
+  <object id="49" type="semaforo" x="750" y="250" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="1"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="50" type="semaforoR" x="1250" y="750" width="250" height="250">
+  <object id="50" type="semaforo" x="1250" y="750" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="3"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="51" type="semaforoR" x="1250" y="250" width="250" height="250">
+  <object id="51" type="semaforo" x="1250" y="250" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="2"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="52" type="semaforoR" x="1750" y="750" width="250" height="250">
+  <object id="52" type="semaforo" x="1750" y="750" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="4"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="53" type="semaforoR" x="1750" y="250" width="250" height="250">
+  <object id="53" type="semaforo" x="1750" y="250" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="1"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="54" type="semaforoR" x="2250" y="750" width="250" height="250">
+  <object id="54" type="semaforo" x="2250" y="750" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="3"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="55" type="semaforoR" x="1750" y="1500" width="250" height="250">
+  <object id="55" type="semaforo" x="1750" y="1500" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="1"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="56" type="semaforoR" x="1750" y="2000" width="250" height="250">
+  <object id="56" type="semaforo" x="1750" y="2000" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="4"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="57" type="semaforoR" x="2250" y="2000" width="250" height="250">
+  <object id="57" type="semaforo" x="2250" y="2000" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="3"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="58" type="semaforoR" x="2250" y="1500" width="250" height="250">
+  <object id="58" type="semaforo" x="2250" y="1500" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="2"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="59" type="semaforoR" x="1250" y="1500" width="250" height="250">
+  <object id="59" type="semaforo" x="1250" y="1500" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="2"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="60" type="semaforoR" x="750" y="1500" width="250" height="250">
+  <object id="60" type="semaforo" x="750" y="1500" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="1"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="61" type="semaforoR" x="750" y="2000" width="250" height="250">
+  <object id="61" type="semaforo" x="750" y="2000" width="250" height="250">
    <properties>
     <property name="asa" type="int" value="111"/>
     <property name="rotation" type="int" value="4"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
-  <object id="62" type="semaforoR" x="1250" y="2000" width="250" height="250">
+  <object id="62" type="semaforo" x="1250" y="2000" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="3"/>
-    <property name="status" value="red"/>
+    <property name="status" value="Rosso"/>
    </properties>
   </object>
  </objectgroup>

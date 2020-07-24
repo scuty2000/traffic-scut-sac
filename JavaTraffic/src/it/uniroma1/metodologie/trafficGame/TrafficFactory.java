@@ -92,25 +92,12 @@ public class TrafficFactory implements EntityFactory{
 		
 		int i = (int) data.getData().getOrDefault("rotation", 1);
 		
-		Entity e = FXGL.entityBuilder(data)
-				.type(EntityType.SEMAFORO)
-				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"),data.<Integer>get("height"))))
-				.view("semaforoVerde-0"+i+".png")
-				.with(new CollidableComponent(true))
-				.build();
-		
-		return e;
-	}
-	
-	@Spawns("semaforoR")
-	public Entity getSemaforoR(SpawnData data) {
-		
-		int i = (int) data.getData().getOrDefault("rotation", 0);
+		String s = (String) data.getData().getOrDefault("status", "Verde");
 		
 		Entity e = FXGL.entityBuilder(data)
 				.type(EntityType.SEMAFORO)
 				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"),data.<Integer>get("height"))))
-				.view("semaforoRosso-0"+i+".png")
+				.view("semaforo"+s+"-0"+i+".png")
 				.with(new CollidableComponent(true))
 				.build();
 		
