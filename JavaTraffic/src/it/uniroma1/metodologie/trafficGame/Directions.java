@@ -21,4 +21,20 @@ public enum Directions {
 	}
 	
 	public int getStartingRotation() { return startRotation; }
+	
+	public static Directions getDirectionFromRotation(int rotation) {
+		
+		switch(rotation+"") {
+			case "1":
+				return Directions.DOWN;
+			case "2":
+				return Directions.LEFT;
+			case "3":
+				return Directions.UP;
+			case "4":
+				return Directions.RIGHT;
+		}
+		
+		return null;
+	}
 }

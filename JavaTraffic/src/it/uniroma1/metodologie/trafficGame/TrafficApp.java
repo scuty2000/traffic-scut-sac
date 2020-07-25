@@ -64,7 +64,7 @@ public class TrafficApp extends GameApplication {
 
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 
-		FXGL.spawn("vehicle", vdata);
+		//FXGL.spawn("vehicle", vdata);
 
 		matrixIncroci = parseIncroci();		//gets the grid of the semafori
 

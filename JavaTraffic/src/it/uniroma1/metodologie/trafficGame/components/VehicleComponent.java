@@ -2,6 +2,7 @@ package it.uniroma1.metodologie.trafficGame.components;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
@@ -12,6 +13,7 @@ import it.uniroma1.metodologie.trafficGame.Directions;
 import it.uniroma1.metodologie.trafficGame.Vehicle;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
+import tutorial.AndreaGameApp.EntityType;
 
 /**
  * TODO this class will contain the methods that defines the behavior of the vehicles (speed, decisions, etc...)
@@ -53,18 +55,30 @@ public class VehicleComponent extends Component{
 	 */
 	@Override
 	public void onUpdate(double tpf) {
+		
+		//TODO FIX THIS
+		
+//		ArrayList<Entity> semaforiVicini = (ArrayList<Entity>) FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO).stream().filter(x -> x.getPosition().distance(entity.getPosition()) < 200).collect(Collectors.toList());
+//		ArrayList<Entity> incrociVicini = (ArrayList<Entity>) FXGL.getGameWorld().getEntitiesByType(EntityType.INCROCIO).stream().filter(x -> x.getPosition().distance(entity.getPosition()) < 600).collect(Collectors.toList());
+//
+//		if(semaforiVicini.size() > 0)
+//			System.out.println(semaforiVicini.size()+" "+incrociVicini.size()+" "+d+" "+semaforiVicini.get(0).getPropertyOptional("direction").orElse(null));		
+//		
+//		if(semaforiVicini.size() == 1 && semaforiVicini.get(0).getComponent(TrafficLightAnimationComponent.class).isRed() && semaforiVicini.get(0).getPropertyOptional("direction").orElse(Directions.UP).equals(d)) {
+//				speed = 0;
+//		} else {
+//			speed = 5.0;
+//		}
 
 		if(entity.getX() < -100 || entity.getX() > 2600 || entity.getY() < -100 || entity.getY() > 2600) {
 			entity.removeFromWorld();
-			System.out.println("Deleted");
-		}
-		else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove))) {
+			//System.out.println("Deleted");
+		} else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove))) {
 			if(turning)
 				turnAnimation();
 			else 
 				entity.translate(new Point2D(speed * d.getX(), speed * d.getY()));
 				
-				//			System.out.println("moved");
 			shootTimer.capture();
 		}
 	}

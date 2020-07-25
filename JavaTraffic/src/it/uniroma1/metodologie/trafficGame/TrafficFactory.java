@@ -84,7 +84,6 @@ public class TrafficFactory implements EntityFactory{
 			vehicle = build(data, Vehicle.TIR);
 		Rectangle s = (Rectangle) ((Vehicle) vehicle.getType()).getShape();
 		vehicle.setAnchoredPosition(vehicle.getPosition().subtract(s.getWidth()/2, s.getHeight()/2 ));
-		//vehicle.addComponent(new HitBox());
 		return vehicle;
 	}
 	
@@ -99,6 +98,8 @@ public class TrafficFactory implements EntityFactory{
 				.with(new TrafficLightAnimationComponent(i))
 				.with(new CollidableComponent(true))
 				.build();
+		
+		e.setProperty("direction", Directions.getDirectionFromRotation(i));
 		
 		return e;
 	}

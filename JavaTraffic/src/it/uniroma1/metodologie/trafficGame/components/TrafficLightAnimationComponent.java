@@ -45,6 +45,10 @@ public class TrafficLightAnimationComponent extends Component {
 		toSwitch = false;
 	}
 	
+	public boolean isRed() {
+		return isRed;
+	}
+	
 	public void switchLight() {
 		toSwitch = true;
 	}

@@ -28,7 +28,7 @@ public enum Vehicle {
 		this.heigh = heigh;
 	}
 	
-	public Shape getShape() { return new Rectangle(width, heigh, Color.YELLOW); }
+	public Shape getShape() { return new Rectangle(width, heigh, Color.LAWNGREEN); }
 	
 	public boolean canTurn() { return canTurn; }
 	
