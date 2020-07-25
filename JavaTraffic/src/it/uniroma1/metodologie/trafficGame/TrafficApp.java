@@ -73,8 +73,8 @@ public class TrafficApp extends GameApplication {
 		incroci = (ArrayList<Entity>) gw.getEntitiesByType(EntityType.INCROCIO);
 		
 		for (Entity semaforo : FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO)) {
-			if((semaforo.getProperties().getInt("rotation") == 1 || semaforo.getProperties().getInt("rotation") == 3) && semaforo.getPropertyOptional("status").orElse("Verde").equals("Rosso"))
-				semaforo.setVisible(!semaforo.isVisible());
+			if((semaforo.getProperties().getInt("rotation") == 1 || semaforo.getProperties().getInt("rotation") == 3))
+				semaforo.getComponent(TrafficLightAnimationComponent.class).switchLight();
 		}
 		
 	}

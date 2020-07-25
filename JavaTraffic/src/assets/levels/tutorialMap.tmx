@@ -31,7 +31,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="3" name="Semafori" locked="1">
+ <objectgroup id="3" name="Semafori">
   <object id="2" type="semaforo" x="750" y="250" width="250" height="250">
    <properties>
     <property name="rotation" type="int" value="1"/>
