@@ -21,6 +21,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.sun.javafx.geom.Point2D;
 
+import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.scene.input.KeyCode;
 import tutorial.AndreaGameApp.EntityType;
@@ -110,13 +111,14 @@ public class TrafficApp extends GameApplication {
 				ArrayList<Entity> semafori = (ArrayList<Entity>) FXGL.getGameWorld()
 																		.getEntitiesByType(EntityType.SEMAFORO)
 																		.stream()
-																		.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354 && x.getPropertyOptional("status").orElse("Verde").equals("Rosso"))
+																		.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354)
 																		.collect(Collectors.toList());
 				
 				//System.out.println("Semafori che verranno cambiati:");
 				for (Entity entity : semafori) {
 					//System.out.println(entity.getProperties().getValue("id").toString());
-					entity.setVisible(!entity.isVisible());
+					//entity.setVisible(!entity.isVisible());
+					entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
 				}
 				
 			}

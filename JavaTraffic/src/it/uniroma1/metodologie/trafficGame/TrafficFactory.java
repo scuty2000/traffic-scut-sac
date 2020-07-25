@@ -12,6 +12,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxglgames.bomberman.components.PlayerComponent;
 
+import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.scene.paint.Color;
 
@@ -97,7 +98,8 @@ public class TrafficFactory implements EntityFactory{
 		Entity e = FXGL.entityBuilder(data)
 				.type(EntityType.SEMAFORO)
 				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"),data.<Integer>get("height"))))
-				.view("semaforo"+s+"-0"+i+".png")
+				//.view("semaforo"+s+"-0"+i+".png")
+				.with(new TrafficLightAnimationComponent())
 				.with(new CollidableComponent(true))
 				.build();
 		
