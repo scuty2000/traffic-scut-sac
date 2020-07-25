@@ -93,13 +93,10 @@ public class TrafficFactory implements EntityFactory{
 		
 		int i = (int) data.getData().getOrDefault("rotation", 1);
 		
-		String s = (String) data.getData().getOrDefault("status", "Verde");
-		
 		Entity e = FXGL.entityBuilder(data)
 				.type(EntityType.SEMAFORO)
 				.bbox(new HitBox(BoundingShape.box(data.<Integer>get("width"),data.<Integer>get("height"))))
-				//.view("semaforo"+s+"-0"+i+".png")
-				.with(new TrafficLightAnimationComponent())
+				.with(new TrafficLightAnimationComponent(i))
 				.with(new CollidableComponent(true))
 				.build();
 		

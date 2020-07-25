@@ -108,16 +108,13 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Change trafficlight status") {
 			@Override
 			protected void onActionBegin() {
-				ArrayList<Entity> semafori = (ArrayList<Entity>) FXGL.getGameWorld()
+				ArrayList<Entity> semaforiAdiacenti = (ArrayList<Entity>) FXGL.getGameWorld()
 																		.getEntitiesByType(EntityType.SEMAFORO)
 																		.stream()
 																		.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354)
 																		.collect(Collectors.toList());
 				
-				//System.out.println("Semafori che verranno cambiati:");
-				for (Entity entity : semafori) {
-					//System.out.println(entity.getProperties().getValue("id").toString());
-					//entity.setVisible(!entity.isVisible());
+				for (Entity entity : semaforiAdiacenti) {
 					entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
 				}
 				

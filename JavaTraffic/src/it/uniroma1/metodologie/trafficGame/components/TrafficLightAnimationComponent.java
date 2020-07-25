@@ -15,9 +15,11 @@ public class TrafficLightAnimationComponent extends Component {
 	private AnimatedTexture texture;
 	private AnimationChannel animRed, animGreen;
 	
-	public TrafficLightAnimationComponent() {
-		animRed = new AnimationChannel(FXGL.image("tile2.png"), 1, 250, 250, Duration.seconds(1), 1, 1);
-		animGreen = new AnimationChannel(FXGL.image("tiles_sheet.png"), 1, 250, 250, Duration.seconds(1), 1, 1);
+	public TrafficLightAnimationComponent(int tileID) {
+		
+		// parameters: sprite sheet image, number of frames per row, single frame width, single frame height, duration of the animation channel, start frame and end frame (c'ho messo un ora a capirlo dio santo non è scritto da nessuna parte)
+		animRed = new AnimationChannel(FXGL.image("semaforoRosso-0"+tileID+".png"), 1, 250, 250, Duration.seconds(1), 0, 0);
+		animGreen = new AnimationChannel(FXGL.image("semaforoVerde-0"+tileID+".png"), 1, 250, 250, Duration.seconds(1), 0, 0);
 		
 		texture = new AnimatedTexture(animRed);
 	}
