@@ -1,7 +1,7 @@
 package it.uniroma1.metodologie.trafficGame;
 
 public enum Directions {
-	UP(0,-1,90),DOWN(0,1,-90),LEFT(-1,0,180),RIGHT(1,0,0);
+	UP(0,-1,-90),DOWN(0,1,+90),LEFT(-1,0,180),RIGHT(1,0,0);
 	
 	private int x;
 	private int y;

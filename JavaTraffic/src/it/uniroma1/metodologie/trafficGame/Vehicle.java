@@ -30,6 +30,9 @@ public enum Vehicle {
 	
 	public Shape getShape() { return new Rectangle(width, heigh, Color.LAWNGREEN); }
 	
+	public int getWidth() { return width; }
+	public int getHeigh() { return heigh; }
+	
 	public boolean canTurn() { return canTurn; }
 	
 }

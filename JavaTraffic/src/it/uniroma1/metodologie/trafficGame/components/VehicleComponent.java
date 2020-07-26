@@ -7,11 +7,14 @@ import java.util.stream.Collectors;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.physics.BoundingShape;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.time.LocalTimer;
 
 import it.uniroma1.metodologie.trafficGame.Directions;
 import it.uniroma1.metodologie.trafficGame.Vehicle;
 import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
 
