@@ -108,7 +108,7 @@ public class VehicleComponent extends Component{
 					toAddX = 0;
 					toAddY = 1;
 					mul = 1;
-					rot = +5;
+					rot = +10;
 				}
 				break;
 			case DOWN : 
@@ -118,7 +118,7 @@ public class VehicleComponent extends Component{
 					toAddX = 0;
 					toAddY = -1;
 					mul = 1;
-					rot = +5;
+					rot = +10;
 				}
 				else {
 					xMovement = LONG_RADIUS/DIV + 9;
@@ -144,7 +144,7 @@ public class VehicleComponent extends Component{
 					toAddX = -1;
 					toAddY = 0;
 					mul = 1;
-					rot = +5;
+					rot = +10;
 				}
 				break;
 			case LEFT : 
@@ -154,7 +154,7 @@ public class VehicleComponent extends Component{
 					toAddX = 1;
 					toAddY = 0;
 					mul = 1;
-					rot = +5;
+					rot = +10;
 				}
 				else {
 					xMovement = -LONG_RADIUS/DIV - 25;
