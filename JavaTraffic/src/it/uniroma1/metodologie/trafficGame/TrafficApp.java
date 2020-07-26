@@ -190,6 +190,91 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void initPhysics() {
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, Vehicle.CAR) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollisionEnd(Entity a, Entity b) {
+				b.getComponent(VehicleComponent.class).accelerate();
+			}
+			
+		});
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, Vehicle.MOTORBIKE) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollisionEnd(Entity a, Entity b) {
+				b.getComponent(VehicleComponent.class).accelerate();
+			}
+			
+		});
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, Vehicle.TIR) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollisionEnd(Entity a, Entity b) {
+				b.getComponent(VehicleComponent.class).accelerate();
+			}
+			
+		});
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, Vehicle.TIR) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollisionEnd(Entity a, Entity b) {
+				b.getComponent(VehicleComponent.class).accelerate();
+			}
+			
+		});
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.TIR, Vehicle.TIR) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollisionEnd(Entity a, Entity b) {
+				b.getComponent(VehicleComponent.class).accelerate();
+			}
+			
+		});
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, Vehicle.MOTORBIKE) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollisionEnd(Entity a, Entity b) {
+				b.getComponent(VehicleComponent.class).accelerate();
+			}
+			
+		});
+		
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, EntityType.INCROCIO) {
 
 			@Override
@@ -230,6 +315,19 @@ public class TrafficApp extends GameApplication {
 					v.getComponentOptional(VehicleComponent.class).get().accelerate();
 			}
 		});		
+	}
+	
+	@Override
+	protected void onUpdate(double tpf) {
+		if(new Random().nextInt(10000) < 100) {
+			Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
+
+			SpawnData vdata = new SpawnData(e.getPosition());
+
+			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
+
+			FXGL.getGameWorld().spawn("vehicle", vdata);
+		}
 	}
 	
 	private void turnVehicle(Entity v, Entity i) {

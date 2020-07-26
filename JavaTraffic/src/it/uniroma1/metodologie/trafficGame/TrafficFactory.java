@@ -68,7 +68,10 @@ public class TrafficFactory implements EntityFactory{
 		
 		HitBox h = new HitBox("EYE", BoundingShape.box(v.getWidth(), v.getHeigh() + 100));
 		
-		e.getBoundingBoxComponent().addHitBox(h);;
+		HitBox frontHitBox = new HitBox("FRONT", BoundingShape.box(v.getWidth() + 20, v.getHeigh()));
+		
+		e.getBoundingBoxComponent().addHitBox(h);
+		e.getBoundingBoxComponent().addHitBox(frontHitBox);
 		return e;
 	}
 	
