@@ -58,20 +58,6 @@ public class VehicleComponent extends Component{
 	 */
 	@Override
 	public void onUpdate(double tpf) {
-		
-		//TODO FIX THIS
-		
-//		ArrayList<Entity> semaforiVicini = (ArrayList<Entity>) FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO).stream().filter(x -> x.getPosition().distance(entity.getPosition()) < 200).collect(Collectors.toList());
-//		ArrayList<Entity> incrociVicini = (ArrayList<Entity>) FXGL.getGameWorld().getEntitiesByType(EntityType.INCROCIO).stream().filter(x -> x.getPosition().distance(entity.getPosition()) < 600).collect(Collectors.toList());
-//
-//		if(semaforiVicini.size() > 0)
-//			System.out.println(semaforiVicini.size()+" "+incrociVicini.size()+" "+d+" "+semaforiVicini.get(0).getPropertyOptional("direction").orElse(null));		
-//		
-//		if(semaforiVicini.size() == 1 && semaforiVicini.get(0).getComponent(TrafficLightAnimationComponent.class).isRed() && semaforiVicini.get(0).getPropertyOptional("direction").orElse(Directions.UP).equals(d)) {
-//				speed = 0;
-//		} else {
-//			speed = 5.0;
-//		}
 
 		if(entity.getX() < -100 || entity.getX() > 2600 || entity.getY() < -100 || entity.getY() > 2600) {
 			entity.removeFromWorld();
@@ -200,41 +186,6 @@ public class VehicleComponent extends Component{
 		
 	}
 	
-	
-	private void niceTraslation(Entity vehicle, Point2D destinationPoint) {
-		
-		ArrayList<Integer> xTranslations = new ArrayList<>();
-		ArrayList<Integer> yTranslations = new ArrayList<>();
-		
-		for(int i = (int) vehicle.getX(); i != (int) destinationPoint.getX()+vehicle.getX();) {
-			if(i < (int) destinationPoint.getX()+vehicle.getX()) {
-				xTranslations.add(i++);
-			} else if ((int) i > (int) destinationPoint.getX()+vehicle.getX()) {
-				xTranslations.add(i--);
-			}
-			System.out.println("neither "+i+":"+(int) destinationPoint.getX()+vehicle.getX());
-		}
-		
-		for(int i = (int) vehicle.getY(); (int) i != (int) destinationPoint.getY()+vehicle.getY();) {
-			if(i< (int) destinationPoint.getY()+vehicle.getY()) {
-				yTranslations.add(i);
-				i = i + 1;
-			} else if(i> (int) destinationPoint.getY()+vehicle.getY()) {
-				yTranslations.add(i);
-				i = i - 1;
-			}
-		}
-		
-		System.out.println("xCoords: "+xTranslations.toString()+" yCoords: "+yTranslations.toString()+" destX: "+ (int) destinationPoint.getX()+vehicle.getX()+" destY: "+ (int) destinationPoint.getY()+vehicle.getY());
-		
-		while (entity.getX() != destinationPoint.getX() && !xTranslations.isEmpty() && !yTranslations.isEmpty()) {
-			entity.translate(new Point2D(xTranslations.get(0), yTranslations.get(0)));
-			xTranslations.remove(0);
-			yTranslations.remove(0);
-		}
-		System.out.println("should be translated");
-	}
-
 	public Directions getDirection() { return this.d; }
 
 	public void setDirection(Directions d) { 
