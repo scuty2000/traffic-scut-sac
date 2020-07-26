@@ -12,6 +12,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxglgames.bomberman.components.PlayerComponent;
 
+import it.uniroma1.metodologie.trafficGame.components.PlayerAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.scene.paint.Color;
@@ -37,7 +38,7 @@ public class TrafficFactory implements EntityFactory{
 				.with("pointerX", 0)
 				.with("pointerY", 0)
 				.with(new PlayerComponent())
-				.view("pointer.png")
+				.with(new PlayerAnimationComponent())
 				.build();
 			return player1;
 		}
