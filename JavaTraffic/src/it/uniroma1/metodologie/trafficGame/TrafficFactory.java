@@ -57,7 +57,7 @@ public class TrafficFactory implements EntityFactory{
 	
 	private Entity build(SpawnData data, Vehicle v) {
 		//TODO a method that spawns cars, tirs and motorbikes based on the data passed (heigh, width, direction...)
-		HitBox h = new HitBox("eye", BoundingShape.box(v.getWidth() + 30, v.getHeigh()));
+		HitBox h = new HitBox("eye", BoundingShape.box(v.getWidth() + 30, v.getHeigh() + 100));
 		
 		return FXGL.entityBuilder(data)
 					.type(v)
