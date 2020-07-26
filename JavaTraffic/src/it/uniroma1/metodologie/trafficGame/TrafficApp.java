@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -193,9 +194,15 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				turnVehicle(v, i);
+//				Entity e = FXGL.entityBuilder()
+//						.bbox(v.getBoundingBoxComponent().hitBoxesProperty().stream().filter(x -> x.getName().equals("__VIEW__")).findFirst().orElse(v.getBoundingBoxComponent().hitBoxesProperty().get(0)))
+//						.build();
+//				System.out.println(e.getBoundingBoxComponent().hitBoxesProperty().get(0).getName());
+//				if(i.isColliding(e))
+					turnVehicle(v, i);
+				
 			}
-		});
+		});		
 		
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, EntityType.INCROCIO) {
 
@@ -204,6 +211,25 @@ public class TrafficApp extends GameApplication {
 				turnVehicle(v, i);
 			}
 		});
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, EntityType.SEMAFORO) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name()) && i.getComponent(TrafficLightAnimationComponent.class).isRed() && !v.isColliding(FXGL.getGameWorld()
+																									.getEntitiesByType(EntityType.INCROCIO)
+																									.stream()
+																									.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
+																									.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
+					v.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(!i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
+					v.getComponentOptional(VehicleComponent.class).get().accelerate();
+			}
+		});		
 	}
 	
 	private void turnVehicle(Entity v, Entity i) {

@@ -194,10 +194,13 @@ public class VehicleComponent extends Component{
 
 	public Vehicle getVehicle() { return v; }
 	
-	/* 
-	 * y = sqrt(r^2 - x^2)      semicircle's formula
-	 */
-	private double getPointOfRotation(double x) {
-		return Math.sqrt(Math.pow(turnRadius,2) - Math.pow(x, 2));
+	public boolean isTurning() { return turning; }
+	
+	public void slowDown() {
+		this.speed = 0;
+	}
+	
+	public void accelerate() {
+		this.speed = 5.0;
 	}
 }

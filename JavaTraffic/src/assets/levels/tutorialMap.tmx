@@ -34,31 +34,37 @@
  <objectgroup id="3" name="Semafori">
   <object id="2" type="semaforo" x="750" y="250" width="250" height="250">
    <properties>
+    <property name="direzione" value="DOWN"/>
     <property name="rotation" type="int" value="1"/>
    </properties>
   </object>
   <object id="3" type="semaforo" x="1250" y="750" width="250" height="250">
    <properties>
+    <property name="direzione" value="UP"/>
     <property name="rotation" type="int" value="3"/>
    </properties>
   </object>
   <object id="4" type="semaforo" x="1250" y="250" width="250" height="250">
    <properties>
+    <property name="direzione" value="LEFT"/>
     <property name="rotation" type="int" value="2"/>
    </properties>
   </object>
   <object id="5" type="semaforo" x="1750" y="750" width="250" height="250">
    <properties>
+    <property name="direzione" value="RIGHT"/>
     <property name="rotation" type="int" value="4"/>
    </properties>
   </object>
   <object id="6" type="semaforo" x="1750" y="250" width="250" height="250">
    <properties>
+    <property name="direzione" value="DOWN"/>
     <property name="rotation" type="int" value="1"/>
    </properties>
   </object>
   <object id="7" type="semaforo" x="2250" y="750" width="250" height="250">
    <properties>
+    <property name="direzione" value="UP"/>
     <property name="rotation" type="int" value="3"/>
    </properties>
   </object>
