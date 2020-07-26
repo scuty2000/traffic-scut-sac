@@ -37,7 +37,7 @@ public class TrafficFactory implements EntityFactory{
 				.with("pointerX", 0)
 				.with("pointerY", 0)
 				.with(new PlayerComponent())
-				.viewWithBBox(new Rectangle(250,250, Color.BLUE))
+				.view("pointer.png")
 				.opacity(0.4)
 				.build();
 			return player1;
