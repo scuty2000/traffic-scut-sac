@@ -83,7 +83,7 @@ public class VehicleComponent extends Component{
 		}
 	}
 	
-	private final static int SHORT_RADIUS = 90;
+	private final static int SHORT_RADIUS = 60;
 	private final static int LONG_RADIUS = 200;
 	private final static int DIV = 9;
 	private double mul;
@@ -95,56 +95,72 @@ public class VehicleComponent extends Component{
 			switch(this.d) {
 			case UP : 
 				if(d.equals(Directions.LEFT)) {
-					xMovement = -LONG_RADIUS/DIV;		//sub x, sub y
-					yMovement = -LONG_RADIUS/DIV;
+					xMovement = -LONG_RADIUS/DIV - 9;		//sub x, sub y
+					yMovement = -LONG_RADIUS/DIV - 25;
+					toAddX = 1;
+					toAddY = 2.777778;
 					mul = 0.5;
 					rot = -10;
 				}
 				else {
 					xMovement = SHORT_RADIUS/DIV;		//add x, sub y
-					yMovement = -SHORT_RADIUS/DIV;
+					yMovement = -SHORT_RADIUS/DIV - 9;
+					toAddX = 0;
+					toAddY = 1;
 					mul = 1;
-					rot = +10;
+					rot = +5;
 				}
 				break;
 			case DOWN : 
 				if(d.equals(Directions.LEFT)) {
 					xMovement = -SHORT_RADIUS/DIV;
-					yMovement = SHORT_RADIUS/DIV;
+					yMovement = SHORT_RADIUS/DIV + 9;
+					toAddX = 0;
+					toAddY = -1;
 					mul = 1;
-					rot = +10;
+					rot = +5;
 				}
 				else {
-					xMovement = LONG_RADIUS/DIV;
-					yMovement = LONG_RADIUS/DIV;
+					xMovement = LONG_RADIUS/DIV + 9;
+					yMovement = LONG_RADIUS/DIV + 25;
+					toAddX = -1;
+					toAddY = -2.777778;
 					mul = 0.5;
 					rot = -10;
 				}
 				break;
 			case RIGHT : 
 				if(d.equals(Directions.UP)) {
-					xMovement = LONG_RADIUS/DIV;
-					yMovement = -LONG_RADIUS/DIV;
+					xMovement = LONG_RADIUS/DIV + 25;
+					yMovement = -LONG_RADIUS/DIV + 9;
+					toAddX = -2.777778;
+					toAddY = -1;
 					mul = 0.5;
 					rot = -10;
 				}
 				else {
-					xMovement = SHORT_RADIUS/DIV;
+					xMovement = SHORT_RADIUS/DIV + 9;
 					yMovement = SHORT_RADIUS/DIV;
+					toAddX = -1;
+					toAddY = 0;
 					mul = 1;
-					rot = +10;
+					rot = +5;
 				}
 				break;
 			case LEFT : 
 				if(d.equals(Directions.UP)) {
-					xMovement = -SHORT_RADIUS/DIV;
+					xMovement = -SHORT_RADIUS/DIV - 9;
 					yMovement = -SHORT_RADIUS/DIV;
+					toAddX = 1;
+					toAddY = 0;
 					mul = 1;
-					rot = + 10;
+					rot = +5;
 				}
 				else {
-					xMovement = -LONG_RADIUS/DIV;
-					yMovement = LONG_RADIUS/DIV;
+					xMovement = -LONG_RADIUS/DIV - 25;
+					yMovement = LONG_RADIUS/DIV - 9;
+					toAddX = 2.777778;
+					toAddY = 1;
 					mul = 0.5;
 					rot = -10;
 				}
@@ -161,11 +177,17 @@ public class VehicleComponent extends Component{
 	private double xMovement;
 
 	private double yMovement;
+	
+	private double toAddX = 0;
+	
+	private double toAddY = 0;
 
 	private void turnAnimation() {
 
 		entity.rotateBy(rot*mul);
 		entity.translate(xMovement*mul, yMovement*mul);
+		xMovement += toAddX;
+		yMovement += toAddY;
 		//niceTraslation(entity, new Point2D(xMovement*mul, yMovement*mul));
 		
 		if(entity.getRotation()%90 == 0) {
