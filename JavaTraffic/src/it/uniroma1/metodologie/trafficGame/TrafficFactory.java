@@ -11,16 +11,12 @@ import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxglgames.bomberman.components.PlayerComponent;
-import javafx.geometry.Point2D;
-
 import it.uniroma1.metodologie.trafficGame.components.PlayerAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.scene.paint.Color;
 
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.shape.TriangleMesh;
 import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficFactory implements EntityFactory{
@@ -68,7 +64,7 @@ public class TrafficFactory implements EntityFactory{
 		
 		HitBox h = new HitBox("EYE", BoundingShape.box(v.getWidth(), v.getHeigh() + 100));
 		
-		HitBox frontHitBox = new HitBox("FRONT", BoundingShape.box(v.getWidth() + 20, v.getHeigh()));
+		HitBox frontHitBox = new HitBox("FRONT", BoundingShape.box(v.getWidth() + 30, v.getHeigh()+10));
 		
 		e.getBoundingBoxComponent().addHitBox(h);
 		e.getBoundingBoxComponent().addHitBox(frontHitBox);

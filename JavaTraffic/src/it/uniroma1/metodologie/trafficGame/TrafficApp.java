@@ -191,15 +191,24 @@ public class TrafficApp extends GameApplication {
 	@Override
 	protected void initPhysics() {
 		
+		/**
+		 * Qui inizia il proto-collision dei veicoli. Fa altamente cagare e mi sento male solo a leggerlo, poi funziona pure male.
+		 */
+		
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, Vehicle.CAR) {
 			
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				i.getComponent(VehicleComponent.class).slowDown();
+				if(i.getComponent(VehicleComponent.class).getSpeed() != 0) {
+					i.getComponent(VehicleComponent.class).slowDown();
+				} else {
+					v.getComponent(VehicleComponent.class).slowDown();
+				}
 			}
 			
 			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
+				a.getComponent(VehicleComponent.class).accelerate();
 				b.getComponent(VehicleComponent.class).accelerate();
 			}
 			
@@ -274,6 +283,10 @@ public class TrafficApp extends GameApplication {
 			}
 			
 		});
+		
+		/**
+		 *  Qui finisce lo scempio, mi dispiace se lo hai letto tutto. Scusa.
+		 */
 		
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, EntityType.INCROCIO) {
 
