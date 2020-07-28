@@ -7,10 +7,10 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
+import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
-import com.almasb.fxglgames.bomberman.components.PlayerComponent;
 import it.uniroma1.metodologie.trafficGame.components.PlayerAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
@@ -34,7 +34,6 @@ public class TrafficFactory implements EntityFactory{
 				.type(EntityType.PLAYER)
 				.with("pointerX", 0)
 				.with("pointerY", 0)
-				.with(new PlayerComponent())
 				.with(new PlayerAnimationComponent())
 				.build();
 			return player1;
@@ -45,7 +44,6 @@ public class TrafficFactory implements EntityFactory{
 			.at(data.getX(),data.getY())
 			.with("pointerX", 0)
 			.with("pointerY", 0)
-			.with(new PlayerComponent())
 			.viewWithBBox(new Rectangle(250,250, Color.RED))
 			.build();
 		return player2;
