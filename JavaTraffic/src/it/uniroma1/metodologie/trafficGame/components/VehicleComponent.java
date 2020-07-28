@@ -30,6 +30,8 @@ public class VehicleComponent extends Component{
 	private LocalTimer shootTimer;
 
 	private double gapBetweenMove = 0.01;
+	
+	private LocalTimer accSlow;
 
 	Directions d;
 
@@ -43,6 +45,8 @@ public class VehicleComponent extends Component{
 		shootTimer = FXGL.newLocalTimer();
 		shootTimer.capture();
 		turnRadius = 0;
+		accSlow = FXGL.newLocalTimer();
+		accSlow.capture();
 	}
 
 
@@ -190,11 +194,18 @@ public class VehicleComponent extends Component{
 	public boolean isTurning() { return turning; }
 	
 	public void slowDown() {
-		this.speed = 0;
+		if(this.speed > 0 && accSlow.elapsed(Duration.seconds(0.1))) {
+			this.speed--;
+			accSlow.capture();
+		}
 	}
 	
 	public void accelerate() {
-		this.speed = 5.0;
+		
+		if(this.speed < 5 && accSlow.elapsed(Duration.seconds(0.1))) {
+			this.speed++;
+			accSlow.capture();
+		}
 	}
 	
 	public double getSpeed() {

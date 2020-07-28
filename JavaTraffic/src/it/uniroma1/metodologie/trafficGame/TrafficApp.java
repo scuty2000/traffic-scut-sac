@@ -207,6 +207,14 @@ public class TrafficApp extends GameApplication {
 			}
 			
 			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
+					v.getComponent(VehicleComponent.class).accelerate();
+				else
+					v.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
 				a.getComponent(VehicleComponent.class).accelerate();
 				b.getComponent(VehicleComponent.class).accelerate();
@@ -219,6 +227,14 @@ public class TrafficApp extends GameApplication {
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
+					v.getComponent(VehicleComponent.class).accelerate();
+				else
+					v.getComponent(VehicleComponent.class).slowDown();
 			}
 			
 			@Override
@@ -236,6 +252,14 @@ public class TrafficApp extends GameApplication {
 			}
 			
 			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
+					v.getComponent(VehicleComponent.class).accelerate();
+				else
+					v.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
 				b.getComponent(VehicleComponent.class).accelerate();
 			}
@@ -247,6 +271,14 @@ public class TrafficApp extends GameApplication {
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
+					v.getComponent(VehicleComponent.class).accelerate();
+				else
+					v.getComponent(VehicleComponent.class).slowDown();
 			}
 			
 			@Override
@@ -264,6 +296,14 @@ public class TrafficApp extends GameApplication {
 			}
 			
 			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
+					v.getComponent(VehicleComponent.class).accelerate();
+				else
+					v.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
 				b.getComponent(VehicleComponent.class).accelerate();
 			}
@@ -275,6 +315,14 @@ public class TrafficApp extends GameApplication {
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				i.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
+					v.getComponent(VehicleComponent.class).accelerate();
+				else
+					v.getComponent(VehicleComponent.class).slowDown();
 			}
 			
 			@Override
@@ -324,10 +372,61 @@ public class TrafficApp extends GameApplication {
 			
 			@Override
 			protected void onCollision(Entity v, Entity i) {
-				if(!i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
+				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
+				if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
+					v.getComponentOptional(VehicleComponent.class).get().slowDown();
+				else
 					v.getComponentOptional(VehicleComponent.class).get().accelerate();
+				}
 			}
-		});		
+		});	
+		
+		
+FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, EntityType.SEMAFORO) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name()) && i.getComponent(TrafficLightAnimationComponent.class).isRed() && !v.isColliding(FXGL.getGameWorld()
+																									.getEntitiesByType(EntityType.INCROCIO)
+																									.stream()
+																									.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
+																									.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
+					v.getComponent(VehicleComponent.class).slowDown();
+			}
+			
+			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
+				if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
+					v.getComponentOptional(VehicleComponent.class).get().slowDown();
+				else
+					v.getComponentOptional(VehicleComponent.class).get().accelerate();
+				}
+			}
+		});	
+
+FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.TIR, EntityType.SEMAFORO) {
+	
+	@Override
+	protected void onCollisionBegin(Entity v, Entity i) {
+		if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name()) && i.getComponent(TrafficLightAnimationComponent.class).isRed() && !v.isColliding(FXGL.getGameWorld()
+																							.getEntitiesByType(EntityType.INCROCIO)
+																							.stream()
+																							.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
+																							.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
+			v.getComponent(VehicleComponent.class).slowDown();
+	}
+	
+	@Override
+	protected void onCollision(Entity v, Entity i) {
+		if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
+		if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
+			v.getComponentOptional(VehicleComponent.class).get().slowDown();
+		else
+			v.getComponentOptional(VehicleComponent.class).get().accelerate();
+		}
+	}
+});	
 	}
 	
 	@Override
