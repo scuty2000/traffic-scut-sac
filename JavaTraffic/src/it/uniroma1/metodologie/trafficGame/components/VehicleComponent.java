@@ -1,7 +1,9 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
@@ -12,14 +14,12 @@ import it.uniroma1.metodologie.trafficGame.Directions;
 import it.uniroma1.metodologie.trafficGame.Vehicle;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.shape.QuadCurve;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
-
-/**
- * TODO this class will contain the methods that defines the behavior of the vehicles (speed, decisions, etc...)
- * @author Andrea
- *
- */
 
 public class VehicleComponent extends Component{
 	/*
@@ -42,6 +42,16 @@ public class VehicleComponent extends Component{
 	private Directions d;
 
 	private List<Entity> pathList;
+	
+	private Point2D startPoint;
+	
+	private Point2D endPoint;
+	
+	private Point2D rotationCenter;
+	
+	private double radius;
+	
+	private double xIncrement;
 
 	public VehicleComponent(Vehicle v, Directions d, List<Entity> pathList) {
 		this.v = v;
@@ -98,88 +108,118 @@ public class VehicleComponent extends Component{
 
 	private void turn(Directions d) {
 		if(!(d.equals(this.d) || d.isOpposite(this.d))) {  //checks if the new direction is different from the old one
-			turnRadius = 0;
+			this.startPoint = new Point2D(entity.getX(), entity.getY());
+//			System.out.println(pathList.size());
+//			this.endPoint = new Point2D(pathList.get(0).getX(), pathList.get(0).getY());
+			Entity nearestIncrocio = FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO).stream().sorted((x, y) -> (int)(x.distance(entity)-y.distance(entity))).collect(Collectors.toList()).get(0);
 			switch(this.d) {
 			case UP : 
 				if(d.equals(Directions.LEFT)) {
-					xMovement = -LONG_RADIUS/DIV - 9;		//sub x, sub y
-					yMovement = -LONG_RADIUS/DIV - 25;
-					toAddX = 1;
-					toAddY = 2.777778;
+					
+					this.xIncrement = -10;
+					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
+					
+//					xMovement = -LONG_RADIUS/DIV - 9;		//sub x, sub y
+//					yMovement = -LONG_RADIUS/DIV - 25;
+//					toAddX = 1;
+//					toAddY = 2.777778;
 					mul = 0.5;
 					rot = -10;
-				}
-				else {
-					xMovement = SHORT_RADIUS/DIV;		//add x, sub y
-					yMovement = -SHORT_RADIUS/DIV - 9;
-					toAddX = 0;
-					toAddY = 1;
+				} else {
+					
+					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
+					this.xIncrement = 10;
+					
+//					xMovement = SHORT_RADIUS/DIV;		//add x, sub y
+//					yMovement = -SHORT_RADIUS/DIV - 9;
+//					toAddX = 0;
+//					toAddY = 1;
 					mul = 1;
 					rot = +10;
 				}
 				break;
 			case DOWN : 
 				if(d.equals(Directions.LEFT)) {
-					xMovement = -SHORT_RADIUS/DIV;
-					yMovement = SHORT_RADIUS/DIV + 9;
-					toAddX = 0;
-					toAddY = -1;
+					
+					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY());
+					this.xIncrement = -10;
+					
+//					xMovement = -SHORT_RADIUS/DIV;
+//					yMovement = SHORT_RADIUS/DIV + 9;
+//					toAddX = 0;
+//					toAddY = -1;
 					mul = 1;
 					rot = +10;
-				}
-				else {
-					xMovement = LONG_RADIUS/DIV + 9;
-					yMovement = LONG_RADIUS/DIV + 25;
-					toAddX = -1;
-					toAddY = -2.777778;
+				} else {
+					
+					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY());
+					this.xIncrement = 10;
+					
+//					xMovement = LONG_RADIUS/DIV + 9;
+//					yMovement = LONG_RADIUS/DIV + 25;
+//					toAddX = -1;
+//					toAddY = -2.777778;
 					mul = 0.5;
 					rot = -10;
 				}
 				break;
 			case RIGHT : 
 				if(d.equals(Directions.UP)) {
-					xMovement = LONG_RADIUS/DIV + 25;
-					yMovement = -LONG_RADIUS/DIV + 9;
-					toAddX = -2.777778;
-					toAddY = -1;
+					
+					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY());
+					this.xIncrement = 10;
+					
+//					xMovement = LONG_RADIUS/DIV + 25;
+//					yMovement = -LONG_RADIUS/DIV + 9;
+//					toAddX = -2.777778;
+//					toAddY = -1;
 					mul = 0.5;
 					rot = -10;
-				}
-				else {
-					xMovement = SHORT_RADIUS/DIV + 9;
-					yMovement = SHORT_RADIUS/DIV;
-					toAddX = -1;
-					toAddY = 0;
+				} else {
+					
+					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
+					this.xIncrement = 10;
+					
+//					xMovement = SHORT_RADIUS/DIV + 9;
+//					yMovement = SHORT_RADIUS/DIV;
+//					toAddX = -1;
+//					toAddY = 0;
 					mul = 1;
 					rot = +10;
 				}
 				break;
 			case LEFT : 
 				if(d.equals(Directions.UP)) {
-					xMovement = -SHORT_RADIUS/DIV - 9;
-					yMovement = -SHORT_RADIUS/DIV;
-					toAddX = 1;
-					toAddY = 0;
+					
+					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY());
+					this.xIncrement = -10;
+					
+//					xMovement = -SHORT_RADIUS/DIV - 9;
+//					yMovement = -SHORT_RADIUS/DIV;
+//					toAddX = 1;
+//					toAddY = 0;
 					mul = 1;
 					rot = +10;
-				}
-				else {
-					xMovement = -LONG_RADIUS/DIV - 25;
-					yMovement = LONG_RADIUS/DIV - 9;
-					toAddX = 2.777778;
-					toAddY = 1;
+				} else {
+					
+					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
+					this.xIncrement = -10;
+					
+//					xMovement = -LONG_RADIUS/DIV - 25;
+//					yMovement = LONG_RADIUS/DIV - 9;
+//					toAddX = 2.777778;
+//					toAddY = 1;
 					mul = 0.5;
 					rot = -10;
 				}
 				break;
 			};
+			this.radius = this.rotationCenter.distance(entity.getPosition());
 			this.d = d;
 			this.turning = true;
 			gapBetweenMove = 0.05;
 		}
 	}
-
-	private double turnRadius; //the radius of the circumference that the vehicle has to follow in order to turn
 
 	private double xMovement;
 
@@ -192,7 +232,8 @@ public class VehicleComponent extends Component{
 	private void turnAnimation() {
 
 		entity.rotateBy(rot*mul);
-		entity.translate(xMovement*mul, yMovement*mul);
+//		entity.translate(xMovement*mul, yMovement*mul);
+		entity.translate(generateNextPoint());
 		xMovement += toAddX;
 		yMovement += toAddY;
 		//niceTraslation(entity, new Point2D(xMovement*mul, yMovement*mul));
@@ -201,15 +242,40 @@ public class VehicleComponent extends Component{
 			turning = false;
 			gapBetweenMove = 0.01;
 		}
-
+		
+//		Point2D startPoint = null;
+//		Point2D controlPoint = null;
+//		Point2D endPoint = null;
+//		QuadCurve qC = null;
+//		
+//		Entity nextPath = pathList.get(0);
+//		
+//		if(currentPath != null) {
+//			if(currentPath.getPropertyOptional("direzione").orElse("RIGHT").equals("UP") || currentPath.getPropertyOptional("direzione").orElse("RIGHT").equals("DOWN")) {
+//				startPoint = new Point2D(currentPath.getX(), currentPath.getBottomY());
+//				if(currentPath.getProperties().getString("direzione").equals("UP"))
+//					startPoint = new Point2D(startPoint.getX(), startPoint.getY()+currentPath.getHeight());
+//				controlPoint = new Point2D(currentPath.getX(), nextPath.getY());
+//				endPoint = new Point2D(nextPath.getX(), nextPath.getY());
+//			}
+//		}
+		
+	}
+	
+	private Point2D generateNextPoint() {
+		double relativeX = entity.getX() + this.xIncrement - this.rotationCenter.getX();
+		System.out.println(relativeX);
+		double relativeY = Math.sqrt(Math.pow(this.radius, 2) - Math.pow(relativeX,2));
+		
+		System.out.println(relativeX+" "+relativeY+" "+radius);                                  
+		
+		return new Point2D(relativeX, relativeY);
 	}
 
 	public Directions getDirection() { return this.d; }
 
-	public void nextPath() { 
-		currentPath = pathList.get(0);
-		//System.out.println(currentPath);
-		pathList.remove(0);
+	public void nextPath() {
+		currentPath = pathList.remove(0);
 		turn(Directions.valueOf((String) currentPath.getPropertyOptional("direzione").orElse("DOWN")));
 	}
 
