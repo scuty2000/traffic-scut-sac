@@ -1,9 +1,12 @@
 package it.uniroma1.metodologie.trafficGame;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
@@ -28,13 +31,13 @@ import javafx.scene.input.KeyCode;
 import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficApp extends GameApplication {
-	
+
 	private ArrayList<Entity> incroci;
 
 	@Override
 	protected void initSettings(GameSettings settings) {
 		settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
-		settings.setVersion("Alpha 0.0"); // To update periodically
+		settings.setVersion("Alpha 1.0"); // To update periodically
 		settings.setTitle("  Traffic  ");
 		settings.setWidth(2500);
 		settings.setHeight(2500);
@@ -46,15 +49,15 @@ public class TrafficApp extends GameApplication {
 	private Entity player1;
 	//private Entity player2;
 
-	private String map = "tutorialMap.tmx";
+	private String map = "map-v2.tmx";
 
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
 
 	@Override
 	protected void initGame() {
-		
+
 		GameWorld gw = FXGL.getGameWorld();
-		
+
 		gw.addEntityFactory(new TrafficFactory());
 
 		FXGL.setLevelFromMap(map);
@@ -66,18 +69,21 @@ public class TrafficApp extends GameApplication {
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 
 		//FXGL.spawn("vehicle", vdata);
-
+		
+		getPathTree();
+		
 		matrixIncroci = parseIncroci();		//gets the grid of the semafori
 
 		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
-		
+
 		incroci = (ArrayList<Entity>) gw.getEntitiesByType(EntityType.INCROCIO);
-		
+
 		for (Entity semaforo : FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO)) {
 			if((semaforo.getProperties().getInt("rotation") == 1 || semaforo.getProperties().getInt("rotation") == 3))
 				semaforo.getComponent(TrafficLightAnimationComponent.class).switchLight();
 		}
 		
+
 	}
 
 	private HashMap<Integer, ArrayList<Entity>> parseIncroci() {
@@ -110,15 +116,15 @@ public class TrafficApp extends GameApplication {
 			@Override
 			protected void onActionBegin() {
 				ArrayList<Entity> semaforiAdiacenti = (ArrayList<Entity>) FXGL.getGameWorld()
-																		.getEntitiesByType(EntityType.SEMAFORO)
-																		.stream()
-																		.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354)
-																		.collect(Collectors.toList());
-				
+						.getEntitiesByType(EntityType.SEMAFORO)
+						.stream()
+						.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354)
+						.collect(Collectors.toList());
+
 				for (Entity entity : semaforiAdiacenti) {
 					entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
 				}
-				
+
 			}
 		}, KeyCode.F);
 
@@ -157,6 +163,8 @@ public class TrafficApp extends GameApplication {
 				Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
 
 				SpawnData vdata = new SpawnData(e.getPosition());
+				
+				vdata.put("pathList", pathChooser(e));
 
 				vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 
@@ -187,280 +195,155 @@ public class TrafficApp extends GameApplication {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	
+	private Entity findCarBehind(Entity e1, Entity e2) {
+			Directions direction = e1.getComponent(VehicleComponent.class).getDirection();
+			if(!direction.equals(e2.getComponent(VehicleComponent.class).getDirection()))
+				return null;
+			if(direction.equals(Directions.UP)) return e1.getY() > e2.getY() ? e1 : e2;
+			else if(direction.equals(Directions.DOWN)) return e1.getY() > e2 .getY() ? e2 : e1;
+			else if(direction.equals(Directions.LEFT)) return e1.getX() > e2 .getX() ? e1 : e2;
+			else return e1.getX() > e2 .getX() ? e2 : e1;
+			
+		}
 
 	@Override
 	protected void initPhysics() {
 		
+		
+
 		/**
 		 * Qui inizia il proto-collision dei veicoli. Fa altamente cagare e mi sento male solo a leggerlo, poi funziona pure male.
 		 */
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, Vehicle.CAR) {
+
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.VEHICLE) {
 			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity i) {
-				if(i.getComponent(VehicleComponent.class).getSpeed() != 0) {
-					i.getComponent(VehicleComponent.class).slowDown();
-				} else {
-					v.getComponent(VehicleComponent.class).slowDown();
-				}
-			}
-			
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
-					v.getComponent(VehicleComponent.class).accelerate();
-				else
-					v.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollisionEnd(Entity a, Entity b) {
-				a.getComponent(VehicleComponent.class).accelerate();
-				b.getComponent(VehicleComponent.class).accelerate();
-			}
-			
-		});
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, Vehicle.MOTORBIKE) {
-			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity i) {
-				i.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
-					v.getComponent(VehicleComponent.class).accelerate();
-				else
-					v.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollisionEnd(Entity a, Entity b) {
-				b.getComponent(VehicleComponent.class).accelerate();
-			}
-			
-		});
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, Vehicle.TIR) {
-			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity i) {
-				i.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
-					v.getComponent(VehicleComponent.class).accelerate();
-				else
-					v.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollisionEnd(Entity a, Entity b) {
-				b.getComponent(VehicleComponent.class).accelerate();
-			}
-			
-		});
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, Vehicle.TIR) {
-			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity i) {
-				i.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
-					v.getComponent(VehicleComponent.class).accelerate();
-				else
-					v.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollisionEnd(Entity a, Entity b) {
-				b.getComponent(VehicleComponent.class).accelerate();
-			}
-			
-		});
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.TIR, Vehicle.TIR) {
-			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity i) {
-				i.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
-					v.getComponent(VehicleComponent.class).accelerate();
-				else
-					v.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollisionEnd(Entity a, Entity b) {
-				b.getComponent(VehicleComponent.class).accelerate();
-			}
-			
-		});
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, Vehicle.MOTORBIKE) {
-			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity i) {
-				i.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getComponent(VehicleComponent.class).getSpeed() > v.getComponent(VehicleComponent.class).getSpeed())
-					v.getComponent(VehicleComponent.class).accelerate();
-				else
-					v.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollisionEnd(Entity a, Entity b) {
-				b.getComponent(VehicleComponent.class).accelerate();
-			}
-			
-		});
-		
-		/**
-		 *  Qui finisce lo scempio, mi dispiace se lo hai letto tutto. Scusa.
-		 */
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, EntityType.INCROCIO) {
+			Entity carBehind;
+			Entity carInFront;
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-//				Entity e = FXGL.entityBuilder()
-//						.bbox(v.getBoundingBoxComponent().hitBoxesProperty().stream().filter(x -> x.getName().equals("__VIEW__")).findFirst().orElse(v.getBoundingBoxComponent().hitBoxesProperty().get(0)))
-//						.build();
-//				System.out.println(e.getBoundingBoxComponent().hitBoxesProperty().get(0).getName());
-//				if(i.isColliding(e))
+				carBehind = findCarBehind(v, i);
+				carInFront = carBehind == v ? i : v;
+				if(carBehind != null)
+					carBehind.getComponent(VehicleComponent.class).slowDown();
+			}
+
+			@Override
+			protected void onCollision(Entity v, Entity i) {
+				carBehind = findCarBehind(v, i);
+				if(carBehind != null)
+					carBehind.getComponent(VehicleComponent.class).slowDown();
+			}
+
+			@Override
+			protected void onCollisionEnd(Entity a, Entity b) {
+				if(carBehind != null)
+					carBehind.getComponent(VehicleComponent.class).accelerate();
+			}
+
+		});
+
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.INCROCIO) {
+
+			@Override
+			protected void onCollisionBegin(Entity v, Entity i) {
+				//				Entity e = FXGL.entityBuilder()
+				//						.bbox(v.getBoundingBoxComponent().hitBoxesProperty().stream().filter(x -> x.getName().equals("__VIEW__")).findFirst().orElse(v.getBoundingBoxComponent().hitBoxesProperty().get(0)))
+				//						.build();
+				//				System.out.println(e.getBoundingBoxComponent().hitBoxesProperty().get(0).getName());
+				//				if(i.isColliding(e))
+				if(v.getComponent(VehicleComponent.class).getVehicle().canTurn())
 					turnVehicle(v, i);
-				
+
 			}
 		});		
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, EntityType.INCROCIO) {
+
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.SEMAFORO) {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				turnVehicle(v, i);
-			}
-		});
-		
-		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.CAR, EntityType.SEMAFORO) {
-			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity i) {
 				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name()) && i.getComponent(TrafficLightAnimationComponent.class).isRed() && !v.isColliding(FXGL.getGameWorld()
-																									.getEntitiesByType(EntityType.INCROCIO)
-																									.stream()
-																									.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
-																									.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
+						.getEntitiesByType(EntityType.INCROCIO)
+						.stream()
+						.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
+						.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
 					v.getComponent(VehicleComponent.class).slowDown();
 			}
-			
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
-				if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
-					v.getComponentOptional(VehicleComponent.class).get().slowDown();
-				else
-					v.getComponentOptional(VehicleComponent.class).get().accelerate();
-				}
-			}
-		});	
-		
-		
-FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.MOTORBIKE, EntityType.SEMAFORO) {
-			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity i) {
-				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name()) && i.getComponent(TrafficLightAnimationComponent.class).isRed() && !v.isColliding(FXGL.getGameWorld()
-																									.getEntitiesByType(EntityType.INCROCIO)
-																									.stream()
-																									.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
-																									.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
-					v.getComponent(VehicleComponent.class).slowDown();
-			}
-			
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
-				if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
-					v.getComponentOptional(VehicleComponent.class).get().slowDown();
-				else
-					v.getComponentOptional(VehicleComponent.class).get().accelerate();
-				}
-			}
-		});	
 
-FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(Vehicle.TIR, EntityType.SEMAFORO) {
-	
-	@Override
-	protected void onCollisionBegin(Entity v, Entity i) {
-		if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name()) && i.getComponent(TrafficLightAnimationComponent.class).isRed() && !v.isColliding(FXGL.getGameWorld()
-																							.getEntitiesByType(EntityType.INCROCIO)
-																							.stream()
-																							.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
-																							.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
-			v.getComponent(VehicleComponent.class).slowDown();
+			@Override
+			protected void onCollision(Entity v, Entity i) {
+				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
+					if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
+						v.getComponentOptional(VehicleComponent.class).get().slowDown();
+					else
+						v.getComponentOptional(VehicleComponent.class).get().accelerate();
+				}
+			}
+		});	
 	}
-	
-	@Override
-	protected void onCollision(Entity v, Entity i) {
-		if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
-		if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
-			v.getComponentOptional(VehicleComponent.class).get().slowDown();
-		else
-			v.getComponentOptional(VehicleComponent.class).get().accelerate();
-		}
-	}
-});	
-	}
-	
+
 	@Override
 	protected void onUpdate(double tpf) {
-		if(new Random().nextInt(10000) < 100) {
-			Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
+//		if(new Random().nextInt(10000) < 100) {
+//			Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
+//
+//			SpawnData vdata = new SpawnData(e.getPosition());
+//
+//			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
+//
+//			FXGL.getGameWorld().spawn("vehicle", vdata);
+//		}
+	}
 
-			SpawnData vdata = new SpawnData(e.getPosition());
+	private void turnVehicle(Entity v, Entity i) {
+		v.getComponent(VehicleComponent.class).nextPath();
+	}
 
-			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
+	HashMap<Entity,List<Entity>> pathMap;
 
-			FXGL.getGameWorld().spawn("vehicle", vdata);
+	private HashMap<Entity, List<Entity>> getPathTree() {
+		if(pathMap == null) {
+			pathMap = new HashMap<>();
+			List<Entity> pathList = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH);
+			pathList.sort(Comparator.comparing(x -> ((Entity)x).getY()));
+			//pathList.forEach(x -> System.out.println(x.getProperties()));
+			pathList.forEach(x -> pathMap.put(x, getPathDirections(x)));
 		}
+		return pathMap;
+	}
+
+	private List<Entity> getPathDirections(Entity e){
+		return Arrays.stream(((String) e.getPropertyOptional("paths").orElse("")).split(","))
+				.filter(s -> s.length() > 0)
+				.map(x -> findPath(x))
+				.collect(Collectors.toList());
 	}
 	
-	private void turnVehicle(Entity v, Entity i) {
-		VehicleComponent vcomp = v.getComponentOptional(VehicleComponent.class).orElse(null);
-		if(vcomp.getVehicle().canTurn()) {
-
-			Optional<String> o = i.getPropertyOptional("direzione");
-			if(o.isEmpty()) {		//if the direction property is empty the incrocio has to be a incrocio4
-				int x = new Random().nextInt(4);
-				if(!(Directions.values()[x].equals(vcomp.getDirection()) || Directions.values()[x].isOpposite(vcomp.getDirection())))
-					vcomp.setDirection(Directions.values()[x]);
-			}
-			else {
-				Directions d = Directions.valueOf((String) o.orElse(null));	//d is the direction that can not be used
-				Predicate<Directions> p = vcomp.getDirection().isOpposite(d) ? dir -> dir.isOpposite(d) || dir.equals(d) : dir -> dir.equals(d);
-				int x = new Random().nextInt(4);
-				while(p.test(Directions.values()[x])) {
-					x = new Random().nextInt(4);
-				}
-				vcomp.setDirection(Directions.values()[x]);
-			}
-		}
+	private Entity findPath(String x) {
+		return FXGL.getGameWorld().getEntityByID("path", Integer.parseInt(x)).orElse(null);
 	}
+	
+	public List<Entity> pathChooser(Entity spawn){
+		LinkedList<Entity> paths = new LinkedList<>();
+		
+		Entity root = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH).stream().filter(x -> spawn.isColliding(x)).findFirst().get();
+		
+		paths.add(root);
+		
+		while(((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(",").length > 1) {
+			paths.add(nextPathFinder((String) root.getPropertyOptional("direzione").get(), ((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(",")));
+		}
+		
+		return paths;
+	}
+	
+	private Entity nextPathFinder(String current, String[] strings) {
+		//lista dei possibili path
+		List<Entity> l = Arrays.stream(strings).map(x -> findPath(x)).filter(x -> x != null).collect(Collectors.toList());
+		Random r = new Random();
+		if(l.isEmpty()) return null;
+		return l.get(r.nextInt(l.size()));
+	}
+	
 }

@@ -2,7 +2,9 @@ package it.uniroma1.metodologie.trafficGame;
 
 import java.util.Random;
 
+import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.dsl.FXGLForKtKt;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
@@ -11,11 +13,14 @@ import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
+import com.almasb.fxgl.ui.FXGLCheckBox;
+
 import it.uniroma1.metodologie.trafficGame.components.PlayerAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
-
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import tutorial.AndreaGameApp.EntityType;
 
@@ -52,20 +57,20 @@ public class TrafficFactory implements EntityFactory{
 	private Entity build(SpawnData data, Vehicle v) {
 		//TODO a method that spawns cars, tirs and motorbikes based on the data passed (heigh, width, direction...)
 		Entity e = FXGL.entityBuilder(data)
-					.type(v)
+					.type(EntityType.VEHICLE)
 					.collidable()
-					.with(new VehicleComponent(v,data.<Directions>get("direction")))
+					.with(new VehicleComponent(v,data.<Directions>get("direction"), data.get("pathList")))
 					.viewWithBBox(v.getShape())
 					//.atAnchored(new Point2D(1000,1000), new Point2D(1000,1000))//new Point2D(data.getX() + v.getWidth()/2, data.getY() + v.getHeigh()/2), new Point2D(data.getX() + v.getWidth()/2, data.getY() + v.getHeigh()/2))
 					.rotate(data.<Directions>get("direction").getStartingRotation())
 					.build();
 		
-		HitBox h = new HitBox("EYE", BoundingShape.box(v.getWidth(), v.getHeigh() + 100));
+		HitBox h = new HitBox("EYE", BoundingShape.box(v.getWidth() + 10, v.getHeigh()));
 		
-		HitBox frontHitBox = new HitBox("FRONT", BoundingShape.box(v.getWidth() + 30, v.getHeigh()+10));
+		//HitBox frontHitBox = new HitBox("FRONT", BoundingShape.box(v.getWidth() + 30, v.getHeigh()+10));
 		
-		e.getBoundingBoxComponent().addHitBox(h);
-		e.getBoundingBoxComponent().addHitBox(frontHitBox);
+		//e.getBoundingBoxComponent().addHitBox(h);
+		//e.getBoundingBoxComponent().addHitBox(frontHitBox);
 		return e;
 	}
 	
@@ -85,7 +90,7 @@ public class TrafficFactory implements EntityFactory{
 			vehicle = build(data, Vehicle.MOTORBIKE);
 		else
 			vehicle = build(data, Vehicle.TIR);
-		Rectangle s = (Rectangle) ((Vehicle) vehicle.getType()).getShape();
+			Rectangle s = (Rectangle) vehicle.getComponent(VehicleComponent.class).getVehicle().getShape();
 		vehicle.setAnchoredPosition(vehicle.getPosition().subtract(s.getWidth()/2, s.getHeight()/2 ));
 		return vehicle;
 	}
@@ -130,7 +135,22 @@ public class TrafficFactory implements EntityFactory{
 	public Entity getSpawn(SpawnData data) {
 		return FXGL.entityBuilder(data)
 				.type(EntityType.SPAWN)
+				.bbox(new HitBox(BoundingShape.box(0, 0)))
+				.collidable()
+				.build();
+	}
+	
+	@Spawns("path")
+	public Entity getPath(SpawnData data) {
+		return FXGL.entityBuilder(data)
+					.type(EntityType.PATH)
+					.with(new CollidableComponent(true))
+					.opacity(0.3)
+					.viewWithBBox(new Rectangle((int)data.get("width") == 0 ? 4 : (int)data.get("width"), (int)data.get("height") == 0 ? 4 : (int)data.get("height")))
+					//.bbox(new HitBox(BoundingShape.chain(new Point2D((float)data.getX(),(float)data.getY()), new Point2D(data.getX() + (int)data.get("width"),data.getY() + (int)data.get("height")))))
+					//.with("direzione", data.get("direzione"))
 					.build();
+					
 	}
 
 }

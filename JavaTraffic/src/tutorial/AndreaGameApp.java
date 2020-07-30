@@ -22,7 +22,7 @@ import javafx.geometry.Point2D;
 public class AndreaGameApp extends GameApplication{
 
 	public enum EntityType{
-		PLAYER,COIN,WALL,SEMAFORO,INCROCIO,SPAWN,VEHICLE
+		PLAYER,COIN,WALL,SEMAFORO,INCROCIO,SPAWN,VEHICLE,PATH
 	}
 
 	/*

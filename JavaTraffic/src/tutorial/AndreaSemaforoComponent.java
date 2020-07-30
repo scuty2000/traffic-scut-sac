@@ -6,6 +6,7 @@ import com.almasb.fxgl.entity.component.Component;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 public class AndreaSemaforoComponent extends Component {
 		
@@ -14,8 +15,8 @@ public class AndreaSemaforoComponent extends Component {
 	private AnimationChannel red,green,current;
 	
 	public AndreaSemaforoComponent() {
-		red = new AnimationChannel(new Image("assets\\semaforoRosso-01.png"),1,250,250,javafx.util.Duration.seconds(1),1,1);
-		green = new AnimationChannel(new Image("assets\\semaforoVerde-01.png"),1,250,250,javafx.util.Duration.seconds(1),1,1);
+		red = new AnimationChannel(new Image("assets\\semaforoRosso-01.png"),1,250,250,Duration.seconds(1),1,1);
+		green = new AnimationChannel(new Image("assets\\semaforoVerde-01.png"),1,250,250,Duration.seconds(1),1,1);
 		texture = new AnimatedTexture(red);
 		current = red;
 	}

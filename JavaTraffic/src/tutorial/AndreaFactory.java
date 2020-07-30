@@ -30,7 +30,6 @@ public class AndreaFactory implements EntityFactory{
 					.type(EntityType.PLAYER)
 					.at(100, 100)
 					.with(new AndreaSemaforoComponent())
-					.viewWithBBox("brick.png")
 					.with(new CollidableComponent(true))
 					.build();
 		return player;
