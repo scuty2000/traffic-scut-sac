@@ -28,7 +28,7 @@ public enum Vehicle {
 		this.heigh = heigh;
 	}
 	
-	public Shape getShape() { return new Rectangle(width, heigh, Color.LAWNGREEN); }
+	public Shape getShape() { return new Rectangle(width, heigh, Color.rgb(255, 229, 94)); }
 	
 	public int getWidth() { return width; }
 	public int getHeigh() { return heigh; }

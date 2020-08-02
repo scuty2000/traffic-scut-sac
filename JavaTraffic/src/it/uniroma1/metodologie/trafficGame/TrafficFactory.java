@@ -65,11 +65,11 @@ public class TrafficFactory implements EntityFactory{
 					.rotate(data.<Directions>get("direction").getStartingRotation())
 					.build();
 		
-		HitBox h = new HitBox("EYE", BoundingShape.box(v.getWidth() + 10, v.getHeigh()));
+		HitBox h = new HitBox("EYE", BoundingShape.box(v.getWidth() + 20, v.getHeigh()));
 		
 		//HitBox frontHitBox = new HitBox("FRONT", BoundingShape.box(v.getWidth() + 30, v.getHeigh()+10));
 		
-		//e.getBoundingBoxComponent().addHitBox(h);
+		e.getBoundingBoxComponent().addHitBox(h);
 		//e.getBoundingBoxComponent().addHitBox(frontHitBox);
 		return e;
 	}
@@ -109,7 +109,27 @@ public class TrafficFactory implements EntityFactory{
 		
 		e.setProperty("direction", Directions.getDirectionFromRotation(i));
 		
+		Point2D p = getPoint(i);
+		p.add(data.getX(), data.getY());
+		
+		HitBox h = new HitBox(p, BoundingShape.box(70, 70));
+
+		e.getBoundingBoxComponent().addHitBox(h);
+		
 		return e;
+	}
+	
+	private Point2D getPoint(int i) {
+		switch(i) {
+		case 1:
+			return new Point2D(250,180);
+		case 2:
+			return new Point2D(0,250);
+		case 3:
+			return new Point2D(-70, 0);
+		default:
+			return new Point2D(180, -70);
+		}
 	}
 	
 	@Spawns("incrocioA4")

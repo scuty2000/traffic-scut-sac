@@ -1,5 +1,6 @@
 package it.uniroma1.metodologie.trafficGame;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -23,11 +24,13 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.time.LocalTimer;
 import com.sun.javafx.geom.Point2D;
 
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficApp extends GameApplication {
@@ -238,8 +241,11 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
-				if(carBehind != null)
+				carBehind = findCarBehind(a, b);
+				if(carBehind != null) {
 					carBehind.getComponent(VehicleComponent.class).accelerate();
+					carBehind.getComponent(VehicleComponent.class).moveForward();
+				}
 			}
 
 		});
@@ -255,7 +261,6 @@ public class TrafficApp extends GameApplication {
 				//				if(i.isColliding(e))
 				if(v.getComponent(VehicleComponent.class).getVehicle().canTurn())
 					turnVehicle(v, i);
-
 			}
 		});		
 
@@ -264,17 +269,17 @@ public class TrafficApp extends GameApplication {
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name()) && i.getComponent(TrafficLightAnimationComponent.class).isRed() && !v.isColliding(FXGL.getGameWorld()
-						.getEntitiesByType(EntityType.INCROCIO)
-						.stream()
-						.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
-						.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
+																																																											.getEntitiesByType(EntityType.INCROCIO)
+																																																											.stream()
+																																																											.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
+																																																											.findFirst().get())) /////DA NON FARE MAI IL GET CON GLI OPTIONAL
 					v.getComponent(VehicleComponent.class).slowDown();
 			}
 
 			@Override
 			protected void onCollision(Entity v, Entity i) {
 				if(i.getPropertyOptional("direzione").orElse("fail").equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
-					if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed())
+					if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed() && !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
 						v.getComponentOptional(VehicleComponent.class).get().slowDown();
 					else
 						v.getComponentOptional(VehicleComponent.class).get().accelerate();
@@ -282,18 +287,27 @@ public class TrafficApp extends GameApplication {
 			}
 		});	
 	}
-
+	
+	private LocalTimer spawnTimer;
+	
+	private double spawnRate = 2;
+	
 	@Override
 	protected void onUpdate(double tpf) {
-//		if(new Random().nextInt(10000) < 100) {
-//			Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
-//
-//			SpawnData vdata = new SpawnData(e.getPosition());
-//
-//			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
-//
-//			FXGL.getGameWorld().spawn("vehicle", vdata);
-//		}
+		if(spawnTimer == null)
+			spawnTimer = FXGL.newLocalTimer();
+		if(spawnTimer.elapsed(Duration.seconds(spawnRate))) {
+			Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
+
+			SpawnData vdata = new SpawnData(e.getPosition());
+
+			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
+			vdata.put("pathList", pathChooser(e));
+
+			FXGL.getGameWorld().spawn("vehicle", vdata);
+			
+			spawnTimer.capture();
+		}
 	}
 
 	private void turnVehicle(Entity v, Entity i) {

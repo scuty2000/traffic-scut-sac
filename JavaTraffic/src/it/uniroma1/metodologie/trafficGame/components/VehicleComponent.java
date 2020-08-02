@@ -9,6 +9,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.time.LocalTimer;
+import com.sun.source.doctree.EntityTree;
 
 import it.uniroma1.metodologie.trafficGame.Directions;
 import it.uniroma1.metodologie.trafficGame.Vehicle;
@@ -25,7 +26,7 @@ public class VehicleComponent extends Component{
 	/*
 	 * speed of the veichle
 	 */
-	private double speed = 5.0;
+	private double speed = 2.0;
 
 	private Vehicle v;
 
@@ -89,7 +90,7 @@ public class VehicleComponent extends Component{
 					//System.out.println("Y changed to " + entity.getPosition().getY());
 				}
 				else if((d.equals(Directions.UP) || d.equals(Directions.DOWN)) && Math.abs(entity.getCenter().getX() - currentPath.getX()) > 1) {
-					entity.translateX(entity.getCenter().getX() - currentPath.getX() > 0 ? -0.2 : 0.2);
+					moveForward();
 					//System.out.println("X changed to " + entity.getPosition().getX() + "        -     current path x = " + currentPath.getX());
 				}
 
@@ -99,41 +100,57 @@ public class VehicleComponent extends Component{
 			shootTimer.capture();
 		}
 	}
+	
+	public void moveForward() {
+		entity.translateX(entity.getCenter().getX() - currentPath.getX() > 0 ? -0.2 : 0.2);
+	}
 
 	private final static int SHORT_RADIUS = 50;
 	private final static int LONG_RADIUS = 200;
 	private final static int DIV = 9;
 	private double mul;
 	private int rot;
+	
+	public Entity getNearestSemaforo() {
+		return getNearestByClass(EntityType.SEMAFORO);
+	}
+	
+	public Entity getNearestIncrocio() {
+		return getNearestByClass(EntityType.INCROCIO);
+	}
+	
+	private Entity getNearestByClass(EntityType t) {
+		return FXGL.getGameWorld().getEntitiesByType(t).stream().sorted((x, y) -> (int)(x.distance(entity)-y.distance(entity))).collect(Collectors.toList()).get(0);
+	}
 
 	private void turn(Directions d) {
 		if(!(d.equals(this.d) || d.isOpposite(this.d))) {  //checks if the new direction is different from the old one
 			this.startPoint = new Point2D(entity.getX(), entity.getY());
 //			System.out.println(pathList.size());
 //			this.endPoint = new Point2D(pathList.get(0).getX(), pathList.get(0).getY());
-			Entity nearestIncrocio = FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO).stream().sorted((x, y) -> (int)(x.distance(entity)-y.distance(entity))).collect(Collectors.toList()).get(0);
+			Entity nearestIncrocio = getNearestSemaforo();
 			switch(this.d) {
 			case UP : 
 				if(d.equals(Directions.LEFT)) {
 					
-					this.xIncrement = -10;
-					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
+//					this.xIncrement = -10;
+//					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
 					
-//					xMovement = -LONG_RADIUS/DIV - 9;		//sub x, sub y
-//					yMovement = -LONG_RADIUS/DIV - 25;
-//					toAddX = 1;
-//					toAddY = 2.777778;
+					xMovement = -LONG_RADIUS/DIV - 9;		//sub x, sub y
+					yMovement = -LONG_RADIUS/DIV - 25;
+					toAddX = 1;
+					toAddY = 2.777778;
 					mul = 0.5;
 					rot = -10;
 				} else {
 					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
-					this.xIncrement = 10;
+//					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
+//					this.xIncrement = 10;
 					
-//					xMovement = SHORT_RADIUS/DIV;		//add x, sub y
-//					yMovement = -SHORT_RADIUS/DIV - 9;
-//					toAddX = 0;
-//					toAddY = 1;
+					xMovement = SHORT_RADIUS/DIV;		//add x, sub y
+					yMovement = -SHORT_RADIUS/DIV - 9;
+					toAddX = 0;
+					toAddY = 1;
 					mul = 1;
 					rot = +10;
 				}
@@ -141,24 +158,24 @@ public class VehicleComponent extends Component{
 			case DOWN : 
 				if(d.equals(Directions.LEFT)) {
 					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY());
-					this.xIncrement = -10;
+//					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY());
+//					this.xIncrement = -10;
 					
-//					xMovement = -SHORT_RADIUS/DIV;
-//					yMovement = SHORT_RADIUS/DIV + 9;
-//					toAddX = 0;
-//					toAddY = -1;
+					xMovement = -SHORT_RADIUS/DIV;
+					yMovement = SHORT_RADIUS/DIV + 9;
+					toAddX = 0;
+					toAddY = -1;
 					mul = 1;
 					rot = +10;
 				} else {
+//					
+//					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY());
+//					this.xIncrement = 10;
 					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY());
-					this.xIncrement = 10;
-					
-//					xMovement = LONG_RADIUS/DIV + 9;
-//					yMovement = LONG_RADIUS/DIV + 25;
-//					toAddX = -1;
-//					toAddY = -2.777778;
+					xMovement = LONG_RADIUS/DIV + 9;
+					yMovement = LONG_RADIUS/DIV + 25;
+					toAddX = -1;
+					toAddY = -2.777778;
 					mul = 0.5;
 					rot = -10;
 				}
@@ -166,24 +183,24 @@ public class VehicleComponent extends Component{
 			case RIGHT : 
 				if(d.equals(Directions.UP)) {
 					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY());
-					this.xIncrement = 10;
+//					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY());
+//					this.xIncrement = 10;
 					
-//					xMovement = LONG_RADIUS/DIV + 25;
-//					yMovement = -LONG_RADIUS/DIV + 9;
-//					toAddX = -2.777778;
-//					toAddY = -1;
+					xMovement = LONG_RADIUS/DIV + 25;
+					yMovement = -LONG_RADIUS/DIV + 9;
+					toAddX = -2.777778;
+					toAddY = -1;
 					mul = 0.5;
 					rot = -10;
 				} else {
 					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
-					this.xIncrement = 10;
+//					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
+//					this.xIncrement = 10;
 					
-//					xMovement = SHORT_RADIUS/DIV + 9;
-//					yMovement = SHORT_RADIUS/DIV;
-//					toAddX = -1;
-//					toAddY = 0;
+					xMovement = SHORT_RADIUS/DIV + 9;
+					yMovement = SHORT_RADIUS/DIV;
+					toAddX = -1;
+					toAddY = 0;
 					mul = 1;
 					rot = +10;
 				}
@@ -191,33 +208,33 @@ public class VehicleComponent extends Component{
 			case LEFT : 
 				if(d.equals(Directions.UP)) {
 					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY());
-					this.xIncrement = -10;
+//					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY());
+//					this.xIncrement = -10;
 					
-//					xMovement = -SHORT_RADIUS/DIV - 9;
-//					yMovement = -SHORT_RADIUS/DIV;
-//					toAddX = 1;
-//					toAddY = 0;
+					xMovement = -SHORT_RADIUS/DIV - 9;
+					yMovement = -SHORT_RADIUS/DIV;
+					toAddX = 1;
+					toAddY = 0;
 					mul = 1;
 					rot = +10;
 				} else {
 					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
-					this.xIncrement = -10;
+//					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
+//					this.xIncrement = -10;
 					
-//					xMovement = -LONG_RADIUS/DIV - 25;
-//					yMovement = LONG_RADIUS/DIV - 9;
-//					toAddX = 2.777778;
-//					toAddY = 1;
+					xMovement = -LONG_RADIUS/DIV - 25;
+					yMovement = LONG_RADIUS/DIV - 9;
+					toAddX = 2.777778;
+					toAddY = 1;
 					mul = 0.5;
 					rot = -10;
 				}
 				break;
 			};
-			this.radius = this.rotationCenter.distance(entity.getPosition());
+//			this.radius = this.rotationCenter.distance(entity.getPosition());
 			this.d = d;
 			this.turning = true;
-			gapBetweenMove = 0.05;
+			gapBetweenMove = 0.1;
 		}
 	}
 
@@ -232,8 +249,8 @@ public class VehicleComponent extends Component{
 	private void turnAnimation() {
 
 		entity.rotateBy(rot*mul);
-//		entity.translate(xMovement*mul, yMovement*mul);
-		entity.translate(generateNextPoint());
+		entity.translate(xMovement*mul, yMovement*mul);
+//		entity.translate(generateNextPoint());
 		xMovement += toAddX;
 		yMovement += toAddY;
 		//niceTraslation(entity, new Point2D(xMovement*mul, yMovement*mul));
@@ -292,7 +309,7 @@ public class VehicleComponent extends Component{
 	}
 
 	public void accelerate() {
-		this.speed = 5.0;
+		this.speed = 2.0;
 		//		if(this.speed < 5 && accSlow.elapsed(Duration.seconds(0.1))) {
 		//			this.speed++;
 		//			accSlow.capture();
