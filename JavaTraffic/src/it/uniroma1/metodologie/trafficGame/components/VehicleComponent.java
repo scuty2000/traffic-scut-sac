@@ -86,16 +86,16 @@ public class VehicleComponent extends Component{
 
 	private void createPoints() {
 		
-		for (int i = 0; i < 40; ++i) {
+		for (int i = 0; i < 70; ++i) {
 			
-		    final double angle = Math.toRadians(((double) i / 40) * 360d);
+		    final double angle = Math.toRadians(((double) i / 70) * 360d);
 
-		    if(Math.cos(angle) * 18 < 0)
+		    if(Math.cos(angle) * 16 < 0)
 		    	break;
 		    
 	    	arrayPunti.add(new Point2D(
-			        Math.cos(angle) * 18+entity.getHeight()/2, 
-			        Math.sin(angle) * 18+entity.getWidth()/2
+			        Math.cos(angle) * 16+entity.getHeight()/2, 
+			        Math.sin(angle) * 16+entity.getWidth()/2
 			    ));
 		    	
 		}

@@ -198,7 +198,7 @@
   </object>
   <object id="9" type="semaforo" x="1750" y="2000" width="250" height="250">
    <properties>
-    <property name="direzione" value="LEFT"/>
+    <property name="direzione" value="RIGHT"/>
     <property name="rotation" type="int" value="4"/>
    </properties>
   </object>
