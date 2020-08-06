@@ -304,7 +304,7 @@ public class TrafficApp extends GameApplication {
 			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 			vdata.put("pathList", pathChooser(e));
 
-			FXGL.getGameWorld().spawn("vehicle", vdata);
+			//FXGL.getGameWorld().spawn("vehicle", vdata);
 			
 			spawnTimer.capture();
 		}
