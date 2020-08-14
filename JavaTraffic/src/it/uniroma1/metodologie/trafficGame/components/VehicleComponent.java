@@ -34,7 +34,7 @@ public class VehicleComponent extends Component{
 	/*
 	 * speed of the veichle
 	 */
-	private double speed = 2.0;
+	private double speed = 3.0;
 
 	private Vehicle v;
 
@@ -64,7 +64,9 @@ public class VehicleComponent extends Component{
 	
 	private double xIncrement;
 	
-	ArrayList<Point2D> arrayPunti = new ArrayList<>();
+	private ArrayList<Point2D> arrayPunti = new ArrayList<>();
+	
+	private ArrayList<Point2D> arrayPuntiBCK;
 
 	public VehicleComponent(Vehicle v, Directions d, List<Entity> pathList) {
 		this.v = v;
@@ -81,14 +83,16 @@ public class VehicleComponent extends Component{
 		accSlow.capture();
 		
 		createPoints();
-		
+		this.arrayPuntiBCK = (ArrayList<Point2D>) this.arrayPunti.clone();
 	}
 
 	private void createPoints() {
 		
-		for (int i = 0; i < 70; ++i) {
+		this.arrayPunti.clear();
+		
+		for (int i = 0; i < 41; ++i) {
 			
-		    final double angle = Math.toRadians(((double) i / 70) * 360d);
+		    final double angle = Math.toRadians(((double) i / 41) * 360d);
 
 		    if(Math.cos(angle) * 16 < 0)
 		    	break;
@@ -100,7 +104,6 @@ public class VehicleComponent extends Component{
 		    	
 		}
 		
-		System.out.println(arrayPunti.size());
 	}
 
 	/*
@@ -158,6 +161,7 @@ public class VehicleComponent extends Component{
 	private void turn(Directions d) {
 		if(!(d.equals(this.d) || d.isOpposite(this.d))) {  //checks if the new direction is different from the old one
 			this.startPoint = new Point2D(entity.getX(), entity.getY());
+//			createPoints();
 //			System.out.println(pathList.size());
 			//this.endPoint = new Point2D(pathList.get(0).getX(), pathList.get(0).getY());
 			Entity nearestIncrocio = getNearestSemaforo();
@@ -263,11 +267,12 @@ public class VehicleComponent extends Component{
 				}
 				break;
 			};
-			this.radius = this.rotationCenter.distance(entity.getPosition());
+			//this.radius = this.rotationCenter.distance(entity.getPosition());
 			this.oldDirection = this.d;
 			this.d = d;
 			this.turning = true;
-			gapBetweenMove = 0.1;
+			gapBetweenMove = 0.06;
+			
 		}
 	}
 
@@ -305,6 +310,8 @@ public class VehicleComponent extends Component{
 		if(entity.getRotation()%90 == 0) {
 			turning = false;
 			gapBetweenMove = 0.01;
+			System.out.println("arrayPunti: "+arrayPunti.size()+" arrayPuntiBCK: "+arrayPuntiBCK.size());
+			this.arrayPunti = (ArrayList<Point2D>) this.arrayPuntiBCK.clone();
 		}
 		
 	}
@@ -329,7 +336,7 @@ public class VehicleComponent extends Component{
 	}
 
 	public void accelerate() {
-		this.speed = 2.0;
+		this.speed = 3.0;
 		//		if(this.speed < 5 && accSlow.elapsed(Duration.seconds(0.1))) {
 		//			this.speed++;
 		//			accSlow.capture();
