@@ -72,8 +72,10 @@ public class TrafficFactory implements EntityFactory{
 		
 		//adding arrows
 		Rectangle f1 = new Rectangle(v.getWidth()-10, 0, 10, 10);
+		f1.setFill(Color.YELLOW);
 		f1.setVisible(false);
 		Rectangle f2 = new Rectangle(v.getWidth()-10, v.getHeigh() - 10, 10, 10);
+		f2.setFill(Color.YELLOW);
 		f2.setVisible(false);
 		e.getViewComponent().addChild(f1);
 		e.getViewComponent().addChild(f2);

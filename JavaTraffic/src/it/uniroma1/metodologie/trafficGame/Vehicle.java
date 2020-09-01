@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 
 
 public enum Vehicle {
-	CAR(true, 60, 40),TIR(false,195, 50),MOTORBIKE(true, 35, 14);
+	CAR(true, 60, 40, Color.STEELBLUE),TIR(false,195, 50, Color.BLACK),MOTORBIKE(true, 35, 14, Color.DARKCYAN);
 	
 	private boolean canTurn;
 	
@@ -22,13 +22,16 @@ public enum Vehicle {
 	
 	private int heigh;
 	
-	Vehicle(boolean canTurn, int width, int heigh) {
+	private Color c;
+	
+	Vehicle(boolean canTurn, int width, int heigh, Color c) {
 		this.canTurn = canTurn;
 		this.width = width;
 		this.heigh = heigh;
+		this.c = c;
 	}
 	
-	public Shape getShape() { return new Rectangle(width, heigh, Color.rgb(255, 229, 94)); }
+	public Shape getShape() { return new Rectangle(width, heigh, c); }
 	
 	public int getWidth() { return width; }
 	public int getHeigh() { return heigh; }
