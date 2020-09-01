@@ -80,12 +80,9 @@ public class VehicleComponent extends Component{
 		}
 	}
 	
-	
+	private final double COST = 5;
 	//potrebbe essere static ??????????????
 	private void creaCurve() {
-		
-		final double COST = 5;
-		
 	    for(int j = 0; j < 8; j++) {
     		arrayCurve.add(new ArrayList<Point2D>());
 	    }
@@ -94,46 +91,14 @@ public class VehicleComponent extends Component{
 			
 		    final double angle = Math.toRadians(((double) i / 356) * 360d);
 
-		    if(Math.toDegrees(angle)<90) {
-		    	arrayCurve.get(0).add(new Point2D(
-			        Math.cos(angle) * COST +entity.getHeight()/2, 
-			        Math.sin(angle) * COST +entity.getWidth()/2
-			    ));
-		    	if(i%2==0)
-		    		arrayCurve.get(4).add(new Point2D(
-				        Math.cos(angle) * COST +entity.getHeight()/2, 
-				        Math.sin(angle) * COST +entity.getWidth()/2
-				    ));
-		    } else if(Math.toDegrees(angle)<180) {
-	    		arrayCurve.get(1).add(new Point2D(
-			        Math.cos(angle) * COST +entity.getHeight()/2, 
-			        Math.sin(angle) * COST +entity.getWidth()/2
-			    ));
-	    		if(i%2==0)
-		    		arrayCurve.get(5).add(new Point2D(
-				        Math.cos(angle) * COST +entity.getHeight()/2, 
-				        Math.sin(angle) * COST +entity.getWidth()/2
-				    ));
-		    } else if(Math.toDegrees(angle)<270) {
-		    	arrayCurve.get(2).add(new Point2D(
-				        Math.cos(angle) * COST +entity.getHeight()/2, 
-				        Math.sin(angle) * COST +entity.getWidth()/2
-				    ));
-		    	if(i%2==0)
-		    		arrayCurve.get(6).add(new Point2D(
-				        Math.cos(angle) * COST +entity.getHeight()/2, 
-				        Math.sin(angle) * COST +entity.getWidth()/2
-				    ));
+		    if(Math.toDegrees(angle)<90) {//0, 4
+		    	calculatePoint(angle, 0, 4, i);
+		    } else if(Math.toDegrees(angle)<180) {//1,5
+	    		calculatePoint(angle, 1, 5, i);
+		    } else if(Math.toDegrees(angle)<270) {//2,6
+		    	calculatePoint(angle, 2, 6, i);
 		    } else if(Math.toDegrees(angle)<360) {
-		    	arrayCurve.get(3).add(new Point2D(
-			        Math.cos(angle) * COST +entity.getHeight()/2, 
-			        Math.sin(angle) * COST +entity.getWidth()/2
-			    ));
-		    	if(i%2==0)
-		    		arrayCurve.get(7).add(new Point2D(
-				        Math.cos(angle) * COST +entity.getHeight()/2, 
-				        Math.sin(angle) * COST +entity.getWidth()/2
-				    ));
+		    	calculatePoint(angle, 3, 7, i);
 		    }
 		    		    	
 		}
@@ -145,6 +110,18 @@ public class VehicleComponent extends Component{
 		arrayCurve.get(5).add(new Point2D(0, 0));
 		arrayCurve.get(7).add(new Point2D(0, 0));
 		
+	}
+	
+	private void calculatePoint(double angle, int number1, int number2, int i) {
+		arrayCurve.get(number1).add(new Point2D(
+		        Math.cos(angle) * COST +entity.getHeight()/2, 
+		        Math.sin(angle) * COST +entity.getWidth()/2
+		    ));
+	    	if(i%2==0)
+	    		arrayCurve.get(number2).add(new Point2D(
+			        Math.cos(angle) * COST +entity.getHeight()/2, 
+			        Math.sin(angle) * COST +entity.getWidth()/2
+			    ));
 	}
 
 	/*
