@@ -149,14 +149,14 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Move Up") {
 			@Override
 			protected void onActionBegin() {
-				move(Directions.UP, y -> y > 0, "pointerY");	
+				moveUpDown(Directions.UP, y -> y > 0, "pointerY");	
 			}
 		}, KeyCode.W);
 
 		i.addAction(new UserAction("Move Down") {
 			@Override
 			protected void onActionBegin() {
-				move(Directions.DOWN, y -> y < matrixIncroci.size() - 1, "pointerY");	
+				moveUpDown(Directions.DOWN, y -> y < matrixIncroci.size() - 1, "pointerY");	
 			}
 		}, KeyCode.S);
 
@@ -176,7 +176,19 @@ public class TrafficApp extends GameApplication {
 			}
 		}, KeyCode.SPACE);
 	}
-
+	
+	private void moveUpDown(Directions d, Predicate<Integer> p, String pointer) {
+		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
+		if(i > 1 && matrixIncroci.get(i + d.getY()).size() < matrixIncroci.get(i).size()) {
+			List<Entity> l = matrixIncroci.get(i + d.getY());
+			player1.setPosition(l.get(l.size()-1).getPosition());
+			player1.setProperty("pointerX", (int)player1.getPropertyOptional("pointerX").orElse(0) + d.getX());
+			player1.setProperty("pointerY", (int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY());
+		}
+		else
+			move(d, p, pointer);
+	}
+	
 	private void move(Directions d, Predicate<Integer> p, String pointer) {
 		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
 		if(p.test(i)) {
@@ -234,18 +246,15 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollision(Entity v, Entity i) {
-				carBehind = findCarBehind(v, i);
+				//carBehind = findCarBehind(v, i);
 				if(carBehind != null)
 					carBehind.getComponent(VehicleComponent.class).slowDown();
 			}
 
 			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
-				carBehind = findCarBehind(a, b);
-				if(carBehind != null) {
-					carBehind.getComponent(VehicleComponent.class).accelerate();
-					carBehind.getComponent(VehicleComponent.class).moveForward();
-				}
+				a.getComponent(VehicleComponent.class).accelerate();
+				b.getComponent(VehicleComponent.class).accelerate();
 			}
 
 		});
