@@ -251,9 +251,11 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
-				a.getComponent(VehicleComponent.class).accelerate();
-				b.getComponent(VehicleComponent.class).accelerate();
-				carInFront.getComponent(VehicleComponent.class).moveForward();
+				if(carBehind != null) {
+					a.getComponent(VehicleComponent.class).accelerate();
+					b.getComponent(VehicleComponent.class).accelerate();
+					carInFront.getComponent(VehicleComponent.class).moveForward();
+				}
 			}
 
 		});

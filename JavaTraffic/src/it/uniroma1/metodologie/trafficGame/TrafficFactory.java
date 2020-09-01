@@ -69,6 +69,16 @@ public class TrafficFactory implements EntityFactory{
 		//HitBox frontHitBox = new HitBox("FRONT", BoundingShape.box(v.getWidth() + 30, v.getHeigh()+10));
 		e.getBoundingBoxComponent().addHitBox(h);
 		//e.getBoundingBoxComponent().addHitBox(frontHitBox);
+		
+		//adding arrows
+		Rectangle f1 = new Rectangle(v.getWidth()-10, 0, 10, 10);
+		f1.setVisible(false);
+		Rectangle f2 = new Rectangle(v.getWidth()-10, v.getHeigh() - 10, 10, 10);
+		f2.setVisible(false);
+		e.getViewComponent().addChild(f1);
+		e.getViewComponent().addChild(f2);
+		e.getComponent(VehicleComponent.class).addArrows(f1, f2);
+		
 		return e;
 	}
 	
@@ -92,6 +102,7 @@ public class TrafficFactory implements EntityFactory{
 			vehicle = build(data, Vehicle.TIR);
 		Rectangle s = (Rectangle) vehicle.getComponent(VehicleComponent.class).getVehicle().getShape();
 		vehicle.setLocalAnchor(new Point2D(s.getWidth()/2, s.getHeight()/2 ));
+
 		return vehicle;
 	}
 	
@@ -112,7 +123,7 @@ public class TrafficFactory implements EntityFactory{
 		Point2D p = getPoint(i);
 		p.add(data.getX(), data.getY());
 		
-		HitBox h = new HitBox(p, BoundingShape.box(70, 70));
+		HitBox h = new HitBox(p, BoundingShape.box(40, 40));
 
 		e.getBoundingBoxComponent().addHitBox(h);
 		
@@ -122,13 +133,13 @@ public class TrafficFactory implements EntityFactory{
 	private Point2D getPoint(int i) {
 		switch(i) {
 		case 1:
-			return new Point2D(250,180);
+			return new Point2D(295,210);
 		case 2:
-			return new Point2D(0,250);
+			return new Point2D(0, 295);
 		case 3:
-			return new Point2D(-70, 0);
+			return new Point2D(-80, 0);
 		default:
-			return new Point2D(180, -70);
+			return new Point2D(210, -80);
 		}
 	}
 	

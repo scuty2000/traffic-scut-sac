@@ -13,21 +13,12 @@ import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.time.LocalTimer;
-import com.sun.source.doctree.EntityTree;
 
 import it.uniroma1.metodologie.trafficGame.Directions;
 import it.uniroma1.metodologie.trafficGame.Vehicle;
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
 
@@ -42,7 +33,7 @@ public class VehicleComponent extends Component{
 	/*
 	 * speed of the veichle
 	 */
-	private double speed = 2.0;
+	private double speed = 3.0;
 
 	private Vehicle v;
 
@@ -81,6 +72,7 @@ public class VehicleComponent extends Component{
 		shootTimer.capture();
 		accSlow = FXGL.newLocalTimer();
 		accSlow.capture();
+		turnTimer = FXGL.newLocalTimer();
 		
 		creaCurve();
 		for (ArrayList<Point2D> arrayList : arrayCurve) {
@@ -89,10 +81,10 @@ public class VehicleComponent extends Component{
 	}
 	
 	
-	
+	//potrebbe essere static ??????????????
 	private void creaCurve() {
 		
-		final int COST = 5;
+		final double COST = 5;
 		
 	    for(int j = 0; j < 8; j++) {
     		arrayCurve.add(new ArrayList<Point2D>());
@@ -189,17 +181,19 @@ public class VehicleComponent extends Component{
 			entity.removeFromWorld();
 			//System.out.println("Deleted");
 		} else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove)) && !turning) {
-				if(accelerating)
-					accelerate();
-				else
-					slowDown();
 				moveForward();
 			//FXGL.getGameWorld().getEntitiesInRange(new Rectangle2D(entity.getX(), entity.getY(), 40, 40)).stream().filter(x -> x.getType().equals(EntityType.PATH))
 
 			shootTimer.capture();
 		}
-		else if(turning)
+		else if(turning) {
+			blinkArrow();
 			turnAnimation();
+		}
+		if(accelerating)
+			accelerate();
+		else
+			slowDown();
 	}
 	//entity.translateX(entity.getCenter().getX() - currentPath.getX() > 0 ? -0.2 : 0.2);
 
@@ -280,9 +274,12 @@ public class VehicleComponent extends Component{
 			
 		}
 	}
-
+	
+	private double TURN_GAP = 0.02;
+	private LocalTimer turnTimer;
+	
 	private void turnAnimation() {
-
+		if(turnTimer.elapsed(Duration.seconds(TURN_GAP * 3/speed))){
 		entity.rotateBy(rot*mul);
 		
 		if(this.oldDirection.equals(Directions.RIGHT) && this.d.equals(Directions.DOWN)){
@@ -310,20 +307,46 @@ public class VehicleComponent extends Component{
 		
 		if(entity.getRotation()%90 == 0) {
 			turning = false;
+			accelerate();
 			gapBetweenMove = 0.01;
 			this.arrayCurve.clear();
 			for (ArrayList<Point2D> arrayList : arrayCurveBCK) {
 				this.arrayCurve.add((ArrayList<Point2D>) arrayList.clone());
 			}
+			
+			this.currentArrow.setVisible(false);
 		}
-		
+		turnTimer.capture();
+	}
 	}
 
 	public Directions getDirection() { return this.d; }
 
 	public void nextPath() {
+		Entity oldPath = currentPath;
 		currentPath = pathList.remove(0);
+		//////////////////////////////////////serve ancora???????????
 		turn(Directions.valueOf((String) currentPath.getPropertyOptional("direzione").orElse("DOWN")));
+		if(oldPath != null)
+			setArrow(oldPath, currentPath);
+	}
+	
+	private void setArrow(Entity op, Entity np) {
+		Directions npd = Directions.valueOf((String) np.getPropertyOptional("direzione").orElseThrow());
+		switch(Directions.valueOf((String) op.getPropertyOptional("direzione").orElseThrow())) {
+		case UP:
+			currentArrow = npd == Directions.RIGHT ? ra : la;
+			break;
+		case DOWN:
+			currentArrow = npd == Directions.RIGHT ? la : ra;
+			break;
+		case LEFT:
+			currentArrow = npd == Directions.UP ? ra : la;
+			break;
+		case RIGHT:
+			currentArrow = npd == Directions.UP ? la : ra;
+			break;
+		}
 	}
 
 	public Vehicle getVehicle() { return v; }
@@ -342,7 +365,7 @@ public class VehicleComponent extends Component{
 	public void accelerate() {
 		//this.speed = 2.0;
 		this.accelerating = true;
-		if(this.speed < 1.9 && accSlow.elapsed(Duration.seconds(0.08))) {
+		if(this.speed < 2.9 && accSlow.elapsed(Duration.seconds(0.08))) {
 			this.speed += 0.5;
 			accSlow.capture();
 		}
@@ -350,5 +373,23 @@ public class VehicleComponent extends Component{
 
 	public double getSpeed() {
 		return this.speed;
+	}
+	
+	private Rectangle ra;
+	private Rectangle la;
+	private final double BLINK_TIME = 0.3;
+	private Rectangle currentArrow;
+	private LocalTimer blinkTimer = FXGL.newLocalTimer();
+	
+	public void addArrows(Rectangle la, Rectangle ra) {
+		this.ra = ra;
+		this.la = la;
+	}
+	
+	private void blinkArrow() {
+		if(isTurning() && blinkTimer.elapsed(Duration.seconds(BLINK_TIME))) {
+			currentArrow.setVisible(currentArrow.isVisible() == true ? false : true);
+			blinkTimer.capture();
+		}
 	}
 }
