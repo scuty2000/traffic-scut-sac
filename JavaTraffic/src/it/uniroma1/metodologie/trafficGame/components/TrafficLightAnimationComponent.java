@@ -12,6 +12,11 @@ public class TrafficLightAnimationComponent extends Component {
 	private boolean isRed = true;
 	private boolean toSwitch = false;
 	
+	/*
+	 * this field is false if a car is turning left on the other side of the cross. It becomes true when the car has finished turning
+	 */
+	private boolean canPass = true;
+	
 	private AnimatedTexture texture;
 	private AnimationChannel animRed, animGreen;
 	
@@ -47,6 +52,21 @@ public class TrafficLightAnimationComponent extends Component {
 	
 	public boolean isRed() {
 		return isRed;
+	}
+	
+	/*
+	 * returns true if the light is green and no car is turning left on the other side of the cross
+	 */
+	public boolean isGreen() {
+		return !isRed && canPass;
+	}
+	
+	public void waitACar() {
+		canPass = false;
+	}
+	
+	public void canPass() {
+		canPass = true;
 	}
 	
 	public void switchLight() {
