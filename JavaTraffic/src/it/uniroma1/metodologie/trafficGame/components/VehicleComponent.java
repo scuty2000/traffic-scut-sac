@@ -2,6 +2,7 @@ package it.uniroma1.metodologie.trafficGame.components;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -54,19 +55,9 @@ public class VehicleComponent extends Component{
 
 	private List<Entity> pathList;
 	
-	private Point2D startPoint;
+	private ArrayList<ArrayList<Point2D>> arrayCurveBCK = new ArrayList<>();
 	
-	private Point2D endPoint;
-	
-	private Point2D rotationCenter;
-	
-	private double radius;
-	
-	private double xIncrement;
-	
-	private ArrayList<Point2D> arrayPunti = new ArrayList<>();
-	
-	private ArrayList<Point2D> arrayPuntiBCK;
+	private ArrayList<ArrayList<Point2D>> arrayCurve = new ArrayList<>();
 
 	public VehicleComponent(Vehicle v, Directions d, List<Entity> pathList) {
 		this.v = v;
@@ -82,27 +73,72 @@ public class VehicleComponent extends Component{
 		accSlow = FXGL.newLocalTimer();
 		accSlow.capture();
 		
-		createPoints();
-		this.arrayPuntiBCK = (ArrayList<Point2D>) this.arrayPunti.clone();
+		creaCurve();
+		for (ArrayList<Point2D> arrayList : arrayCurve) {
+			this.arrayCurveBCK.add((ArrayList<Point2D>) arrayList.clone());
+		}
 	}
 
-	private void createPoints() {
+	private void creaCurve() {
 		
-		this.arrayPunti.clear();
+	    for(int j = 0; j < 8; j++) {
+    		arrayCurve.add(new ArrayList<Point2D>());
+	    }
 		
-		for (int i = 0; i < 41; ++i) {
+		for (int i = 0; i < 356; ++i) {
 			
-		    final double angle = Math.toRadians(((double) i / 41) * 360d);
+		    final double angle = Math.toRadians(((double) i / 356) * 360d);
 
-		    if(Math.cos(angle) * 16 < 0)
-		    	break;
-		    
-	    	arrayPunti.add(new Point2D(
-			        Math.cos(angle) * 16+entity.getHeight()/2, 
-			        Math.sin(angle) * 16+entity.getWidth()/2
+		    if(Math.toDegrees(angle)<90) {
+		    	arrayCurve.get(0).add(new Point2D(
+			        Math.cos(angle) * 4+entity.getHeight()/2, 
+			        Math.sin(angle) * 4+entity.getWidth()/2
 			    ));
-		    	
+		    	if(i%2==0)
+		    		arrayCurve.get(4).add(new Point2D(
+				        Math.cos(angle) * 4+entity.getHeight()/2, 
+				        Math.sin(angle) * 4+entity.getWidth()/2
+				    ));
+		    } else if(Math.toDegrees(angle)<180) {
+	    		arrayCurve.get(1).add(new Point2D(
+			        Math.cos(angle) * 4+entity.getHeight()/2, 
+			        Math.sin(angle) * 4+entity.getWidth()/2
+			    ));
+	    		if(i%2==0)
+		    		arrayCurve.get(5).add(new Point2D(
+				        Math.cos(angle) * 4+entity.getHeight()/2, 
+				        Math.sin(angle) * 4+entity.getWidth()/2
+				    ));
+		    } else if(Math.toDegrees(angle)<270) {
+		    	arrayCurve.get(2).add(new Point2D(
+				        Math.cos(angle) * 4+entity.getHeight()/2, 
+				        Math.sin(angle) * 4+entity.getWidth()/2
+				    ));
+		    	if(i%2==0)
+		    		arrayCurve.get(6).add(new Point2D(
+				        Math.cos(angle) * 4+entity.getHeight()/2, 
+				        Math.sin(angle) * 4+entity.getWidth()/2
+				    ));
+		    } else if(Math.toDegrees(angle)<360) {
+		    	arrayCurve.get(3).add(new Point2D(
+			        Math.cos(angle) * 4+entity.getHeight()/2, 
+			        Math.sin(angle) * 4+entity.getWidth()/2
+			    ));
+		    	if(i%2==0)
+		    		arrayCurve.get(7).add(new Point2D(
+				        Math.cos(angle) * 4+entity.getHeight()/2, 
+				        Math.sin(angle) * 4+entity.getWidth()/2
+				    ));
+		    }
+		    		    	
 		}
+		
+		arrayCurve.get(0).add(new Point2D(0, 0));
+		arrayCurve.get(1).add(new Point2D(0, 0));
+		arrayCurve.get(2).add(new Point2D(0, 0));
+		arrayCurve.get(3).add(new Point2D(0, 0));
+		arrayCurve.get(5).add(new Point2D(0, 0));
+		arrayCurve.get(7).add(new Point2D(0, 0));
 		
 	}
 
@@ -114,35 +150,23 @@ public class VehicleComponent extends Component{
 
 		if(entity.getX() < -100 || entity.getX() > 2600 || entity.getY() < -100 || entity.getY() > 2600) {
 			entity.removeFromWorld();
-			//System.out.println("Deleted");
-		} else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove))) {
-			if(turning)
-				turnAnimation();
-			else {
-				entity.translate(speed * d.getX(), speed * d.getY());
-				if((d.equals(Directions.LEFT) || d.equals(Directions.RIGHT)) && Math.abs(entity.getCenter().getY() - currentPath.getY()) > 1) {
-					entity.translateY(entity.getCenter().getY() - currentPath.getY() > 0 ?-0.2: 0.2);
-					//System.out.println("Y changed to " + entity.getPosition().getY());
-				}
-				else if((d.equals(Directions.UP) || d.equals(Directions.DOWN)) && Math.abs(entity.getCenter().getX() - currentPath.getX()) > 1) {
-					moveForward();
-					//System.out.println("X changed to " + entity.getPosition().getX() + "        -     current path x = " + currentPath.getX());
-				}
-
+		} else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove)) && !turning) {
+			entity.translate(speed * d.getX(), speed * d.getY());
+			if((d.equals(Directions.LEFT) || d.equals(Directions.RIGHT)) && Math.abs(entity.getCenter().getY() - currentPath.getY()) > 1) {
+				entity.translateY(entity.getCenter().getY() - currentPath.getY() > 0 ?-0.2: 0.2);
+			} else if((d.equals(Directions.UP) || d.equals(Directions.DOWN)) && Math.abs(entity.getCenter().getX() - currentPath.getX()) > 1) {
+				moveForward();
 			}
-			//FXGL.getGameWorld().getEntitiesInRange(new Rectangle2D(entity.getX(), entity.getY(), 40, 40)).stream().filter(x -> x.getType().equals(EntityType.PATH))
-
 			shootTimer.capture();
+		} else if (turning) {
+			turnAnimation();
 		}
+			
 	}
 	
 	public void moveForward() {
 		entity.translateX(entity.getCenter().getX() - currentPath.getX() > 0 ? -0.2 : 0.2);
 	}
-
-	private final static int SHORT_RADIUS = 50;
-	private final static int LONG_RADIUS = 200;
-	private final static int DIV = 9;
 	private double mul;
 	private int rot;
 	
@@ -159,115 +183,45 @@ public class VehicleComponent extends Component{
 	}
 
 	private void turn(Directions d) {
-		if(!(d.equals(this.d) || d.isOpposite(this.d))) {  //checks if the new direction is different from the old one
-			this.startPoint = new Point2D(entity.getX(), entity.getY());
-//			createPoints();
-//			System.out.println(pathList.size());
-			//this.endPoint = new Point2D(pathList.get(0).getX(), pathList.get(0).getY());
-			Entity nearestIncrocio = getNearestSemaforo();
+		if(!(d.equals(this.d) || d.isOpposite(this.d))) {
 			switch(this.d) {
 			case UP : 
 				if(d.equals(Directions.LEFT)) {
-					
-					this.xIncrement = -10;
-					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
-					
-					xMovement = -LONG_RADIUS/DIV - 9;		//sub x, sub y
-					yMovement = -LONG_RADIUS/DIV - 25;
-					toAddX = 1;
-					toAddY = 2.777778;
 					mul = 0.5;
-					rot = -10;
+					rot = -2;
 				} else {
-					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
-					this.xIncrement = 10;
-					
-					xMovement = SHORT_RADIUS/DIV;		//add x, sub y
-					yMovement = -SHORT_RADIUS/DIV - 9;
-					toAddX = 0;
-					toAddY = 1;
 					mul = 1;
-					rot = +10;
+					rot = +2;
 				}
 				break;
 			case DOWN : 
 				if(d.equals(Directions.LEFT)) {
-					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY());
-					this.xIncrement = -10;
-					
-					xMovement = -SHORT_RADIUS/DIV;
-					yMovement = SHORT_RADIUS/DIV + 9;
-					toAddX = 0;
-					toAddY = -1;
 					mul = 1;
-					rot = +10;
+					rot = +2;
 				} else {
-//					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY());
-					this.xIncrement = 10;
-					
-					xMovement = LONG_RADIUS/DIV + 9;
-					yMovement = LONG_RADIUS/DIV + 25;
-					toAddX = -1;
-					toAddY = -2.777778;
 					mul = 0.5;
-					rot = -10;
+					rot = -2;
 				}
 				break;
 			case RIGHT : 
 				if(d.equals(Directions.UP)) {
-					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY());
-					this.xIncrement = 10;
-					
-					xMovement = LONG_RADIUS/DIV + 25;
-					yMovement = -LONG_RADIUS/DIV + 9;
-					toAddX = -2.777778;
-					toAddY = -1;
 					mul = 0.5;
-					rot = -10;
+					rot = -2;
 				} else {
-					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
-					this.xIncrement = 10;
-					
-					xMovement = SHORT_RADIUS/DIV + 9;
-					yMovement = SHORT_RADIUS/DIV;
-					toAddX = -1;
-					toAddY = 0;
 					mul = 1;
-					rot = +10;
+					rot = +2;
 				}
 				break;
 			case LEFT : 
 				if(d.equals(Directions.UP)) {
-					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY());
-					this.xIncrement = -10;
-					
-					xMovement = -SHORT_RADIUS/DIV - 9;
-					yMovement = -SHORT_RADIUS/DIV;
-					toAddX = 1;
-					toAddY = 0;
 					mul = 1;
-					rot = +10;
+					rot = +2;
 				} else {
-					
-					this.rotationCenter = new Point2D(nearestIncrocio.getX()+nearestIncrocio.getWidth(), nearestIncrocio.getY()-nearestIncrocio.getHeight());
-					this.xIncrement = -10;
-					
-					xMovement = -LONG_RADIUS/DIV - 25;
-					yMovement = LONG_RADIUS/DIV - 9;
-					toAddX = 2.777778;
-					toAddY = 1;
 					mul = 0.5;
-					rot = -10;
+					rot = -2;
 				}
 				break;
 			};
-			//this.radius = this.rotationCenter.distance(entity.getPosition());
 			this.oldDirection = this.d;
 			this.d = d;
 			this.turning = true;
@@ -276,42 +230,35 @@ public class VehicleComponent extends Component{
 		}
 	}
 
-	private double xMovement;
-
-	private double yMovement;
-
-	private double toAddX = 0;
-
-	private double toAddY = 0;
-
 	private void turnAnimation() {
 
 		entity.rotateBy(rot*mul);
 		
-//		FXGL.entityBuilder()
-//		.at(entity.getCenter())
-//		.view(new Rectangle(10, 10, Color.GREEN))
-//		.buildAndAttach();
-		
 		if(this.oldDirection.equals(Directions.RIGHT) && this.d.equals(Directions.DOWN)){
-			if(entity.getRotation()%10 == 0 && !arrayPunti.isEmpty()) {
-				entity.translate(arrayPunti.remove(0));
-			} else {
-				entity.translate(new Point2D(0, 0));
-			}
-		} else {
-			entity.translate(xMovement*mul, yMovement*mul);
+			entity.translate(arrayCurve.get(4).remove(0));
+		} else if(this.oldDirection.equals(Directions.RIGHT) && this.d.equals(Directions.UP)) {
+			entity.translate(arrayCurve.get(3).remove(arrayCurve.get(3).size()-1));
+		} else if(this.oldDirection.equals(Directions.UP) && this.d.equals(Directions.RIGHT)) {
+			entity.translate(arrayCurve.get(7).remove(0));
+		} else if(this.oldDirection.equals(Directions.UP) && this.d.equals(Directions.LEFT)) {
+			entity.translate(arrayCurve.get(2).remove(arrayCurve.get(2).size()-1));
+		} else if(this.oldDirection.equals(Directions.LEFT) && this.d.equals(Directions.UP)) {
+			entity.translate(arrayCurve.get(6).remove(0));
+		} else if(this.oldDirection.equals(Directions.LEFT) && this.d.equals(Directions.DOWN)) {
+			entity.translate(arrayCurve.get(1).remove(arrayCurve.get(1).size()-1));
+		} else if(this.oldDirection.equals(Directions.DOWN) && this.d.equals(Directions.RIGHT)) {
+			entity.translate(arrayCurve.get(0).remove(arrayCurve.get(0).size()-1));
+		} else if(this.oldDirection.equals(Directions.DOWN) && this.d.equals(Directions.LEFT)) { // TODO tune this
+			entity.translate(arrayCurve.get(5).remove(0));
 		}
-
-//		System.out.println("I'm was pointing "+this.oldDirection.toString()+" and now I do point "+this.d.toString());
-		xMovement += toAddX;
-		yMovement += toAddY;
-
+		
 		if(entity.getRotation()%90 == 0) {
 			turning = false;
 			gapBetweenMove = 0.01;
-			System.out.println("arrayPunti: "+arrayPunti.size()+" arrayPuntiBCK: "+arrayPuntiBCK.size());
-			this.arrayPunti = (ArrayList<Point2D>) this.arrayPuntiBCK.clone();
+			this.arrayCurve.clear();
+			for (ArrayList<Point2D> arrayList : arrayCurveBCK) {
+				this.arrayCurve.add((ArrayList<Point2D>) arrayList.clone());
+			}
 		}
 		
 	}
@@ -329,18 +276,10 @@ public class VehicleComponent extends Component{
 
 	public void slowDown() {
 		this.speed = 0;
-		//		if(this.speed > 0 && accSlow.elapsed(Duration.seconds(0.1))) {
-		//			this.speed--;
-		//			accSlow.capture();
-		//		}
 	}
 
 	public void accelerate() {
 		this.speed = 3.0;
-		//		if(this.speed < 5 && accSlow.elapsed(Duration.seconds(0.1))) {
-		//			this.speed++;
-		//			accSlow.capture();
-		//		}
 	}
 
 	public double getSpeed() {
