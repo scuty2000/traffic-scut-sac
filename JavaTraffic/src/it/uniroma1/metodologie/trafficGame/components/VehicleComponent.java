@@ -88,9 +88,11 @@ public class VehicleComponent extends Component{
 		}
 	}
 	
-	private int cost = 5;
+	
 	
 	private void creaCurve() {
+		
+		final int COST = 5;
 		
 	    for(int j = 0; j < 8; j++) {
     		arrayCurve.add(new ArrayList<Point2D>());
@@ -102,43 +104,43 @@ public class VehicleComponent extends Component{
 
 		    if(Math.toDegrees(angle)<90) {
 		    	arrayCurve.get(0).add(new Point2D(
-			        Math.cos(angle) * cost+entity.getHeight()/2, 
-			        Math.sin(angle) * cost+entity.getWidth()/2
+			        Math.cos(angle) * COST +entity.getHeight()/2, 
+			        Math.sin(angle) * COST +entity.getWidth()/2
 			    ));
 		    	if(i%2==0)
 		    		arrayCurve.get(4).add(new Point2D(
-				        Math.cos(angle) * cost+entity.getHeight()/2, 
-				        Math.sin(angle) * cost+entity.getWidth()/2
+				        Math.cos(angle) * COST +entity.getHeight()/2, 
+				        Math.sin(angle) * COST +entity.getWidth()/2
 				    ));
 		    } else if(Math.toDegrees(angle)<180) {
 	    		arrayCurve.get(1).add(new Point2D(
-			        Math.cos(angle) * cost+entity.getHeight()/2, 
-			        Math.sin(angle) * cost+entity.getWidth()/2
+			        Math.cos(angle) * COST +entity.getHeight()/2, 
+			        Math.sin(angle) * COST +entity.getWidth()/2
 			    ));
 	    		if(i%2==0)
 		    		arrayCurve.get(5).add(new Point2D(
-				        Math.cos(angle) * cost+entity.getHeight()/2, 
-				        Math.sin(angle) * cost+entity.getWidth()/2
+				        Math.cos(angle) * COST +entity.getHeight()/2, 
+				        Math.sin(angle) * COST +entity.getWidth()/2
 				    ));
 		    } else if(Math.toDegrees(angle)<270) {
 		    	arrayCurve.get(2).add(new Point2D(
-				        Math.cos(angle) * cost+entity.getHeight()/2, 
-				        Math.sin(angle) * cost+entity.getWidth()/2
+				        Math.cos(angle) * COST +entity.getHeight()/2, 
+				        Math.sin(angle) * COST +entity.getWidth()/2
 				    ));
 		    	if(i%2==0)
 		    		arrayCurve.get(6).add(new Point2D(
-				        Math.cos(angle) * cost+entity.getHeight()/2, 
-				        Math.sin(angle) * cost+entity.getWidth()/2
+				        Math.cos(angle) * COST +entity.getHeight()/2, 
+				        Math.sin(angle) * COST +entity.getWidth()/2
 				    ));
 		    } else if(Math.toDegrees(angle)<360) {
 		    	arrayCurve.get(3).add(new Point2D(
-			        Math.cos(angle) * cost+entity.getHeight()/2, 
-			        Math.sin(angle) * cost+entity.getWidth()/2
+			        Math.cos(angle) * COST +entity.getHeight()/2, 
+			        Math.sin(angle) * COST +entity.getWidth()/2
 			    ));
 		    	if(i%2==0)
 		    		arrayCurve.get(7).add(new Point2D(
-				        Math.cos(angle) * cost+entity.getHeight()/2, 
-				        Math.sin(angle) * cost+entity.getWidth()/2
+				        Math.cos(angle) * COST +entity.getHeight()/2, 
+				        Math.sin(angle) * COST +entity.getWidth()/2
 				    ));
 		    }
 		    		    	
