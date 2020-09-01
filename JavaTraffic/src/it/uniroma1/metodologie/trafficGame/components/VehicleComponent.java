@@ -32,6 +32,13 @@ import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
 
 public class VehicleComponent extends Component{
+	
+	/*
+	 * DEBUG
+	 */
+	
+	private boolean debugCurve = true;
+	
 	/*
 	 * speed of the veichle
 	 */
@@ -251,6 +258,11 @@ public class VehicleComponent extends Component{
 		} else if(this.oldDirection.equals(Directions.DOWN) && this.d.equals(Directions.LEFT)) { // TODO tune this
 			entity.translate(arrayCurve.get(5).remove(0));
 		}
+		if(debugCurve)
+			FXGL.entityBuilder()
+			.at(entity.getPosition())
+			.view(new Rectangle(5,5, Color.BLUE))
+			.buildAndAttach();
 		
 		if(entity.getRotation()%90 == 0) {
 			turning = false;
