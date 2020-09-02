@@ -11,15 +11,12 @@ import tutorial.AndreaGameApp.EntityType;
 
 public class SpawnPointComponent extends Component{
 	
-	private LinkedList<String> vehicleList;
+	private int vehicles = 0;
 	private LinkedList<SpawnData> spawnDataList;
 	private static final int DEATH = 6;
 	
 	@Override
-	public void onAdded() {
-		vehicleList = new LinkedList<>();
-		spawnDataList = new LinkedList<>();
-	}
+	public void onAdded() { spawnDataList = new LinkedList<>(); }
 	
 	@Override
 	public void onUpdate(double tps) {
@@ -28,16 +25,17 @@ public class SpawnPointComponent extends Component{
 			FXGL.getGameController().gotoMainMenu();
 	}
 	
-	public void registerCar(String string, SpawnData sd) { 
-		vehicleList.add(string);	
+	public void registerCar(SpawnData sd) { 
+		vehicles ++;
 		spawnDataList.add(sd);
 		}
 	
-	public boolean hasLost() { return vehicleList.size() >= DEATH; }
+	public boolean hasLost() { return vehicles >= DEATH; }
 	
 	public void spawnCar() {
-		if(isFree() && !vehicleList.isEmpty()) {
-			FXGL.getGameWorld().spawn(vehicleList.remove(0), spawnDataList.remove(0));
+		if(isFree() && vehicles > 0) {
+			FXGL.getGameWorld().spawn("vehicle", spawnDataList.remove(0));
+			vehicles --;
 		}
 	}
 	

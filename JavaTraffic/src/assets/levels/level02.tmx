@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="10" height="7" tilewidth="250" tileheight="250" infinite="0" nextlayerid="7" nextobjectid="58">
  <editorsettings>
-  <export format="tmx"/>
+  <export target="." format="tmx"/>
  </editorsettings>
  <tileset firstgid="1" name="tiles_sheet" tilewidth="250" tileheight="250" tilecount="42" columns="7">
   <image source="../textures/tiles_sheet.png" trans="ff00ff" width="1750" height="1500"/>
@@ -44,7 +44,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="5" name="Semafori">
+ <objectgroup id="5" name="Semafori" locked="1">
   <object id="1" type="semaforo" x="500" y="750" width="250" height="250">
    <properties>
     <property name="direzione" value="DOWN"/>
@@ -142,40 +142,46 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="SpawnPoint" locked="1">
+ <objectgroup id="6" name="SpawnPoint">
   <object id="25" type="spawn" x="0" y="438.5">
    <properties>
     <property name="direzione" value="RIGHT"/>
+    <property name="tir" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
   <object id="26" type="spawn" x="0" y="1188.5">
    <properties>
     <property name="direzione" value="RIGHT"/>
+    <property name="tir" type="bool" value="false"/>
    </properties>
    <point/>
   </object>
   <object id="27" type="spawn" x="1313.5" y="0">
    <properties>
     <property name="direzione" value="DOWN"/>
+    <property name="tir" type="bool" value="false"/>
    </properties>
    <point/>
   </object>
   <object id="28" type="spawn" x="2500" y="313.5">
    <properties>
     <property name="direzione" value="LEFT"/>
+    <property name="tir" type="bool" value="true"/>
    </properties>
    <point/>
   </object>
   <object id="29" type="spawn" x="938.5" y="1750">
    <properties>
     <property name="direzione" value="UP"/>
+    <property name="tir" type="bool" value="false"/>
    </properties>
    <point/>
   </object>
   <object id="30" type="spawn" x="2188.5" y="1750">
    <properties>
     <property name="direzione" value="UP"/>
+    <property name="tir" type="bool" value="false"/>
    </properties>
    <point/>
   </object>

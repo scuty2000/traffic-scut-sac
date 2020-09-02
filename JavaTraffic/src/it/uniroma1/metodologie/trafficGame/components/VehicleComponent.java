@@ -28,7 +28,11 @@ public class VehicleComponent extends Component{
 	/*
 	 * speed of the veichle
 	 */
-	private double speed = 2.1;
+	private double speed = 2.4;
+	
+	private double acceleration = speed/6;
+	
+	private final double MAX_SPEED = speed;
 
 	private Vehicle v;
 
@@ -255,7 +259,7 @@ public class VehicleComponent extends Component{
 		}
 	}
 	
-	private double TURN_GAP = 0.02;
+	private double TURN_GAP = 0.03;
 	private LocalTimer turnTimer;
 	
 	private void turnAnimation() {
@@ -337,7 +341,7 @@ public class VehicleComponent extends Component{
 		//this.speed = 0;
 		this.accelerating = false;
 		if(this.speed >= 0.1 && accSlow.elapsed(Duration.seconds(0.08))) {
-			this.speed -= 0.35;
+			this.speed -= acceleration;
 			accSlow.capture();
 		}
 		speed = speed < 0 ? 0 : speed;
@@ -346,8 +350,8 @@ public class VehicleComponent extends Component{
 	public void accelerate() {
 		//this.speed = 2.0;
 		this.accelerating = true;
-		if(this.speed <= 2.0 && accSlow.elapsed(Duration.seconds(0.08))) {
-			this.speed += 0.3;
+		if(this.speed < MAX_SPEED && accSlow.elapsed(Duration.seconds(0.08))) {
+			this.speed += acceleration;
 			accSlow.capture();
 		}
 	}

@@ -208,15 +208,7 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Spawn Car") {
 			@Override
 			protected void onActionBegin() {
-				Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(1));
-
-				SpawnData vdata = new SpawnData(e.getPosition());
-
-				vdata.put("pathList", pathChooser(e));
-
-				vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
-				
-				e.getComponent(SpawnPointComponent.class).registerCar("vehicle", vdata);
+				spawnCar();
 			}
 		}, KeyCode.SPACE);
 	}
@@ -368,21 +360,20 @@ public class TrafficApp extends GameApplication {
 		if(spawnTimer == null)
 			spawnTimer = FXGL.newLocalTimer();
 		if(spawnTimer.elapsed(Duration.seconds(spawnRate))) {
-			Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnList.size()));
-
-			SpawnData vdata = new SpawnData(e.getPosition());
-
-			vdata.put("pathList", pathChooser(e));
-
-			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
-			
-			e.getComponent(SpawnPointComponent.class).registerCar("vehicle", vdata);
-			
+			spawnCar();			
 			if(spawnRate > minSpawnRate)
 				spawnRate -= 0.03;
-			
 			spawnTimer.capture();
 		}
+	}
+	
+	private void spawnCar() {
+		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnList.size()));
+		SpawnData vdata = new SpawnData(e.getPosition());
+		vdata.put("pathList", pathChooser(e));
+		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
+		vdata.put("tir", (boolean) e.getPropertyOptional("tir").orElse(false));
+		e.getComponent(SpawnPointComponent.class).registerCar(vdata);
 	}
 
 	private void turnVehicle(Entity v, Entity i) {

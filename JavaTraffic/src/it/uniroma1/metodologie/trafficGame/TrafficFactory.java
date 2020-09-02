@@ -62,14 +62,12 @@ public class TrafficFactory implements EntityFactory{
 					.collidable()
 					.with(new VehicleComponent(v,data.<Directions>get("direction"), data.get("pathList")))
 					.viewWithBBox(v.getShape())
-					//.atAnchored(new Point2D(1000,1000), new Point2D(1000,1000))//new Point2D(data.getX() + v.getWidth()/2, data.getY() + v.getHeigh()/2), new Point2D(data.getX() + v.getWidth()/2, data.getY() + v.getHeigh()/2))
 					.rotate(data.<Directions>get("direction").getStartingRotation())
 					.build();
+		
 		HitBox h = new HitBox("EYE", BoundingShape.box(v.getWidth() + vehicleHitboxLen, v.getHeigh()));
 		e.translate(-v.getWidth()/2, -v.getHeigh()/2);
-		//HitBox frontHitBox = new HitBox("FRONT", BoundingShape.box(v.getWidth() + 30, v.getHeigh()+10));
 		e.getBoundingBoxComponent().addHitBox(h);
-		//e.getBoundingBoxComponent().addHitBox(frontHitBox);
 		
 		//adding arrows
 		Rectangle f1 = new Rectangle(v.getWidth()-10, 0, 10, 10);
@@ -96,13 +94,13 @@ public class TrafficFactory implements EntityFactory{
 	@Spawns("vehicle")
 	public Entity getVehicle(SpawnData data) {
 		Entity vehicle;
-		int random = new Random().nextInt(7);
-		if(random <= 3)
-			vehicle = build(data, Vehicle.CAR);
-		else if(random <= 5)
+		int random = new Random().nextInt(9);
+		if(random <= 1 && (boolean) data.get("tir"))
+			vehicle = build(data, Vehicle.TIR);
+		else if(random <= 3)
 			vehicle = build(data, Vehicle.MOTORBIKE);
 		else
-			vehicle = build(data, Vehicle.TIR);
+			vehicle = build(data, Vehicle.CAR);
 		Rectangle s = (Rectangle) vehicle.getComponent(VehicleComponent.class).getVehicle().getShape();
 		vehicle.setLocalAnchor(new Point2D(s.getWidth()/2, s.getHeight()/2 ));
 
