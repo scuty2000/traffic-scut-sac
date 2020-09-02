@@ -17,6 +17,9 @@ import java.util.stream.Collectors;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.FXGLMenu;
+import com.almasb.fxgl.app.scene.MenuType;
+import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
@@ -29,6 +32,7 @@ import com.sun.javafx.geom.Point2D;
 
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
+import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
@@ -46,6 +50,13 @@ public class TrafficApp extends GameApplication {
 		settings.setHeight(2500);
 		settings.setApplicationMode(ApplicationMode.DEVELOPER);
 		settings.setProfilingEnabled(true);
+		settings.setMainMenuEnabled(true);
+		settings.setSceneFactory(new SceneFactory() {
+			@Override
+			public FXGLMenu newMainMenu() {
+				return new TrafficAppMenu(MenuType.MAIN_MENU);
+			}
+		});
 	}
 
 
@@ -58,7 +69,7 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void initGame() {
-
+		
 		GameWorld gw = FXGL.getGameWorld();
 
 		gw.addEntityFactory(new TrafficFactory());
