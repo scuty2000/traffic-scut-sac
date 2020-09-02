@@ -313,6 +313,7 @@ public class TrafficApp extends GameApplication {
 	private LocalTimer spawnTimer;
 
 	private double spawnRate = 2;
+	private final double minSpawnRate = 0.5;
 
 	@Override
 	protected void onUpdate(double tpf) {
@@ -328,6 +329,9 @@ public class TrafficApp extends GameApplication {
 			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 			
 			e.getComponent(SpawnPointComponent.class).registerCar("vehicle", vdata);
+			
+			if(spawnRate > minSpawnRate)
+				spawnRate -= 0.003;
 			
 			spawnTimer.capture();
 		}
