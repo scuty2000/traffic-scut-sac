@@ -69,12 +69,7 @@ public class TrafficAppMenu extends FXGLMenu {
 
 	@Override
 	protected Node createBackground(double arg0, double arg1) {
-		
 		Texture texture = FXGL.texture("bg.jpg");
-//		texture.setFitHeight(FXGL.getAppHeight());
-//		texture.setFitWidth(FXGL.getAppWidth());
-//		texture.setEffect(null);
-		
 		return texture;
 	}
 
