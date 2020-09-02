@@ -88,6 +88,8 @@ public class TrafficApp extends GameApplication {
 		
 		gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
 		
+		gameMusic.getAudio$fxgl_media().setVolume(0.5);
+		
 		FXGL.getAudioPlayer().loopMusic(gameMusic);
 		
 		spawnList = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList());
@@ -424,6 +426,10 @@ public class TrafficApp extends GameApplication {
 		Random r = new Random();
 		if(l.isEmpty()) return null;
 		return l.get(r.nextInt(l.size()));
+	}
+	
+	public Music getGameMusic() {
+		return this.gameMusic;
 	}
 
 }
