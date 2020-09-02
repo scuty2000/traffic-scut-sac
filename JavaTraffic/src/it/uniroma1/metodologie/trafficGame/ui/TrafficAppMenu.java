@@ -52,7 +52,7 @@ public class TrafficAppMenu extends FXGLMenu {
 				new Separator(Orientation.HORIZONTAL),
 				FXGL.getUIFactoryService().newText("Use arrows and enter to use buttons.", Color.LIGHTGRAY, 40.0));
 		box.setTranslateX(200);
-		box.setTranslateY(1000);
+		box.setTranslateY(1100);
 		
 		getContentRoot().getChildren().addAll(titleBox, box);
 	}
