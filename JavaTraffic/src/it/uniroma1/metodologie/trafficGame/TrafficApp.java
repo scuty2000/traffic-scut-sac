@@ -31,6 +31,7 @@ import it.uniroma1.metodologie.trafficGame.components.SpawnPointComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
@@ -133,12 +134,15 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Change trafficlight status") {
 			@Override
 			protected void onActionBegin() {
-				ArrayList<Entity> semaforiAdiacenti = (ArrayList<Entity>) FXGL.getGameWorld()
-						.getEntitiesByType(EntityType.SEMAFORO)
-						.stream()
-						.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354)
-						.collect(Collectors.toList());
-
+//				ArrayList<Entity> semaforiAdiacenti = (ArrayList<Entity>) FXGL.getGameWorld()
+//						.getEntitiesByType(EntityType.SEMAFORO)
+//						.stream()
+//						.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354)
+//						.collect(Collectors.toList());
+//
+				List<Entity> semaforiAdiacenti = (List<Entity>) FXGL.getGameWorld()
+						.getEntitiesInRange(new Rectangle2D(player1.getPosition().getX(), player1.getPosition().getY(), 252, 252)).stream().filter(x -> x.getType().equals(EntityType.SEMAFORO)).collect(Collectors.toList());
+				semaforiAdiacenti = checkSemafori(semaforiAdiacenti);
 				for (Entity entity : semaforiAdiacenti) {
 					entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
 				}
@@ -146,6 +150,29 @@ public class TrafficApp extends GameApplication {
 				FXGL.getAudioPlayer().playSound(pointersound);
 
 			}
+			
+			private List<Entity> checkSemafori(List<Entity> sa){
+//				for(int i = sa.size() - 1; i >= 0; i--) {
+//					switch(checkSemafori(sa.get(i))) {
+//					case 
+//					}
+//				}
+				return sa.parallelStream().filter(x-> checkPosition(x)).collect(Collectors.toList());
+			}
+			
+			private boolean checkPosition(Entity s) {
+				switch(Directions.valueOf((String) s.getPropertyOptional("direzione").orElseThrow())) {
+				case UP:
+					return s.getY() > player1.getY() && s.getX() > player1.getX();
+				case DOWN:
+					return s.getY() < player1.getY() && s.getX() < player1.getX();
+				case RIGHT:
+					return s.getX() < player1.getX() && s.getY() > player1.getY();
+				default:
+					return s.getX() > player1.getX() && s.getY() < player1.getY();
+				}
+			}
+			
 		}, KeyCode.F);
 
 		i.addAction(new UserAction("Move Right") {
@@ -208,9 +235,10 @@ public class TrafficApp extends GameApplication {
 	private void move(Directions d, Predicate<Integer> p, String pointer) {
 		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
 		if(p.test(i)) {
-			player1.setPosition(matrixIncroci.get((int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY()).get(d.getX() + (int) player1.getPropertyOptional("pointerX").orElse(Integer.valueOf(0))).getPosition());
 			player1.setProperty("pointerX", (int)player1.getPropertyOptional("pointerX").orElse(0) + d.getX());
 			player1.setProperty("pointerY", (int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY());
+			player1.setPosition(matrixIncroci.get((int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY()).get(d.getX() + (int) player1.getPropertyOptional("pointerX").orElse(Integer.valueOf(0))).getPosition());
+			
 		}
 	}
 
