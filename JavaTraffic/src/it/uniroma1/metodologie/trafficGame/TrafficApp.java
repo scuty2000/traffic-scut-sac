@@ -16,6 +16,7 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.app.scene.SceneFactory;
+import com.almasb.fxgl.audio.Music;
 import com.almasb.fxgl.audio.Sound;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
@@ -39,6 +40,8 @@ public class TrafficApp extends GameApplication {
 	private ArrayList<Entity> incroci;
 	
 	private Sound pointersound;
+	
+	private Music gameMusic;
 
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -80,6 +83,12 @@ public class TrafficApp extends GameApplication {
 		FXGL.setLevelFromMap(map);
 		
 		pointersound = FXGL.getAssetLoader().loadSound("pointersound.wav");
+		
+		gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
+		
+		FXGL.getAudioPlayer().loopMusic(gameMusic);
+		
+		FXGL.getGameWorld()
 		
 		spawnList = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList());
 
