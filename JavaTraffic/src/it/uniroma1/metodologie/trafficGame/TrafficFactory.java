@@ -16,6 +16,7 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.ui.FXGLCheckBox;
 
 import it.uniroma1.metodologie.trafficGame.components.PlayerAnimationComponent;
+import it.uniroma1.metodologie.trafficGame.components.SpawnPointComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.geometry.Point2D;
@@ -169,6 +170,7 @@ public class TrafficFactory implements EntityFactory{
 		return FXGL.entityBuilder(data)
 				.type(EntityType.SPAWN)
 				.bbox(new HitBox(BoundingShape.box(0, 0)))
+				.with(new SpawnPointComponent())
 				.collidable()
 				.build();
 	}

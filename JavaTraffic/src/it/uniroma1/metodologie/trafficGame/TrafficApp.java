@@ -25,6 +25,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.time.LocalTimer;
 
+import it.uniroma1.metodologie.trafficGame.components.SpawnPointComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
@@ -63,6 +64,8 @@ public class TrafficApp extends GameApplication {
 	private String map = "map-v2.tmx";
 
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
+	
+	private List<Entity> spawnList;
 
 	@Override
 	protected void initGame() {
@@ -72,14 +75,9 @@ public class TrafficApp extends GameApplication {
 		gw.addEntityFactory(new TrafficFactory());
 
 		FXGL.setLevelFromMap(map);
-
-		Entity e = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).findFirst().orElse(null);
-
-		SpawnData vdata = new SpawnData(e.getPosition());
-
-		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
-
-		//FXGL.spawn("vehicle", vdata);
+		
+		
+		spawnList = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList());
 
 		getPathTree();
 
@@ -176,8 +174,8 @@ public class TrafficApp extends GameApplication {
 				vdata.put("pathList", pathChooser(e));
 
 				vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
-
-				FXGL.getGameWorld().spawn("vehicle", vdata);
+				
+				e.getComponent(SpawnPointComponent.class).registerCar("vehicle", vdata);
 			}
 		}, KeyCode.SPACE);
 	}
@@ -321,15 +319,16 @@ public class TrafficApp extends GameApplication {
 		if(spawnTimer == null)
 			spawnTimer = FXGL.newLocalTimer();
 		if(spawnTimer.elapsed(Duration.seconds(spawnRate))) {
-			Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
+			Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnList.size()));
 
 			SpawnData vdata = new SpawnData(e.getPosition());
 
-			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 			vdata.put("pathList", pathChooser(e));
 
-			//FXGL.getGameWorld().spawn("vehicle", vdata);
-
+			vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
+			
+			e.getComponent(SpawnPointComponent.class).registerCar("vehicle", vdata);
+			
 			spawnTimer.capture();
 		}
 	}

@@ -181,15 +181,15 @@ public class VehicleComponent extends Component{
 		}
 	}
 	
-	/*
-	 * Sometimes vehicles stop moving. This method has to check if the car is colliding with some entity when it is not moveing or if it is bugged
-	 */
-	private void checkIfBugged() {
-		Entity nearestSemaforo = getNearestSemaforo();
-		if((!entity.isColliding(nearestSemaforo) && !entity.isColliding(getNearestByClass(EntityType.VEHICLE))) || (entity.isColliding(nearestSemaforo) && nearestSemaforo.getComponent(TrafficLightAnimationComponent.class).isGreen())){
-			accelerate();
-		}
-	}
+//	/*
+//	 * Sometimes vehicles stop moving. This method has to check if the car is colliding with some entity when it is not moveing or if it is bugged
+//	 */
+//	private void checkIfBugged() {
+//		Entity nearestSemaforo = getNearestSemaforo();
+//		if((!entity.isColliding(nearestSemaforo) && !entity.isColliding(getNearestByClass(EntityType.VEHICLE))) || (entity.isColliding(nearestSemaforo) && nearestSemaforo.getComponent(TrafficLightAnimationComponent.class).isGreen())){
+//			accelerate();
+//		}
+//	}
 	
 	//////////////////////////////////////////////////////////////////
 	private double mul;
