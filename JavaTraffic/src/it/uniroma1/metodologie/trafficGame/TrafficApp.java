@@ -1,16 +1,12 @@
 package it.uniroma1.metodologie.trafficGame;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.Semaphore;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -28,7 +24,6 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.time.LocalTimer;
-import com.sun.javafx.geom.Point2D;
 
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
@@ -69,7 +64,7 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void initGame() {
-		
+
 		GameWorld gw = FXGL.getGameWorld();
 
 		gw.addEntityFactory(new TrafficFactory());
@@ -96,8 +91,6 @@ public class TrafficApp extends GameApplication {
 			if((semaforo.getProperties().getInt("rotation") == 1 || semaforo.getProperties().getInt("rotation") == 3))
 				semaforo.getComponent(TrafficLightAnimationComponent.class).switchLight();
 		}
-
-
 	}
 
 	private HashMap<Integer, ArrayList<Entity>> parseIncroci() {
@@ -174,7 +167,7 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Spawn Car") {
 			@Override
 			protected void onActionBegin() {
-				Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(6));
+				Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(1));
 
 				SpawnData vdata = new SpawnData(e.getPosition());
 
@@ -183,7 +176,6 @@ public class TrafficApp extends GameApplication {
 				vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 
 				FXGL.getGameWorld().spawn("vehicle", vdata);
-
 			}
 		}, KeyCode.SPACE);
 	}
@@ -226,11 +218,18 @@ public class TrafficApp extends GameApplication {
 		Directions direction = e1.getComponent(VehicleComponent.class).getDirection();
 		//		if(!direction.equals(e2.getComponent(VehicleComponent.class).getDirection()))
 		//			return null;
-		if(direction.equals(Directions.UP)) return e1.getY() > e2.getY() ? e1 : e2;
-		else if(direction.equals(Directions.DOWN)) return e1.getY() > e2 .getY() ? e2 : e1;
-		else if(direction.equals(Directions.LEFT)) return e1.getX() > e2 .getX() ? e1 : e2;
-		else return e1.getX() > e2 .getX() ? e2 : e1;
-
+		Entity r = null;
+		switch(direction) {
+		case UP:
+			r = e1.getY() > e2.getY() ? e1 : e2;break;
+		case DOWN:
+			r = e1.getY() > e2 .getY() ? e2 : e1;break;
+		case LEFT:
+			r = e1.getX() > e2 .getX() ? e1 : e2;break;
+		case RIGHT:
+			r = e1.getX() > e2 .getX() ? e2 : e1;break;
+		}
+		return r;
 	}
 
 	@Override
@@ -254,19 +253,24 @@ public class TrafficApp extends GameApplication {
 					carBehind.getComponent(VehicleComponent.class).slowDown();
 			}
 
-			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(carBehind != null)
-					carBehind.getComponent(VehicleComponent.class).slowDown();
-			}
+			
+			/*
+			 *commentando l'on collision non c'è più il problema delle macchine che non ripartono 
+			 */
+//			@Override
+//			protected void onCollision(Entity v, Entity i) {
+//				if(carBehind != null) {
+//					if(carBehind.getLocalAnchor().distance(carInFront.getLocalAnchor()) < carInFront.getWidth())
+//						carBehind.getComponent(VehicleComponent.class).slowDown();
+//					else
+//						carBehind.getComponent(VehicleComponent.class).accelerate();
+//				}
+//			}
 
 			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
-				if(carBehind != null) {
-					a.getComponent(VehicleComponent.class).accelerate();
-					b.getComponent(VehicleComponent.class).accelerate();
-					carInFront.getComponent(VehicleComponent.class).moveForward();
-				}
+				a.getComponent(VehicleComponent.class).accelerate();
+				b.getComponent(VehicleComponent.class).accelerate();
 			}
 
 		});
@@ -289,22 +293,19 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				if(i.getPropertyOptional("direzione").orElseThrow().equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name()) && i.getComponent(TrafficLightAnimationComponent.class).isRed() && !v.isColliding(FXGL.getGameWorld()
-						.getEntitiesByType(EntityType.INCROCIO)
-						.stream()
-						.filter(x -> x.getPosition().distance(player1.getPosition()) <= 300)
-						.findFirst().orElseThrow()))
+				if(!i.getComponent(TrafficLightAnimationComponent.class).isGreen()
+						&& !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
 					v.getComponent(VehicleComponent.class).slowDown();
 			}
 
 			@Override
 			protected void onCollision(Entity v, Entity i) {
-				if(i.getPropertyOptional("direzione").orElseThrow().equals(v.getComponentOptional(VehicleComponent.class).get().getDirection().name())) {
-					if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isRed() && !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
-						v.getComponentOptional(VehicleComponent.class).get().slowDown();
-					else
-						v.getComponentOptional(VehicleComponent.class).get().accelerate();
-				}
+				if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isGreen()
+						|| v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
+					v.getComponentOptional(VehicleComponent.class).get().accelerate();
+				else
+					v.getComponentOptional(VehicleComponent.class).get().slowDown();
+
 			}
 		});	
 	}

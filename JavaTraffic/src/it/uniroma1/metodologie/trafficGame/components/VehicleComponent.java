@@ -1,17 +1,12 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
-import com.almasb.fxgl.physics.BoundingShape;
-import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.time.LocalTimer;
 
 import it.uniroma1.metodologie.trafficGame.Directions;
@@ -33,7 +28,7 @@ public class VehicleComponent extends Component{
 	/*
 	 * speed of the veichle
 	 */
-	private double speed = 3.0;
+	private double speed = 3.5;
 
 	private Vehicle v;
 
@@ -186,7 +181,15 @@ public class VehicleComponent extends Component{
 		}
 	}
 	
-	
+	/*
+	 * Sometimes vehicles stop moving. This method has to check if the car is colliding with some entity when it is not moveing or if it is bugged
+	 */
+	private void checkIfBugged() {
+		Entity nearestSemaforo = getNearestSemaforo();
+		if((!entity.isColliding(nearestSemaforo) && !entity.isColliding(getNearestByClass(EntityType.VEHICLE))) || (entity.isColliding(nearestSemaforo) && nearestSemaforo.getComponent(TrafficLightAnimationComponent.class).isGreen())){
+			accelerate();
+		}
+	}
 	
 	//////////////////////////////////////////////////////////////////
 	private double mul;
@@ -256,7 +259,7 @@ public class VehicleComponent extends Component{
 	private LocalTimer turnTimer;
 	
 	private void turnAnimation() {
-		if(turnTimer.elapsed(Duration.seconds(TURN_GAP * 3/speed))){
+		if(turnTimer.elapsed(Duration.seconds(TURN_GAP))){
 		entity.rotateBy(rot*mul);
 		
 		if(this.oldDirection.equals(Directions.RIGHT) && this.d.equals(Directions.DOWN)){
@@ -334,7 +337,7 @@ public class VehicleComponent extends Component{
 		//this.speed = 0;
 		this.accelerating = false;
 		if(this.speed > 0.1 && accSlow.elapsed(Duration.seconds(0.08))) {
-			this.speed -= 0.5;
+			this.speed -= 0.7;
 			accSlow.capture();
 		}
 	}
@@ -343,7 +346,7 @@ public class VehicleComponent extends Component{
 		//this.speed = 2.0;
 		this.accelerating = true;
 		if(this.speed < 2.9 && accSlow.elapsed(Duration.seconds(0.08))) {
-			this.speed += 0.5;
+			this.speed += 0.7;
 			accSlow.capture();
 		}
 	}

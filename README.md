@@ -48,4 +48,9 @@ Traffic è una reimplementazione di un vecchio gioco per Commodore 64.
 
 - Scut: Ho implementato il menù, ovviamente in forma embrionale. Ora devo sistemarlo e renderlo graficamente accettabile. Inoltre vorrei provare a ridimensionare solo il menù in modo da non dover dipendere dalla risoluzione della mappa (altrimenti dobbiamo fare mappe più piccole).
 
+
+#### 03/09/2020
+
+- Sak: Ho cercato di mettere a posto le collisioni tra macchine dato che alcune volte esse si fermano senza motivo dopo una collisione e non ripartono
+
 <hr/>

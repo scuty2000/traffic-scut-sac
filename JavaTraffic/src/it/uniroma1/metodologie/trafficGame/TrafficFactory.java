@@ -178,7 +178,7 @@ public class TrafficFactory implements EntityFactory{
 		return FXGL.entityBuilder(data)
 					.type(EntityType.PATH)
 					.with(new CollidableComponent(true))
-					.opacity(0.3)
+					.opacity(0)
 					.viewWithBBox(new Rectangle((int)data.get("width") == 0 ? 4 : (int)data.get("width"), (int)data.get("height") == 0 ? 4 : (int)data.get("height")))
 					//.bbox(new HitBox(BoundingShape.chain(new Point2D((float)data.getX(),(float)data.getY()), new Point2D(data.getX() + (int)data.get("width"),data.getY() + (int)data.get("height")))))
 					//.with("direzione", data.get("direzione"))
