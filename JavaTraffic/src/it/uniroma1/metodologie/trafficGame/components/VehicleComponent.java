@@ -28,7 +28,7 @@ public class VehicleComponent extends Component{
 	/*
 	 * speed of the veichle
 	 */
-	private double speed = 3.5;
+	private double speed = 2.1;
 
 	private Vehicle v;
 
@@ -345,8 +345,8 @@ public class VehicleComponent extends Component{
 	public void accelerate() {
 		//this.speed = 2.0;
 		this.accelerating = true;
-		if(this.speed < 2.9 && accSlow.elapsed(Duration.seconds(0.08))) {
-			this.speed += 0.7;
+		if(this.speed < 2.0 && accSlow.elapsed(Duration.seconds(0.08))) {
+			this.speed += 0.3;
 			accSlow.capture();
 		}
 	}
