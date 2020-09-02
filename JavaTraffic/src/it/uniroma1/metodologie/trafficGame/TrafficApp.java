@@ -61,7 +61,7 @@ public class TrafficApp extends GameApplication {
 	private Entity player1;
 	//private Entity player2;
 
-	private String map = "map-v2.tmx";
+	private String map = "level01.tmx";
 
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
 	
@@ -312,7 +312,7 @@ public class TrafficApp extends GameApplication {
 
 	private LocalTimer spawnTimer;
 	private double spawnRate = 2;
-	private final double minSpawnRate = 0.2;
+	private final double minSpawnRate = 0.8;
 
 	@Override
 	protected void onUpdate(double tpf) {
@@ -330,7 +330,7 @@ public class TrafficApp extends GameApplication {
 			e.getComponent(SpawnPointComponent.class).registerCar("vehicle", vdata);
 			
 			if(spawnRate > minSpawnRate)
-				spawnRate -= 0.1;
+				spawnRate -= 0.03;
 			
 			spawnTimer.capture();
 		}
