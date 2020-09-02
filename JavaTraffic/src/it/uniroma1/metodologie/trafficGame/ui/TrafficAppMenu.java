@@ -17,7 +17,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.effect.Effect;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -88,7 +90,19 @@ public class TrafficAppMenu extends FXGLMenu {
 
 	@Override
 	protected Node createVersionView(String arg0) {
-		return new Rectangle();
+		Text text = FXGL.getUIFactoryService().newText("This game is in Alpha stage. Some bugs have to be expected.", Color.WHITE, 40.0);
+		
+		VBox versionBox = new VBox(
+				text
+				);
+		
+		versionBox.setAlignment(Pos.CENTER);
+		
+		versionBox.setMinWidth(FXGL.getAppWidth());
+		
+		versionBox.setBackground(new Background(new BackgroundFill(Color.DARKRED, CornerRadii.EMPTY, null)));
+		
+		return versionBox;
 	}
 	
 	private static class TrafficButton extends StackPane {
