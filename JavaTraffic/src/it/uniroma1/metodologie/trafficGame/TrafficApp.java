@@ -64,7 +64,7 @@ public class TrafficApp extends GameApplication {
 	private Entity player1;
 	//private Entity player2;
 
-	private String map = "level01.tmx";
+	private String map = "level02.tmx";
 
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
 	
