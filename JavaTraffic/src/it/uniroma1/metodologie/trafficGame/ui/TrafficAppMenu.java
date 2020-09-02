@@ -3,6 +3,7 @@ package it.uniroma1.metodologie.trafficGame.ui;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.texture.Texture;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -29,19 +30,16 @@ public class TrafficAppMenu extends FXGLMenu {
 		TrafficButton btnOptions = new TrafficButton("Impostazioni", () -> {});
 		TrafficButton btnQuit = new TrafficButton("Esci dal gioco", () -> fireExit());
 		
-		var titleBox = new VBox(10,
-				FXGL.getUIFactoryService().newText("Traffic, the Lost Game", Color.BLACK, 150),
-				FXGL.getUIFactoryService().newText("Currently developed by Sac & Scut", Color.BLACK, 50)
-				);
+		var titleBox = new VBox(FXGL.texture("logo.png"));
 		titleBox.setAlignment(Pos.CENTER);
-		titleBox.setTranslateX(FXGL.getAppWidth()/2-800);
+		titleBox.setTranslateX(FXGL.getAppWidth()/2-1750/2);
 		titleBox.setTranslateY(200);
 		
 		var box = new VBox(10, 
 				btnPlayGame, 
 				btnOptions,
-				new TrafficButton("PlaceHolder 1", () -> {}),
-				new TrafficButton("PlaceHolder 2", () -> {}),
+				new TrafficButton("Extras", () -> {}),
+				new TrafficButton("Crediti", () -> {}),
 				btnQuit,
 				new Text(""),
 				new Text(""),
@@ -65,7 +63,12 @@ public class TrafficAppMenu extends FXGLMenu {
 
 	@Override
 	protected Node createBackground(double arg0, double arg1) {
-		return FXGL.texture("null.jpg");
+		
+		Texture texture = FXGL.texture("null.png");
+		texture.setFitHeight(FXGL.getAppHeight());
+		texture.setFitWidth(FXGL.getAppWidth());
+		
+		return texture;
 	}
 
 	@Override
