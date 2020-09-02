@@ -340,6 +340,7 @@ public class VehicleComponent extends Component{
 			this.speed -= 0.35;
 			accSlow.capture();
 		}
+		speed = speed < 0 ? 0 : speed;
 	}
 
 	public void accelerate() {
