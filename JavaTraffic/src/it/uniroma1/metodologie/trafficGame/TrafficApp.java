@@ -46,6 +46,8 @@ public class TrafficApp extends GameApplication {
 		settings.setApplicationMode(ApplicationMode.DEVELOPER);
 		settings.setProfilingEnabled(true);
 		settings.setMainMenuEnabled(true);
+		settings.setManualResizeEnabled(true);
+		settings.setPreserveResizeRatio(true);
 		settings.setSceneFactory(new SceneFactory() {
 			@Override
 			public FXGLMenu newMainMenu() {
@@ -255,7 +257,7 @@ public class TrafficApp extends GameApplication {
 
 			
 			/*
-			 *commentando l'on collision non c'è più il problema delle macchine che non ripartono 
+			 *commentando l'on collision non c'ï¿½ piï¿½ il problema delle macchine che non ripartono 
 			 */
 //			@Override
 //			protected void onCollision(Entity v, Entity i) {
