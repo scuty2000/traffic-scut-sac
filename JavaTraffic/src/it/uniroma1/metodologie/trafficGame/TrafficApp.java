@@ -88,8 +88,6 @@ public class TrafficApp extends GameApplication {
 		
 		FXGL.getAudioPlayer().loopMusic(gameMusic);
 		
-		FXGL.getGameWorld()
-		
 		spawnList = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList());
 
 		getPathTree();
