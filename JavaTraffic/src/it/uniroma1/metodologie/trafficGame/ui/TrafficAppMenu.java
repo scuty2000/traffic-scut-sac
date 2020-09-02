@@ -4,6 +4,9 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.texture.Texture;
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.scene.BoundsAccessor;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -12,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.effect.Effect;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
@@ -44,7 +48,7 @@ public class TrafficAppMenu extends FXGLMenu {
 				new Text(""),
 				new Text(""),
 				new Separator(Orientation.HORIZONTAL),
-				FXGL.getUIFactoryService().newText("Use arrows and enter to use buttons.", Color.BLACK, 40.0));
+				FXGL.getUIFactoryService().newText("Use arrows and enter to use buttons.", Color.LIGHTGRAY, 40.0));
 		box.setTranslateX(200);
 		box.setTranslateY(1000);
 		
@@ -64,9 +68,10 @@ public class TrafficAppMenu extends FXGLMenu {
 	@Override
 	protected Node createBackground(double arg0, double arg1) {
 		
-		Texture texture = FXGL.texture("null.png");
-		texture.setFitHeight(FXGL.getAppHeight());
-		texture.setFitWidth(FXGL.getAppWidth());
+		Texture texture = FXGL.texture("bg.jpg");
+//		texture.setFitHeight(FXGL.getAppHeight());
+//		texture.setFitWidth(FXGL.getAppWidth());
+//		texture.setEffect(null);
 		
 		return texture;
 	}
@@ -87,8 +92,8 @@ public class TrafficAppMenu extends FXGLMenu {
 	}
 	
 	private static class TrafficButton extends StackPane {
-		private static final Color FOCUSED_COLOR = Color.BLACK;
-		private static final Color NOT_FOCUSED_COLOR = Color.GRAY;
+		private static final Color FOCUSED_COLOR = Color.WHITE;
+		private static final Color NOT_FOCUSED_COLOR = Color.LIGHTGRAY;
 		
 		private String text;
 		private Runnable action;
@@ -100,8 +105,8 @@ public class TrafficAppMenu extends FXGLMenu {
 			this.text = text;
 			this.action = action;
 			
-			name = FXGL.getUIFactoryService().newText(text, Color.GRAY, 45.0);
-			icon = new Rectangle(15, 40, Color.BLACK);
+			name = FXGL.getUIFactoryService().newText(text, FOCUSED_COLOR, 45.0);
+			icon = new Rectangle(15, 40, FOCUSED_COLOR);
 			icon.setTranslateX(-60);
 			icon.visibleProperty().bind(focusedProperty());
 			
@@ -116,10 +121,6 @@ public class TrafficAppMenu extends FXGLMenu {
 					action.run();
 				}
 			});
-			
-//			setOnMouseClicked(e -> {
-//				action.run();
-//			});
 			
 			setFocusTraversable(true);
 			setAlignment(Pos.CENTER_LEFT);
