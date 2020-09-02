@@ -26,6 +26,7 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.time.LocalTimer;
+import javafx.geometry.Point2D;
 
 import it.uniroma1.metodologie.trafficGame.components.SpawnPointComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
@@ -193,14 +194,14 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Move Up") {
 			@Override
 			protected void onActionBegin() {
-				moveUpDown(Directions.UP, y -> y > 0, "pointerY");	
+				move(Directions.UP, y -> y > 0, "pointerY");	
 			}
 		}, KeyCode.W);
 
 		i.addAction(new UserAction("Move Down") {
 			@Override
 			protected void onActionBegin() {
-				moveUpDown(Directions.DOWN, y -> y < matrixIncroci.size() - 1, "pointerY");	
+				move(Directions.DOWN, y -> y < matrixIncroci.size() - 1, "pointerY");	
 			}
 		}, KeyCode.S);
 
@@ -220,25 +221,32 @@ public class TrafficApp extends GameApplication {
 		}, KeyCode.SPACE);
 	}
 
-	private void moveUpDown(Directions d, Predicate<Integer> p, String pointer) {
-		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
-		if(i > 1 && matrixIncroci.get(i + d.getY()).size() < matrixIncroci.get(i).size()) {
-			List<Entity> l = matrixIncroci.get(i + d.getY());
-			player1.setPosition(l.get(l.size()-1).getPosition());
-			player1.setProperty("pointerX", (int)player1.getPropertyOptional("pointerX").orElse(0) + d.getX());
-			player1.setProperty("pointerY", (int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY());
-		}
-		else
-			move(d, p, pointer);
-	}
+//	private void moveUpDown(Directions d, Predicate<Integer> p, String pointer) {
+//		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
+//		if(i > 1 && matrixIncroci.get(i + d.getY()).size() < matrixIncroci.get(i).size()) {
+//			List<Entity> l = matrixIncroci.get(i + d.getY());
+//			player1.setPosition(l.get(l.size()-1).getPosition());
+//			player1.setProperty("pointerX", (int)player1.getPropertyOptional("pointerX").orElse(0) + d.getX());
+//			player1.setProperty("pointerY", (int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY());
+//		}
+//		else
+//			move(d, p, pointer);
+//	}
 
 	private void move(Directions d, Predicate<Integer> p, String pointer) {
 		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
 		if(p.test(i)) {
 			player1.setProperty("pointerX", (int)player1.getPropertyOptional("pointerX").orElse(0) + d.getX());
 			player1.setProperty("pointerY", (int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY());
-			player1.setPosition(matrixIncroci.get((int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY()).get(d.getX() + (int) player1.getPropertyOptional("pointerX").orElse(Integer.valueOf(0))).getPosition());
-			
+			try {
+			player1.setPosition(matrixIncroci.get((int)player1.getPropertyOptional("pointerY").orElse(0)).get((int) player1.getPropertyOptional("pointerX").orElse(Integer.valueOf(0))).getPosition());
+			}
+			catch(IndexOutOfBoundsException e) {
+				player1.setProperty("pointerX", matrixIncroci.get(player1.getPropertyOptional("pointerY").orElseThrow()).size()-1);
+				List<Entity> row = matrixIncroci.get(player1.getPropertyOptional("pointerY").orElseThrow());
+				Point2D newPosition = row.get(row.size() - 1).getPosition();
+				player1.setPosition(newPosition);
+			}
 		}
 	}
 
