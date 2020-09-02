@@ -75,7 +75,7 @@ public class VehicleComponent extends Component{
 		}
 	}
 	
-	private final double COST = 5;
+	private final double COST = 4.5;
 	//potrebbe essere static ??????????????
 	private void creaCurve() {
 	    for(int j = 0; j < 8; j++) {
@@ -337,7 +337,7 @@ public class VehicleComponent extends Component{
 		//this.speed = 0;
 		this.accelerating = false;
 		if(this.speed > 0.1 && accSlow.elapsed(Duration.seconds(0.08))) {
-			this.speed -= 0.7;
+			this.speed -= 0.35;
 			accSlow.capture();
 		}
 	}
