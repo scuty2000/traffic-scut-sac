@@ -15,6 +15,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.ui.FXGLCheckBox;
 
+import it.uniroma1.metodologie.trafficGame.components.CrossRoadComponent;
 import it.uniroma1.metodologie.trafficGame.components.PlayerAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.SpawnPointComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
@@ -149,6 +150,7 @@ public class TrafficFactory implements EntityFactory{
 		return FXGL.entityBuilder(data)
 					.type(EntityType.INCROCIO)
 					.bbox(new HitBox(BoundingShape.box(250, 250)))
+					.with(new CrossRoadComponent())
 					.with(new CollidableComponent(true))
 					.build();
 	}
@@ -160,6 +162,7 @@ public class TrafficFactory implements EntityFactory{
 					.bbox(new HitBox(BoundingShape.box(250, 250)))
 					.with("direzione", data.get("direzione"))
 					.with(new CollidableComponent(true))
+					.with(new CrossRoadComponent())
 					.build();
 	}
 	

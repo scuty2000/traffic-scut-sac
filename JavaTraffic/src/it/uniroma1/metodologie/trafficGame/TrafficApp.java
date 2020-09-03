@@ -22,12 +22,13 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.time.LocalTimer;
 import javafx.geometry.Point2D;
-
+import it.uniroma1.metodologie.trafficGame.components.CrossRoadComponent;
 import it.uniroma1.metodologie.trafficGame.components.SpawnPointComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
@@ -312,7 +313,7 @@ public class TrafficApp extends GameApplication {
 		});
 
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.INCROCIO) {
-
+		
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				//				Entity e = FXGL.entityBuilder()
@@ -320,16 +321,21 @@ public class TrafficApp extends GameApplication {
 				//						.build();
 				//				System.out.println(e.getBoundingBoxComponent().hitBoxesProperty().get(0).getName());
 				//				if(i.isColliding(e))
+				i.getComponent(CrossRoadComponent.class).addCar();
 				if(v.getComponent(VehicleComponent.class).getVehicle().canTurn())
 					turnVehicle(v, i);
 			}
+			
+			@Override
+			protected void onCollisionEnd(Entity v, Entity i) { i.getComponent(CrossRoadComponent.class).subCar(); }
+			
 		});		
 
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.SEMAFORO) {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				if(!i.getComponent(TrafficLightAnimationComponent.class).isGreen()
+				if(i.getComponent(TrafficLightAnimationComponent.class).isRed()
 						&& !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
 					v.getComponent(VehicleComponent.class).slowDown();
 			}

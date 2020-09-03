@@ -85,13 +85,7 @@ public class TrafficLightAnimationComponent extends Component {
 		toSwitch = true;
 	}
 	
-	public boolean isCrossRoadFree() {
-		List<Entity> entityList = FXGL.getGameWorld().getCollidingEntities(crossRoad);
-		for (Entity en : entityList) 
-			if(en.getType().equals(EntityType.VEHICLE))
-				return false;
-		return true;
-	}
+	public boolean isCrossRoadFree() { return crossRoad.getComponent(CrossRoadComponent.class).isFree(); }
 	
 	public void setCrossRoad(Entity cr) { this.crossRoad = cr; System.out.println("semaforo"); }
 }
