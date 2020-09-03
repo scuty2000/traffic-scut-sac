@@ -1,6 +1,7 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.almasb.fxgl.entity.Entity;
@@ -46,14 +47,14 @@ public class TrafficLightAnimationComponent extends Component {
 		if(isRed && toSwitch) {
 			texture.loopAnimationChannel(animGreen);
 			isCrossRoadFree = false;
-			//System.out.println("toSwitch: "+toSwitch+". AnimationChannel: "+texture.getAnimationChannel()+".");
 			isRed = false;
+			
 		} else if (!isRed && toSwitch) {
 			texture.loopAnimationChannel(animRed);
-			//System.out.println("toSwitch: "+toSwitch+". AnimationChannel: "+texture.getAnimationChannel()+".");
 			isRed = true;
+			
 		}
-		
+		updateAll();
 		toSwitch = false;
 		
 	}
@@ -88,4 +89,15 @@ public class TrafficLightAnimationComponent extends Component {
 	public boolean isCrossRoadFree() { return crossRoad.getComponent(CrossRoadComponent.class).isFree(); }
 	
 	public void setCrossRoad(Entity cr) { this.crossRoad = cr; System.out.println("semaforo"); }
+	
+	///////////////////////////////////////
+	//this part is used when the trafficLight has to communicate with the car
+	
+	private List<Entity> cars = new LinkedList<>();
+	
+	public void registerCar(Entity car) { cars.add(car); }
+	
+	private void updateAll() { cars.forEach(c -> c.getComponent(VehicleComponent.class).updateTrafficLights()); }
+	
+	public void removeCar(Entity c) { cars.remove(c); }
 }

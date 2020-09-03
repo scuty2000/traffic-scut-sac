@@ -322,18 +322,16 @@ public class TrafficApp extends GameApplication {
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				if(i.getComponent(TrafficLightAnimationComponent.class).isRed()
-						&& !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
+						&& !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio())) {
 					v.getComponent(VehicleComponent.class).slowDown();
+					i.getComponent(TrafficLightAnimationComponent.class).registerCar(v);
+				}
+				
 			}
-
+			
 			@Override
-			protected void onCollision(Entity v, Entity i) {
-				if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isGreen()
-						|| v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
-					v.getComponentOptional(VehicleComponent.class).get().accelerate();
-				else
-					v.getComponentOptional(VehicleComponent.class).get().slowDown();
-
+			protected void onCollisionEnd(Entity v, Entity i) {
+				i.getComponent(TrafficLightAnimationComponent.class).removeCar(v);
 			}
 		});	
 	}

@@ -340,4 +340,13 @@ public class VehicleComponent extends Component{
 			blinkTimer.capture();
 		}
 	}
+	
+	public void updateTrafficLights() {
+		Entity i = FXGL.getGameWorld().getCollidingEntities(entity).parallelStream().filter(x -> x.getType().equals(EntityType.SEMAFORO)).findFirst().orElseThrow();
+		if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isGreen()
+				|| entity.isColliding(entity.getComponent(VehicleComponent.class).getNearestIncrocio()))
+			entity.getComponentOptional(VehicleComponent.class).get().accelerate();
+		else
+			entity.getComponentOptional(VehicleComponent.class).get().slowDown();
+	}
 }
