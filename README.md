@@ -53,4 +53,6 @@ Traffic è una reimplementazione di un vecchio gioco per Commodore 64.
 
 - Sak: Ho cercato di mettere a posto le collisioni tra macchine dato che alcune volte esse si fermano senza motivo dopo una collisione e non ripartono
 
+- Scut: Ho aggiunto i counter per la coda delle macchine. Cambiano colore a seconda della quantità di macchine in attesa, e la loro posizione è relativa al tile in cui si trova lo spawn point e non direttamente alla posizione di questo. Poi ho commentato la musica, perché è fastidiosa adesso e non so come gestire il volume globale all'init.
+
 <hr/>
