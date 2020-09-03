@@ -88,9 +88,7 @@ public class TrafficApp extends GameApplication {
 		
 		gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
 		
-		gameMusic.getAudio$fxgl_media().setVolume(0.5);
-		
-		FXGL.getAudioPlayer().loopMusic(gameMusic);
+//		FXGL.getAudioPlayer().loopMusic(gameMusic);
 		
 		spawnList = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList());
 

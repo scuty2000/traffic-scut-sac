@@ -123,31 +123,6 @@ public class VehicleComponent extends Component{
 			    ));
 	}
 
-	/*
-	 * onUpdate the car has to be moved toward the direction setted.
-	 */
-//	@Override
-//	public void onUpdate(double tpf) {
-//
-//		if(entity.getX() < -100 || entity.getX() > 2600 || entity.getY() < -100 || entity.getY() > 2600) {
-//			entity.removeFromWorld();
-//		} else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove)) && !turning) {
-//			entity.translate(speed * d.getX(), speed * d.getY());
-//			if((d.equals(Directions.LEFT) || d.equals(Directions.RIGHT)) && Math.abs(entity.getCenter().getY() - currentPath.getY()) > 1) {
-//				entity.translateY(entity.getCenter().getY() - currentPath.getY() > 0 ?-0.2: 0.2);
-//			} else if((d.equals(Directions.UP) || d.equals(Directions.DOWN)) && Math.abs(entity.getCenter().getX() - currentPath.getX()) > 1) {
-//				moveForward();
-//			}
-//			shootTimer.capture();
-//		} else if (turning) {
-//			turnAnimation();
-//		}
-//			
-//	}
-//	
-//	public void moveForward() {
-//		entity.translateX(entity.getCenter().getX() - currentPath.getX() > 0 ? -0.2 : 0.2);
-//	}
 	@Override
 	public void onUpdate(double tpf) {
 		if(debugCurve)
@@ -171,7 +146,6 @@ public class VehicleComponent extends Component{
 		else
 			slowDown();
 	}
-	//entity.translateX(entity.getCenter().getX() - currentPath.getX() > 0 ? -0.2 : 0.2);
 
 	public void moveForward() {
 		entity.translate(speed * d.getX(), speed * d.getY());
@@ -185,17 +159,6 @@ public class VehicleComponent extends Component{
 		}
 	}
 	
-//	/*
-//	 * Sometimes vehicles stop moving. This method has to check if the car is colliding with some entity when it is not moveing or if it is bugged
-//	 */
-//	private void checkIfBugged() {
-//		Entity nearestSemaforo = getNearestSemaforo();
-//		if((!entity.isColliding(nearestSemaforo) && !entity.isColliding(getNearestByClass(EntityType.VEHICLE))) || (entity.isColliding(nearestSemaforo) && nearestSemaforo.getComponent(TrafficLightAnimationComponent.class).isGreen())){
-//			accelerate();
-//		}
-//	}
-	
-	//////////////////////////////////////////////////////////////////
 	private double mul;
 	private int rot;
 	
