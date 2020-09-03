@@ -24,10 +24,4 @@ public class PlayerAnimationComponent extends Component {
 	public void onAdded() {
 		entity.getViewComponent().addChild(texture);
 	}
-	
-	@Override
-	public void onUpdate(double tpf) {
-		//texture.loopAnimationChannel(animationSprite);
-	}
-	
 }

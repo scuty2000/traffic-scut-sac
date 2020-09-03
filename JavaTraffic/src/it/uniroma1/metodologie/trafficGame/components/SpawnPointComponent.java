@@ -6,6 +6,8 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.physics.BoundingShape;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.time.LocalTimer;
 import it.uniroma1.metodologie.trafficGame.TrafficApp;
 import javafx.geometry.Point2D;
@@ -24,11 +26,15 @@ public class SpawnPointComponent extends Component{
 	private int vehicles = 0;
 	private LocalTimer counterTimer;
 	private Entity queueCounter;
+	
+	private int isFree;
 
 	private LinkedList<SpawnData> spawnDataList;
 	private static final int DEATH = 6;
 	private Entity linkedSpawnPoint;
 	private Point2D spawnPointPosition;
+	
+	private boolean hasLost;
 	
 	private static final Color NP_COLOR = Color.LIGHTBLUE;
 	private static final Color WARNING_COLOR = Color.DARKGOLDENROD;
@@ -44,7 +50,7 @@ public class SpawnPointComponent extends Component{
 	@Override
 	public void onUpdate(double tps) {
 		spawnCar();
-		if(hasLost()) {
+		if(hasLost) {
 			FXGL.getGameController().gotoMainMenu();;
 			TrafficApp mainApp = (TrafficApp) FXGL.getApp();
 			FXGL.getAudioPlayer().stopMusic(mainApp.getGameMusic());
@@ -59,9 +65,8 @@ public class SpawnPointComponent extends Component{
 	public void registerCar(SpawnData sd) { 
 		vehicles ++;
 		spawnDataList.add(sd);
+		hasLost = vehicles >= DEATH;
 	}
-	
-	public boolean hasLost() { return vehicles >= DEATH; }
 	
 	public void spawnCar() {
 		if(isFree() && vehicles > 0) {
@@ -70,7 +75,6 @@ public class SpawnPointComponent extends Component{
 		}
 	}
 	
-	private boolean isFree() { return !FXGL.getGameWorld().getEntitiesInRange(new Rectangle2D(entity.getX(), entity.getY(), 40, 40)).stream().anyMatch(x -> x.getType().equals(EntityType.VEHICLE)); }
 
 	private void spawnQueuedCount() {
 		if(queueCounter != null)
@@ -124,5 +128,12 @@ public class SpawnPointComponent extends Component{
 				.buildAndAttach();
 		
 	}
+	
+	
+	
+	private boolean isFree() { return isFree <= 0; }
+	
+	public void addCarToFree() { isFree ++; }
+	public void subCarToFree() { isFree --; }
 	
 }

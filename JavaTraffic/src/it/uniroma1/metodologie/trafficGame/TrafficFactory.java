@@ -168,12 +168,15 @@ public class TrafficFactory implements EntityFactory{
 	
 	@Spawns("spawn")
 	public Entity getSpawn(SpawnData data) {
-		return FXGL.entityBuilder(data)
+		Entity e =  FXGL.entityBuilder(data)
 				.type(EntityType.SPAWN)
-				.bbox(new HitBox(BoundingShape.box(0, 0)))
 				.with(new SpawnPointComponent())
 				.collidable()
 				.build();
+		Point2D p = e.getPosition();
+		HitBox h = new HitBox(BoundingShape.polygon(new Point2D(-45,-45), new Point2D(-45, 45), new Point2D(45,45), new Point2D(45, -45)));
+		e.getBoundingBoxComponent().addHitBox(h);
+		return e;
 	}
 	
 	@Spawns("path")

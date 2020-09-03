@@ -48,13 +48,13 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void initSettings(GameSettings settings) {
-//		settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
+		settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
 		settings.setVersion("Alpha 1.0"); // To update periodically
 		settings.setTitle("  Traffic  ");
 		settings.setWidth(2500);
 		settings.setHeight(1750);
-//		settings.setApplicationMode(ApplicationMode.DEVELOPER);
-//		settings.setProfilingEnabled(true);
+		settings.setApplicationMode(ApplicationMode.DEVELOPER);
+		settings.setProfilingEnabled(true);
 		settings.setMainMenuEnabled(true);
 		settings.setManualResizeEnabled(true);
 		settings.setPreserveResizeRatio(true);
@@ -209,18 +209,6 @@ public class TrafficApp extends GameApplication {
 		}, KeyCode.SPACE);
 	}
 
-//	private void moveUpDown(Directions d, Predicate<Integer> p, String pointer) {
-//		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
-//		if(i > 1 && matrixIncroci.get(i + d.getY()).size() < matrixIncroci.get(i).size()) {
-//			List<Entity> l = matrixIncroci.get(i + d.getY());
-//			player1.setPosition(l.get(l.size()-1).getPosition());
-//			player1.setProperty("pointerX", (int)player1.getPropertyOptional("pointerX").orElse(0) + d.getX());
-//			player1.setProperty("pointerY", (int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY());
-//		}
-//		else
-//			move(d, p, pointer);
-//	}
-
 	private void move(Directions d, Predicate<Integer> p, String pointer) {
 		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
 		if(p.test(i)) {
@@ -334,22 +322,38 @@ public class TrafficApp extends GameApplication {
 				i.getComponent(TrafficLightAnimationComponent.class).removeCar(v);
 			}
 		});	
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.SPAWN) {
+			
+			@Override
+			protected void onCollisionBegin(Entity v, Entity s) {
+				s.getComponent(SpawnPointComponent.class).addCarToFree();;
+			}
+			
+			@Override
+			protected void onCollisionEnd(Entity v, Entity s) {
+				s.getComponent(SpawnPointComponent.class).subCarToFree();;
+			}
+			
+		});
 	}
+	
+	private static final int EASY = 110;
+	private static final int MEDIUM = 50;
+	private static final int HARD = 30;
 
-	private LocalTimer spawnTimer;
-	private double spawnRate = 2;
-	private final double minSpawnRate = 0.8;
-
+	private int spawnRate = 120;	//fps before spawn of a new car
+	private final int minSpawnRate = MEDIUM;	//min spawn fps
+	private int counter;
 	@Override
 	protected void onUpdate(double tpf) {
-		if(spawnTimer == null)
-			spawnTimer = FXGL.newLocalTimer();
-		if(spawnTimer.elapsed(Duration.seconds(spawnRate))) {
-			spawnCar();			
+		if(counter > spawnRate) {
+			spawnCar();
+			counter = 0;
 			if(spawnRate > minSpawnRate)
-				spawnRate -= 0.03;
-			spawnTimer.capture();
+				spawnRate--;
 		}
+		counter ++;
 	}
 	
 	private void spawnCar() {
