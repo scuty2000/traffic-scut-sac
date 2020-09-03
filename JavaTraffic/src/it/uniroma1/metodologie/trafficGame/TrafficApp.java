@@ -290,20 +290,6 @@ public class TrafficApp extends GameApplication {
 					carBehind.getComponent(VehicleComponent.class).slowDown();
 			}
 
-			
-			/*
-			 *commentando l'on collision non c'� pi� il problema delle macchine che non ripartono 
-			 */
-//			@Override
-//			protected void onCollision(Entity v, Entity i) {
-//				if(carBehind != null) {
-//					if(carBehind.getLocalAnchor().distance(carInFront.getLocalAnchor()) < carInFront.getWidth())
-//						carBehind.getComponent(VehicleComponent.class).slowDown();
-//					else
-//						carBehind.getComponent(VehicleComponent.class).accelerate();
-//				}
-//			}
-
 			@Override
 			protected void onCollisionEnd(Entity a, Entity b) {
 				a.getComponent(VehicleComponent.class).accelerate();
