@@ -99,7 +99,12 @@ public class TrafficApp extends GameApplication {
 		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
 
 		incroci = (ArrayList<Entity>) gw.getEntitiesByType(EntityType.INCROCIO);
-
+		
+		for(Entity i : incroci) {
+			List<Entity> le = getSemaforiAdiacenti(i);
+			le.forEach(x -> x.getComponent(TrafficLightAnimationComponent.class).setCrossRoad(i));
+			System.out.println(i);
+		}
 		for (Entity semaforo : FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO)) {
 			if((semaforo.getProperties().getInt("rotation") == 1 || semaforo.getProperties().getInt("rotation") == 3))
 				semaforo.getComponent(TrafficLightAnimationComponent.class).switchLight();
@@ -127,7 +132,31 @@ public class TrafficApp extends GameApplication {
 	private List<Entity> getListaIncroci(){
 		return FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.INCROCIO)).sorted((s1,s2) ->(int) s1.getY() - (int)s2.getY()).collect(Collectors.toCollection(LinkedList::new));
 	}
+	//####################################
+	private List<Entity> getSemaforiAdiacenti(Entity p) {
+		return checkSemafori((List<Entity>) FXGL.getGameWorld()
+					.getEntitiesInRange(new Rectangle2D(p.getX(), p.getY(), 252, 252))
+					.stream()
+					.filter(x -> x.getType().equals(EntityType.SEMAFORO))
+					.collect(Collectors.toList()), p);
 
+	}
+	
+	private List<Entity> checkSemafori(List<Entity> sa, Entity e){ return sa.parallelStream().filter(x-> checkPosition(x, e)).collect(Collectors.toList()); }
+	
+	private boolean checkPosition(Entity s, Entity e) {
+		switch(Directions.valueOf((String) s.getPropertyOptional("direzione").orElseThrow())) {
+		case UP:
+			return s.getY() > e.getY() && s.getX() > e.getX();
+		case DOWN:
+			return s.getY() < e.getY() && s.getX() < e.getX();
+		case RIGHT:
+			return s.getX() < e.getX() && s.getY() > e.getY();
+		default:
+			return s.getX() > e.getX() && s.getY() < e.getY();
+		}
+	}
+	//####################################
 	@Override
 	protected void initInput() {
 		Input i = FXGL.getInput();
@@ -135,45 +164,11 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Change trafficlight status") {
 			@Override
 			protected void onActionBegin() {
-//				ArrayList<Entity> semaforiAdiacenti = (ArrayList<Entity>) FXGL.getGameWorld()
-//						.getEntitiesByType(EntityType.SEMAFORO)
-//						.stream()
-//						.filter(x -> x.getPosition().distance(player1.getPosition()) <= 354)
-//						.collect(Collectors.toList());
-//
-				List<Entity> semaforiAdiacenti = (List<Entity>) FXGL.getGameWorld()
-						.getEntitiesInRange(new Rectangle2D(player1.getPosition().getX(), player1.getPosition().getY(), 252, 252)).stream().filter(x -> x.getType().equals(EntityType.SEMAFORO)).collect(Collectors.toList());
-				semaforiAdiacenti = checkSemafori(semaforiAdiacenti);
-				for (Entity entity : semaforiAdiacenti) {
+				for (Entity entity : getSemaforiAdiacenti(player1)) {
 					entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
 				}
-				
 				FXGL.getAudioPlayer().playSound(pointersound);
-
-			}
-			
-			private List<Entity> checkSemafori(List<Entity> sa){
-//				for(int i = sa.size() - 1; i >= 0; i--) {
-//					switch(checkSemafori(sa.get(i))) {
-//					case 
-//					}
-//				}
-				return sa.parallelStream().filter(x-> checkPosition(x)).collect(Collectors.toList());
-			}
-			
-			private boolean checkPosition(Entity s) {
-				switch(Directions.valueOf((String) s.getPropertyOptional("direzione").orElseThrow())) {
-				case UP:
-					return s.getY() > player1.getY() && s.getX() > player1.getX();
-				case DOWN:
-					return s.getY() < player1.getY() && s.getX() < player1.getX();
-				case RIGHT:
-					return s.getX() < player1.getX() && s.getY() > player1.getY();
-				default:
-					return s.getX() > player1.getX() && s.getY() < player1.getY();
-				}
-			}
-			
+			}			
 		}, KeyCode.F);
 
 		i.addAction(new UserAction("Move Right") {

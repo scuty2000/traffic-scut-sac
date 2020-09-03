@@ -1,17 +1,21 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
+import java.util.Comparator;
+import java.util.List;
+
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
+import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficLightAnimationComponent extends Component {
 
 	private boolean isRed = true;
-	private boolean toSwitch = false;
-	
+	private boolean toSwitch = false;	
 	/*
 	 * this field is false if a car is turning left on the other side of the cross. It becomes true when the car has finished turning
 	 */
@@ -19,6 +23,8 @@ public class TrafficLightAnimationComponent extends Component {
 	
 	private AnimatedTexture texture;
 	private AnimationChannel animRed, animGreen;
+	
+	private Entity crossRoad;
 	
 	public TrafficLightAnimationComponent(int tileID) {
 		
@@ -39,6 +45,7 @@ public class TrafficLightAnimationComponent extends Component {
 	public void onUpdate(double tpf) {
 		if(isRed && toSwitch) {
 			texture.loopAnimationChannel(animGreen);
+			isCrossRoadFree = false;
 			//System.out.println("toSwitch: "+toSwitch+". AnimationChannel: "+texture.getAnimationChannel()+".");
 			isRed = false;
 		} else if (!isRed && toSwitch) {
@@ -59,7 +66,9 @@ public class TrafficLightAnimationComponent extends Component {
 	 * returns true if the light is green and no car is turning left on the other side of the cross
 	 */
 	public boolean isGreen() {
-		return !isRed && canPass;
+		if(!isCrossRoadFree)
+			isCrossRoadFree = isCrossRoadFree();
+		return !isRed && canPass && isCrossRoadFree;
 	}
 	
 	public void waitACar() {
@@ -70,8 +79,19 @@ public class TrafficLightAnimationComponent extends Component {
 		canPass = true;
 	}
 	
+	private boolean isCrossRoadFree = true;
+	
 	public void switchLight() {
 		toSwitch = true;
 	}
 	
+	public boolean isCrossRoadFree() {
+		List<Entity> entityList = FXGL.getGameWorld().getCollidingEntities(crossRoad);
+		for (Entity en : entityList) 
+			if(en.getType().equals(EntityType.VEHICLE))
+				return false;
+		return true;
+	}
+	
+	public void setCrossRoad(Entity cr) { this.crossRoad = cr; System.out.println("semaforo"); }
 }
