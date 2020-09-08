@@ -1,6 +1,7 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
@@ -70,7 +71,8 @@ public class SpawnPointComponent extends Component{
 	
 	public void spawnCar() {
 		if(isFree() && vehicles > 0) {
-			FXGL.getGameWorld().spawn("vehicle", spawnDataList.remove(0));
+			Entity e = FXGL.getGameWorld().spawn("vehicle", spawnDataList.remove(0));
+			e.getComponent(VehicleComponent.class).getCurrentPath().getComponent(PathComponent.class).addCar(e);
 			vehicles --;
 		}
 	}

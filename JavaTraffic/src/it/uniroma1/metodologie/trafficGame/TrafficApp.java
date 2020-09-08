@@ -29,6 +29,7 @@ import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.time.LocalTimer;
 import javafx.geometry.Point2D;
 import it.uniroma1.metodologie.trafficGame.components.CrossRoadComponent;
+import it.uniroma1.metodologie.trafficGame.components.PathComponent;
 import it.uniroma1.metodologie.trafficGame.components.SpawnPointComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
@@ -309,11 +310,15 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				if(i.getComponent(TrafficLightAnimationComponent.class).isRed()
-						&& !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio())) {
+				if((i.getComponent(TrafficLightAnimationComponent.class).isRed()
+						&& !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
+						||
+						!v.getComponent(VehicleComponent.class).getNextPath().getComponent(PathComponent.class).isFree(v)) {
 					v.getComponent(VehicleComponent.class).slowDown();
 					i.getComponent(TrafficLightAnimationComponent.class).registerCar(v);
 				}
+				else
+					v.getComponent(VehicleComponent.class).getNextPath().getComponent(PathComponent.class).addCar(v);
 				
 			}
 			
@@ -322,6 +327,15 @@ public class TrafficApp extends GameApplication {
 				i.getComponent(TrafficLightAnimationComponent.class).removeCar(v);
 			}
 		});	
+		
+		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.PATH) {
+			
+			@Override
+			protected void onCollisionEnd(Entity v, Entity p) {
+				p.getComponent(PathComponent.class).removeCar(v);
+			}
+			
+		});
 		
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.SPAWN) {
 			
@@ -357,7 +371,7 @@ public class TrafficApp extends GameApplication {
 	}
 	
 	private void spawnCar() {
-		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnList.size()));
+		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(0);//new Random().nextInt(spawnList.size()));
 		SpawnData vdata = new SpawnData(e.getPosition());
 		vdata.put("pathList", pathChooser(e));
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
@@ -401,18 +415,19 @@ public class TrafficApp extends GameApplication {
 		paths.add(root);
 
 		while(((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(",").length > 1) {
-			paths.add(nextPathFinder((String) root.getPropertyOptional("direzione").get(), ((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(",")));
+			paths.add(nextPathFinder((String) root.getPropertyOptional("direzione").get(), ((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(","), Directions.valueOf((String) paths.get(paths.size() - 1).getPropertyOptional("direzione").orElseThrow())));
 		}
 
 		return paths;
 	}
 
-	private Entity nextPathFinder(String current, String[] strings) {
+	private Entity nextPathFinder(String current, String[] strings, Directions oldDir) {
 		//lista dei possibili path
-		List<Entity> l = Arrays.stream(strings).map(x -> findPath(x)).filter(x -> x != null).collect(Collectors.toList());
+		List<Entity> l = Arrays.stream(strings).map(x -> findPath(x)).filter(x -> x != null).sorted(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").get()).equals(oldDir) ? 0 : 1)).collect(Collectors.toList());
 		Random r = new Random();
 		if(l.isEmpty()) return null;
-		return l.get(r.nextInt(l.size()));
+		int i = r.nextInt(l.size() + 3);
+		return l.get(i > l.size() - 1 ? 0 : i);
 	}
 	
 	public Music getGameMusic() {

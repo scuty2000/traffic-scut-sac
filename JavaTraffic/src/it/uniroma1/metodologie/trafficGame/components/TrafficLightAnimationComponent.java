@@ -54,7 +54,8 @@ public class TrafficLightAnimationComponent extends Component {
 			isRed = true;
 			
 		}
-		updateAll();
+		if(isGreen()) 
+			updateAll();
 		toSwitch = false;
 		
 	}

@@ -343,10 +343,25 @@ public class VehicleComponent extends Component{
 	
 	public void updateTrafficLights() {
 		Entity i = FXGL.getGameWorld().getCollidingEntities(entity).parallelStream().filter(x -> x.getType().equals(EntityType.SEMAFORO)).findFirst().orElseThrow();
-		if(i.getComponentOptional(TrafficLightAnimationComponent.class).get().isGreen()
-				|| entity.isColliding(entity.getComponent(VehicleComponent.class).getNearestIncrocio()))
-			entity.getComponentOptional(VehicleComponent.class).get().accelerate();
+		Entity nextPath = getNextPath();
+		if(i.getComponentOptional(TrafficLightAnimationComponent.class).orElseThrow().isGreen()
+				|| entity.isColliding(getNearestIncrocio())) {
+			if(!accelerating) {
+				if(nextPath != null && nextPath.getComponent(PathComponent.class).isFree(entity)) {
+					nextPath.getComponent(PathComponent.class).addCar(entity);
+					accelerate();
+				}
+				else if(nextPath == null)
+					accelerate();
+			}
+		}
 		else
-			entity.getComponentOptional(VehicleComponent.class).get().slowDown();
+			slowDown();
 	}
+
+	public Entity getNextPath() {
+		return pathList.size() > 0 ? pathList.get(0) : null;
+	}
+
+	public Entity getCurrentPath() {return currentPath; }
 }

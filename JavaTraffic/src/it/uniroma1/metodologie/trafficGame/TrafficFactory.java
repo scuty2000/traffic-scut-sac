@@ -16,6 +16,7 @@ import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.ui.FXGLCheckBox;
 
 import it.uniroma1.metodologie.trafficGame.components.CrossRoadComponent;
+import it.uniroma1.metodologie.trafficGame.components.PathComponent;
 import it.uniroma1.metodologie.trafficGame.components.PlayerAnimationComponent;
 import it.uniroma1.metodologie.trafficGame.components.SpawnPointComponent;
 import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationComponent;
@@ -96,7 +97,7 @@ public class TrafficFactory implements EntityFactory{
 	public Entity getVehicle(SpawnData data) {
 		Entity vehicle;
 		int random = new Random().nextInt(9);
-		if(random <= 1 && (boolean) data.get("tir"))
+		if(false)//random <= 1 && (boolean) data.get("tir"))
 			vehicle = build(data, Vehicle.TIR);
 		else if(random <= 3)
 			vehicle = build(data, Vehicle.MOTORBIKE);
@@ -188,6 +189,7 @@ public class TrafficFactory implements EntityFactory{
 					.viewWithBBox(new Rectangle((int)data.get("width") == 0 ? 4 : (int)data.get("width"), (int)data.get("height") == 0 ? 4 : (int)data.get("height")))
 					//.bbox(new HitBox(BoundingShape.chain(new Point2D((float)data.getX(),(float)data.getY()), new Point2D(data.getX() + (int)data.get("width"),data.getY() + (int)data.get("height")))))
 					//.with("direzione", data.get("direzione"))
+					.with(new PathComponent())
 					.build();
 					
 	}
