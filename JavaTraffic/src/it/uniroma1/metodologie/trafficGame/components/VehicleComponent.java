@@ -23,7 +23,7 @@ public class VehicleComponent extends Component{
 	 * DEBUG
 	 */
 	
-	private boolean debugCurve = false;
+	private boolean debugCurve = true;
 	
 	/*
 	 * speed of the veichle
@@ -44,7 +44,7 @@ public class VehicleComponent extends Component{
 
 	private LocalTimer shootTimer;
 
-	private double gapBetweenMove = 0.01;
+	private double gapBetweenMove = 0.03;
 
 	private LocalTimer accSlow;
 
@@ -72,6 +72,7 @@ public class VehicleComponent extends Component{
 		accSlow = FXGL.newLocalTimer();
 		accSlow.capture();
 		turnTimer = FXGL.newLocalTimer();
+		TURN_GAP = gapBetweenMove * 2;
 		
 		creaCurve();
 		for (ArrayList<Point2D> arrayList : arrayCurve) {
@@ -126,7 +127,7 @@ public class VehicleComponent extends Component{
 	@Override
 	public void onUpdate(double tpf) {
 		if(debugCurve)
-			FXGL.entityBuilder().at(entity.getAnchoredPosition()).view(new Rectangle(5,5,Color.BLACK)).buildAndAttach();
+			FXGL.entityBuilder().at(entity.getAnchoredPosition()).view(new Rectangle(5,5,Color.GREEN)).buildAndAttach();
 
 		if(entity.getX() < -100 || entity.getX() > 2600 || entity.getY() < -100 || entity.getY() > 2600) {
 			entity.removeFromWorld();
@@ -175,7 +176,7 @@ public class VehicleComponent extends Component{
 	}
 
 	private void turn(Directions d) {
-		if(!(d.equals(this.d) || d.isOpposite(this.d))) {
+		if(!d.equals(this.d)) {
 			switch(this.d) {
 			case UP : 
 				if(d.equals(Directions.LEFT)) {
@@ -216,55 +217,52 @@ public class VehicleComponent extends Component{
 			};
 			this.oldDirection = this.d;
 			this.d = d;
-			this.turning = true;
-			gapBetweenMove = 0.06;
-			
+			this.turning = true;			
 		}
 	}
 	
-	private double TURN_GAP = 0.03;
+	private double TURN_GAP;
 	private LocalTimer turnTimer;
 	
 	private void turnAnimation() {
 		if(turnTimer.elapsed(Duration.seconds(TURN_GAP))){
-		entity.rotateBy(rot*mul);
-		
-		if(this.oldDirection.equals(Directions.RIGHT) && this.d.equals(Directions.DOWN)){
-			entity.translate(arrayCurve.get(4).remove(0));
-		} else if(this.oldDirection.equals(Directions.RIGHT) && this.d.equals(Directions.UP)) {
-			entity.translate(arrayCurve.get(3).remove(arrayCurve.get(3).size()-1));
-		} else if(this.oldDirection.equals(Directions.UP) && this.d.equals(Directions.RIGHT)) {
-			entity.translate(arrayCurve.get(7).remove(0));
-		} else if(this.oldDirection.equals(Directions.UP) && this.d.equals(Directions.LEFT)) {
-			entity.translate(arrayCurve.get(2).remove(arrayCurve.get(2).size()-1));
-		} else if(this.oldDirection.equals(Directions.LEFT) && this.d.equals(Directions.UP)) {
-			entity.translate(arrayCurve.get(6).remove(0));
-		} else if(this.oldDirection.equals(Directions.LEFT) && this.d.equals(Directions.DOWN)) {
-			entity.translate(arrayCurve.get(1).remove(arrayCurve.get(1).size()-1));
-		} else if(this.oldDirection.equals(Directions.DOWN) && this.d.equals(Directions.RIGHT)) {
-			entity.translate(arrayCurve.get(0).remove(arrayCurve.get(0).size()-1));
-		} else if(this.oldDirection.equals(Directions.DOWN) && this.d.equals(Directions.LEFT)) { // TODO tune this
-			entity.translate(arrayCurve.get(5).remove(0));
-		}
-		if(debugCurve)
-			FXGL.entityBuilder()
-			.at(entity.getPosition())
-			.view(new Rectangle(5,5, Color.BLUE))
-			.buildAndAttach();
-		
-		if(entity.getRotation()%90 == 0) {
-			turning = false;
-			accelerate();
-			gapBetweenMove = 0.01;
-			this.arrayCurve.clear();
-			for (ArrayList<Point2D> arrayList : arrayCurveBCK) {
-				this.arrayCurve.add((ArrayList<Point2D>) arrayList.clone());
+			entity.rotateBy(rot*mul);
+
+			if(this.oldDirection.equals(Directions.RIGHT) && this.d.equals(Directions.DOWN)){
+				entity.translate(arrayCurve.get(4).remove(0));
+			} else if(this.oldDirection.equals(Directions.RIGHT) && this.d.equals(Directions.UP)) {
+				entity.translate(arrayCurve.get(3).remove(arrayCurve.get(3).size()-1));
+			} else if(this.oldDirection.equals(Directions.UP) && this.d.equals(Directions.RIGHT)) {
+				entity.translate(arrayCurve.get(7).remove(0));
+			} else if(this.oldDirection.equals(Directions.UP) && this.d.equals(Directions.LEFT)) {
+				entity.translate(arrayCurve.get(2).remove(arrayCurve.get(2).size()-1));
+			} else if(this.oldDirection.equals(Directions.LEFT) && this.d.equals(Directions.UP)) {
+				entity.translate(arrayCurve.get(6).remove(0));
+			} else if(this.oldDirection.equals(Directions.LEFT) && this.d.equals(Directions.DOWN)) {
+				entity.translate(arrayCurve.get(1).remove(arrayCurve.get(1).size()-1));
+			} else if(this.oldDirection.equals(Directions.DOWN) && this.d.equals(Directions.RIGHT)) {
+				entity.translate(arrayCurve.get(0).remove(arrayCurve.get(0).size()-1));
+			} else if(this.oldDirection.equals(Directions.DOWN) && this.d.equals(Directions.LEFT)) { // TODO tune this
+				entity.translate(arrayCurve.get(5).remove(0));
 			}
-			
-			this.currentArrow.setVisible(false);
+			if(debugCurve)
+				FXGL.entityBuilder()
+				.at(entity.getPosition())
+				.view(new Rectangle(5,5, Color.BLUE))
+				.buildAndAttach();
+
+			if(entity.getRotation()%90 == 0) {
+				turning = false;
+				accelerate();
+				this.arrayCurve.clear();
+				for (ArrayList<Point2D> arrayList : arrayCurveBCK) {
+					this.arrayCurve.add((ArrayList<Point2D>) arrayList.clone());
+				}
+
+				this.currentArrow.setVisible(false);
+			}
+			turnTimer.capture();
 		}
-		turnTimer.capture();
-	}
 	}
 
 	public Directions getDirection() { return this.d; }
@@ -272,7 +270,6 @@ public class VehicleComponent extends Component{
 	public void nextPath() {
 		Entity oldPath = currentPath;
 		currentPath = pathList.remove(0);
-		//////////////////////////////////////serve ancora???????????
 		turn(Directions.valueOf((String) currentPath.getPropertyOptional("direzione").orElse("DOWN")));
 		if(oldPath != null)
 			setArrow(oldPath, currentPath);

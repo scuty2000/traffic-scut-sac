@@ -32,7 +32,6 @@ public class SpawnPointComponent extends Component{
 
 	private LinkedList<SpawnData> spawnDataList;
 	private static final int DEATH = 6;
-	private Entity linkedSpawnPoint;
 	private Point2D spawnPointPosition;
 	
 	private boolean hasLost;
@@ -43,16 +42,15 @@ public class SpawnPointComponent extends Component{
 	
 	@Override
 	public void onAdded() { 
-		spawnDataList = new LinkedList<>(); 
-		linkedSpawnPoint = this.getEntity();
-		spawnPointPosition = linkedSpawnPoint.getPosition();
+		spawnDataList = new LinkedList<>();
+		spawnPointPosition = entity.getPosition();
 	}
 	
 	@Override
 	public void onUpdate(double tps) {
 		spawnCar();
 		if(hasLost) {
-			FXGL.getGameController().gotoMainMenu();;
+			FXGL.getGameController().gotoMainMenu();
 			TrafficApp mainApp = (TrafficApp) FXGL.getApp();
 			FXGL.getAudioPlayer().stopMusic(mainApp.getGameMusic());
 		}
@@ -70,9 +68,10 @@ public class SpawnPointComponent extends Component{
 	}
 	
 	public void spawnCar() {
-		if(isFree() && vehicles > 0) {
+		if(vehicles > 0 && isFree()) {
 			Entity e = FXGL.getGameWorld().spawn("vehicle", spawnDataList.remove(0));
 			e.getComponent(VehicleComponent.class).getCurrentPath().getComponent(PathComponent.class).addCar(e);
+			addCarToFree();
 			vehicles --;
 		}
 	}
@@ -82,7 +81,7 @@ public class SpawnPointComponent extends Component{
 		if(queueCounter != null)
 			queueCounter.removeFromWorld();
 		
-		String direzione = (String) linkedSpawnPoint.getPropertyOptional("direzione").orElse("UP");
+		String direzione = (String) entity.getPropertyOptional("direzione").orElse("UP");
 		int xTranslation = 0;
 		int yTranslation = 0;
 		

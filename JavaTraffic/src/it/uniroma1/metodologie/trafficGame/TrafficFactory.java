@@ -1,5 +1,6 @@
 package it.uniroma1.metodologie.trafficGame;
 
+import java.util.List;
 import java.util.Random;
 
 import com.almasb.fxgl.core.math.FXGLMath;
@@ -174,12 +175,24 @@ public class TrafficFactory implements EntityFactory{
 				.with(new SpawnPointComponent())
 				.collidable()
 				.build();
-		Point2D p = e.getPosition();
-		HitBox h = new HitBox(BoundingShape.polygon(new Point2D(-45,-45), new Point2D(-45, 45), new Point2D(45,45), new Point2D(45, -45)));
+		List<Object> list = calcOffsetSpawn(data.get("direzione"));
+		HitBox h = new HitBox((Point2D) list.get(0), (BoundingShape) list.get(1));
+		//HitBox h = new HitBox(BoundingShape.polygon(new Point2D(-45,-45), new Point2D(-45, 45), new Point2D(45,45), new Point2D(45, -45)));
 		e.getBoundingBoxComponent().addHitBox(h);
 		return e;
 	}
 	
+	private final int SPAWN_WIDTH = 100;
+	private List<Object> calcOffsetSpawn(String d) {
+		switch(Directions.valueOf(d)) {
+		case UP:return List.of(new Point2D(-5, -SPAWN_WIDTH),BoundingShape.box(10, SPAWN_WIDTH));
+		case DOWN:return List.of(new Point2D(-5, 0),BoundingShape.box(10, SPAWN_WIDTH));
+		case LEFT:return List.of(new Point2D(-SPAWN_WIDTH, -5),BoundingShape.box(SPAWN_WIDTH, 10));
+		case RIGHT:return List.of(new Point2D(0, -5),BoundingShape.box(SPAWN_WIDTH, 10));
+		}
+		return null;
+	}
+
 	@Spawns("path")
 	public Entity getPath(SpawnData data) {
 		return FXGL.entityBuilder(data)

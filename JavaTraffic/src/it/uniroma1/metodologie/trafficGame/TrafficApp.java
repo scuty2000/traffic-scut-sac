@@ -338,12 +338,12 @@ public class TrafficApp extends GameApplication {
 		});
 		
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.SPAWN) {
-			
-			@Override
-			protected void onCollisionBegin(Entity v, Entity s) {
-				s.getComponent(SpawnPointComponent.class).addCarToFree();;
-			}
-			
+//			
+//			@Override
+//			protected void onCollisionBegin(Entity v, Entity s) {
+//				s.getComponent(SpawnPointComponent.class).addCarToFree();;
+//			}
+//			
 			@Override
 			protected void onCollisionEnd(Entity v, Entity s) {
 				s.getComponent(SpawnPointComponent.class).subCarToFree();;
@@ -361,13 +361,13 @@ public class TrafficApp extends GameApplication {
 	private int counter;
 	@Override
 	protected void onUpdate(double tpf) {
-		if(counter > spawnRate) {
-			spawnCar();
-			counter = 0;
-			if(spawnRate > minSpawnRate)
-				spawnRate--;
-		}
-		counter ++;
+//		if(counter > spawnRate) {
+//			spawnCar();
+//			counter = 0;
+//			if(spawnRate > minSpawnRate)
+//				spawnRate--;
+//		}
+//		counter ++;
 	}
 	
 	private void spawnCar() {
