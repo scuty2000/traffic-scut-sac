@@ -13,7 +13,8 @@ Traffic è una reimplementazione di un vecchio gioco per Commodore 64.
 	x modificare le funzioni accelerate() e slowDown() in modo da avere una accelerazione costante
 
 	x modificare la hitbox del semaforo se necessario
-	-controllare che le collisioni con gli incroci e tra le macchine funzionino
+	
+        x controllare che le collisioni con gli incroci e tra le macchine funzionino
 		Warning: spesso succede che la macchina dietro non parta !!!!
 
 
@@ -24,16 +25,10 @@ Traffic è una reimplementazione di un vecchio gioco per Commodore 64.
 	x le frecce si devono disattivare al completamento della curva
 
 
-3.Non far collidere le macchine:
-	x aggiunto campo che regola il passaggio delle macchine nel momento in cui una svolta a sx
-
+3.Non far collidere le macchine che svoltano
 	-quando una macchina gira a sx deve recuperare il semaforo a lei opposto.
-	-per non far collidere le macchine bisogna far aspettare i veicoli che girano 
-	 a sx il momento in cui il semaforo opposto non collide con nessun veicolo.
-	-una volta che la macchina può girare deve modificare un campo nel semaforo opposto 
-	 in modo da non farsi intralciare dalle altre macchine (rendendo quindi il campo false)
-	-al completamento della curva la macchina deve rendere quel campo del semaforo di nuovo true
-	
+	-se il semaforo sta collidendo con un’altra entità la macchina deve cambiare il suo percorso
+        -se il semaforo non sta collidendo con un’altra macchina, la svolta può essere effettuata	
 ## Useful links
 
 - <a href="https://docs.google.com/document/d/1hAu8wDXjqYgv10epFFH_dbAOVaOhfp2o3LUO93ofPFU/edit#" target=”_blank”>Project sheet</a>
@@ -53,6 +48,9 @@ Traffic è una reimplementazione di un vecchio gioco per Commodore 64.
 
 - Sak: Ho cercato di mettere a posto le collisioni tra macchine dato che alcune volte esse si fermano senza motivo dopo una collisione e non ripartono
 
-- Scut: Ho aggiunto i counter per la coda delle macchine. Cambiano colore a seconda della quantità di macchine in attesa, e la loro posizione è relativa al tile in cui si trova lo spawn point e non direttamente alla posizione di questo. Poi ho commentato la musica, perché è fastidiosa adesso e non so come gestire il volume globale all'init.
+- Scut: Ho aggiunto i counter per la coda delle macchine. Cambiano colore a seconda della quantità di macchine in attesa, e la loro posizione è relativa al tile in cui si trova lo spawn point e non direttamente alla posizione di questo. Poi ho commentato la musica, perché è fastidiosa adesso e non so come gestire il volume globale all'init
 
+####  07/09/2020
+
+- Sak: ho fatto in modo che le macchine non attraversino l’incrocio se la strada in cui devono svoltare è piena
 <hr/>
