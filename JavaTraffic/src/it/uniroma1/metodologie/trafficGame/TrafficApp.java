@@ -41,6 +41,7 @@ import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
@@ -95,9 +96,9 @@ public class TrafficApp extends GameApplication {
 
 		FXGL.setLevelFromMap(map);
 		
-		pointersound = FXGL.getAssetLoader().loadSound("pointersound.wav");
+//		pointersound = FXGL.getAssetLoader().loadSound("pointersound.wav");
 		
-		gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
+//		gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
 		
 //		FXGL.getAudioPlayer().loopMusic(gameMusic);
 		
@@ -177,10 +178,7 @@ public class TrafficApp extends GameApplication {
 		i.addAction(new UserAction("Change trafficlight status") {
 			@Override
 			protected void onActionBegin() {
-				for (Entity entity : getSemaforiAdiacenti(player1)) {
-					entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
-				}
-				FXGL.getAudioPlayer().playSound(pointersound);
+				switchSemafori();
 			}			
 		}, KeyCode.F);
 
@@ -219,6 +217,32 @@ public class TrafficApp extends GameApplication {
 				spawnCar();
 			}
 		}, KeyCode.SPACE);
+		
+		i.addAction(new UserAction("Select and change traffic light") {
+			@Override
+			protected void onActionBegin() {
+				super.onActionBegin();
+				touchMove(i);
+			}
+			
+			@Override
+			protected void onActionEnd() {
+				super.onActionEnd();
+				switchSemafori();
+			}
+		}, MouseButton.PRIMARY);
+	}
+	
+	private void switchSemafori() {
+		for (Entity entity : getSemaforiAdiacenti(player1)) {
+			entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
+		}
+	}
+	
+	private void touchMove(Input i) {
+		ArrayList<Entity> selectedIncrocio = (ArrayList<Entity>) FXGL.getGameWorld().getEntitiesByType(EntityType.INCROCIO).stream().filter(x -> (i.getMouseXWorld() - x.getX() >= 0 && i.getMouseXWorld() - x.getX() <= 250)&&(i.getMouseYWorld() - x.getY() >= 0 && i.getMouseYWorld() - x.getY() <= 250 )).collect(Collectors.toList());
+		if(!selectedIncrocio.isEmpty())
+			player1.setPosition(selectedIncrocio.get(0).getPosition());
 	}
 
 	private void move(Directions d, Predicate<Integer> p, String pointer) {
