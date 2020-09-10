@@ -85,8 +85,8 @@ public class TrafficApp extends GameApplication {
 		settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
 		settings.setVersion("Alpha 1.0"); // To update periodically
 		settings.setTitle("Traffic");
-		settings.setWidth(2000);
-		settings.setHeight(1125);
+		settings.setWidth(2500);
+		settings.setHeight(1500);
 		settings.setApplicationMode(ApplicationMode.DEVELOPER);
 		settings.setProfilingEnabled(false);
 		settings.setMainMenuEnabled(true);
@@ -368,10 +368,10 @@ public class TrafficApp extends GameApplication {
 			//deve tornare un array con x, y, width e height
 			private int[] whereToCheck(Directions d){
 				switch(d) {
-				case UP: return new int[] {-125,-400,1,200};
-				case DOWN: return new int[] {125,200,1,200};
-				case LEFT: return new int[] {-400,125,200,1};
-				case RIGHT: return new int[] {200,-125,200,1};
+				case UP: return new int[] {-125,-500,1,350};
+				case DOWN: return new int[] {125,200,1,350};
+				case LEFT: return new int[] {-500,125,350,1};
+				case RIGHT: return new int[] {200,-125,350,1};
 				}
 				return null;
 				
@@ -440,29 +440,29 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void onUpdate(double tpf) {
-//				if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
-//					FXGL.getWorldProperties().increment("score", pointsPerSec/5);
-//					FXGL.getGameScene().clearUINodes();
-//					Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
-//					uiText.setFont(Font.font(30));
-//					// 2. add the UI object to game scene (easy way) at 100, 100
-//					FXGL.addUINode(uiText, 10, 30);
-//					SCORE_TIMER.capture();
-//				}
-//				if(counter > spawnRate) {
-//					spawnCar();
-//					counter = 0;
-//					if(spawnRate > minSpawnRate)
-//						spawnRate--;
-//				}
-//				counter ++;
+				if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
+					FXGL.getWorldProperties().increment("score", pointsPerSec/5);
+					FXGL.getGameScene().clearUINodes();
+					Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
+					uiText.setFont(Font.font(30));
+					// 2. add the UI object to game scene (easy way) at 100, 100
+					FXGL.addUINode(uiText, 10, 30);
+					SCORE_TIMER.capture();
+				}
+				if(counter > spawnRate) {
+					spawnCar();
+					counter = 0;
+					if(spawnRate > minSpawnRate)
+						spawnRate--;
+				}
+				counter ++;
 	}
 
 	private int pointsPerSec;
 
 	private void spawnCar() {
 		pointsPerSec ++;
-		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(2));//new Random().nextInt(spawnCount));
+		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnCount));
 		SpawnData vdata = new SpawnData(e.getPosition());
 		vdata.put("spawn", e);
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
