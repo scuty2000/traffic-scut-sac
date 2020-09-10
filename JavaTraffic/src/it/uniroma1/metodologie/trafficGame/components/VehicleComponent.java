@@ -46,7 +46,7 @@ public class VehicleComponent extends Component{
 
 	private LocalTimer shootTimer;
 
-	private double gapBetweenMove = 0.03;
+	private double gapBetweenMove = 0.01;
 
 	private LocalTimer accSlow;
 
@@ -363,6 +363,8 @@ public class VehicleComponent extends Component{
 	}
 
 	public Entity getCurrentPath() {return currentPath; }
+	
+	public List<Entity> getPathList() { return pathList; }
 	
 	/*
 	 * this method has to be used when the vehicle can not turn because it is a tir or because the street is not free

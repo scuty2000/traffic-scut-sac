@@ -60,10 +60,11 @@ public class TrafficFactory implements EntityFactory{
 	
 	private Entity build(SpawnData data, Vehicle v) {
 		//TODO a method that spawns cars, tirs and motorbikes based on the data passed (heigh, width, direction..
+		Entity spawn = data.get("spawn");
 		Entity e = FXGL.entityBuilder(data)
 					.type(EntityType.VEHICLE)
 					.collidable()
-					.with(new VehicleComponent(v,data.<Directions>get("direction"), data.get("pathList")))
+					.with(new VehicleComponent(v,data.<Directions>get("direction"), TrafficApp.pathChooser(FXGL.getGameWorld().getEntitiesByType(EntityType.PATH).stream().filter(x -> spawn.isColliding(x)).findFirst().get(), v.canTurn()))/*create a path based on the vehicle*/)
 					.viewWithBBox(v.getShape())
 					.rotate(data.<Directions>get("direction").getStartingRotation())
 					.build();
@@ -98,7 +99,7 @@ public class TrafficFactory implements EntityFactory{
 	public Entity getVehicle(SpawnData data) {
 		Entity vehicle;
 		int random = new Random().nextInt(9);
-		if(false)//random <= 1 && (boolean) data.get("tir"))
+		if(random <= -1 && (boolean) data.get("tir"))
 			vehicle = build(data, Vehicle.TIR);
 		else if(random <= 3)
 			vehicle = build(data, Vehicle.MOTORBIKE);

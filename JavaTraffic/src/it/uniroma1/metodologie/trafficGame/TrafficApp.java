@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -392,7 +393,7 @@ public class TrafficApp extends GameApplication {
 		pointsPerSec ++;
 		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnList.size()));
 		SpawnData vdata = new SpawnData(e.getPosition());
-		vdata.put("pathList", pathChooser(e, true, true));
+		vdata.put("spawn", e);
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 		vdata.put("tir", (boolean) e.getPropertyOptional("tir").orElse(false));
 		e.getComponent(SpawnPointComponent.class).registerCar(vdata);
@@ -437,29 +438,27 @@ public class TrafficApp extends GameApplication {
 	 * if right is false the list generated will not have a right turn
 	 */
 
-	public static List<Entity> pathChooser(Entity spawn, boolean left, boolean right){
+	public static List<Entity> pathChooser(Entity root, boolean canTurn){	//FXGL.getGameWorld().getEntitiesByType(EntityType.PATH).stream().filter(x -> spawn.isColliding(x)).findFirst().get()
 		LinkedList<Entity> paths = new LinkedList<>();
-
-		Entity root = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH).stream().filter(x -> spawn.isColliding(x)).findFirst().get();
-		
-		
-		
 		paths.add(root);
+		
+
 
 		while(((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(",").length > 1) {
-			paths.add(nextPathFinder((String) root.getPropertyOptional("direzione").get(), ((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(","), Directions.valueOf((String) paths.get(paths.size() - 1).getPropertyOptional("direzione").orElseThrow())));
+			Entity path = nextPathFinder((String) root.getPropertyOptional("direzione").get(), ((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(","), Directions.valueOf((String) paths.get(paths.size() - 1).getPropertyOptional("direzione").orElseThrow()), canTurn);
+			paths.add(path);
 		}
 
 		return paths;
 	}
 
-	private static Entity nextPathFinder(String current, String[] strings, Directions oldDir) {
+	private static Entity nextPathFinder(String current, String[] strings, Directions oldDir, boolean canTurn) {
 		//lista dei possibili path
-		List<Entity> l = Arrays.stream(strings).map(x -> findPath(x)).filter(x -> x != null).sorted(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").get()).equals(oldDir) ? 0 : 1)).collect(Collectors.toList());
+		List<Entity> l = Arrays.stream(strings).map(x -> findPath(x)).filter(x -> x != null).sorted(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").orElseThrow()).equals(oldDir) ? 0 : 1)).collect(Collectors.toList());
 		Random r = new Random();
 		if(l.isEmpty()) return null;
 		int i = r.nextInt(l.size() + 3);
-		return l.get(i > l.size() - 1 ? 0 : i);
+		return l.get(canTurn ? (i > l.size() - 1 ? 0 : i ): 0);
 	}
 	
 	public Music getGameMusic() {

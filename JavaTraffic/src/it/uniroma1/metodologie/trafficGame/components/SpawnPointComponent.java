@@ -2,6 +2,7 @@ package it.uniroma1.metodologie.trafficGame.components;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.almasb.fxgl.core.serialization.Bundle;
 import com.almasb.fxgl.dsl.FXGL;
@@ -80,6 +81,7 @@ public class SpawnPointComponent extends Component{
 		if(vehicles > 0 && isFree()) {
 			Entity e = FXGL.getGameWorld().spawn("vehicle", spawnDataList.remove(0));
 			e.getComponent(VehicleComponent.class).getCurrentPath().getComponent(PathComponent.class).addCar(e);
+			System.out.println(e.getComponent(VehicleComponent.class).getPathList().parallelStream().map(x -> x.getPropertyOptional("direzione")).collect(Collectors.toList()));
 			addCarToFree();
 			vehicles --;
 		}
