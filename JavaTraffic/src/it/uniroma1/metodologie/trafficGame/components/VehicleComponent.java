@@ -77,7 +77,6 @@ public class VehicleComponent extends Component{
 		turnTimer = FXGL.newLocalTimer();
 		TURN_GAP = gapBetweenMove * 2;
 		
-		creaCurve();
 		for (ArrayList<Point2D> arrayList : arrayCurveBCK) {
 			this.arrayCurve.add((ArrayList<Point2D>) arrayList.clone());
 		}
@@ -85,7 +84,7 @@ public class VehicleComponent extends Component{
 	
 	private static final double COST = 4.5;
 	
-	private static void creaCurve() {
+	public static void creaCurve() {
 	    for(int j = 0; j < 8; j++) {
 	    	arrayCurveBCK.add(new ArrayList<Point2D>());
 	    }

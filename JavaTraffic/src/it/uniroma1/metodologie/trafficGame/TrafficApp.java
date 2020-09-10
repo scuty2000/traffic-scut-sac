@@ -144,6 +144,8 @@ public class TrafficApp extends GameApplication {
 		this.SCORE_TIMER = FXGL.newLocalTimer();
 		
 		spawnCount = (int) gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).count();
+		
+		VehicleComponent.creaCurve();
 	}
 
 	private HashMap<Integer, ArrayList<Entity>> parseIncroci() {
