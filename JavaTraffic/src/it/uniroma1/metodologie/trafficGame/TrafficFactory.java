@@ -207,5 +207,4 @@ public class TrafficFactory implements EntityFactory{
 					.build();
 					
 	}
-
 }
