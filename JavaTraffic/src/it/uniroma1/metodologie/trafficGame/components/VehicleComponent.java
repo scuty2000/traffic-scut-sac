@@ -13,7 +13,6 @@ import com.almasb.fxgl.time.LocalTimer;
 import it.uniroma1.metodologie.trafficGame.Directions;
 import it.uniroma1.metodologie.trafficGame.TrafficApp;
 import it.uniroma1.metodologie.trafficGame.Vehicle;
-import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -57,7 +56,7 @@ public class VehicleComponent extends Component{
 
 	private List<Entity> pathList;
 	
-	private ArrayList<ArrayList<Point2D>> arrayCurveBCK = new ArrayList<>();
+	private static ArrayList<ArrayList<Point2D>> arrayCurveBCK = new ArrayList<>();
 	
 	private ArrayList<ArrayList<Point2D>> arrayCurve = new ArrayList<>();
 
@@ -68,6 +67,7 @@ public class VehicleComponent extends Component{
 		nextPath();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onAdded() {
 		shootTimer = FXGL.newLocalTimer();
@@ -77,17 +77,16 @@ public class VehicleComponent extends Component{
 		turnTimer = FXGL.newLocalTimer();
 		TURN_GAP = gapBetweenMove * 2;
 		
-		creaCurve();
-		for (ArrayList<Point2D> arrayList : arrayCurve) {
-			this.arrayCurveBCK.add((ArrayList<Point2D>) arrayList.clone());
+		for (ArrayList<Point2D> arrayList : arrayCurveBCK) {
+			this.arrayCurve.add((ArrayList<Point2D>) arrayList.clone());
 		}
 	}
 	
-	private final double COST = 4.5;
-	//potrebbe essere static ??????????????
-	private void creaCurve() {
+	private static final double COST = 4.5;
+	
+	public static void creaCurve() {
 	    for(int j = 0; j < 8; j++) {
-    		arrayCurve.add(new ArrayList<Point2D>());
+	    	arrayCurveBCK.add(new ArrayList<Point2D>());
 	    }
 		
 		for (int i = 0; i < 356; ++i) {
@@ -106,24 +105,24 @@ public class VehicleComponent extends Component{
 		    		    	
 		}
 		
-		arrayCurve.get(0).add(new Point2D(0, 0));
-		arrayCurve.get(1).add(new Point2D(0, 0));
-		arrayCurve.get(2).add(new Point2D(0, 0));
-		arrayCurve.get(3).add(new Point2D(0, 0));
-		arrayCurve.get(5).add(new Point2D(0, 0));
-		arrayCurve.get(7).add(new Point2D(0, 0));
+		arrayCurveBCK.get(0).add(new Point2D(0, 0));
+		arrayCurveBCK.get(1).add(new Point2D(0, 0));
+		arrayCurveBCK.get(2).add(new Point2D(0, 0));
+		arrayCurveBCK.get(3).add(new Point2D(0, 0));
+		arrayCurveBCK.get(5).add(new Point2D(0, 0));
+		arrayCurveBCK.get(7).add(new Point2D(0, 0));
 		
 	}
 	
-	private void calculatePoint(double angle, int number1, int number2, int i) {
-		arrayCurve.get(number1).add(new Point2D(
-		        Math.cos(angle) * COST +entity.getHeight()/2, 
-		        Math.sin(angle) * COST +entity.getWidth()/2
+	private static void calculatePoint(double angle, int number1, int number2, int i) {
+		arrayCurveBCK.get(number1).add(new Point2D(
+		        Math.cos(angle) * COST, 
+		        Math.sin(angle) * COST
 		    ));
 	    	if(i%2==0)
-	    		arrayCurve.get(number2).add(new Point2D(
-			        Math.cos(angle) * COST +entity.getHeight()/2, 
-			        Math.sin(angle) * COST +entity.getWidth()/2
+	    		arrayCurveBCK.get(number2).add(new Point2D(
+			        Math.cos(angle) * COST,
+			        Math.sin(angle) * COST
 			    ));
 	}
 
@@ -227,6 +226,7 @@ public class VehicleComponent extends Component{
 	private double TURN_GAP;
 	private LocalTimer turnTimer;
 	
+	@SuppressWarnings("unchecked")
 	private void turnAnimation() {
 		if(turnTimer.elapsed(Duration.seconds(TURN_GAP))){
 			entity.rotateBy(rot*mul);
@@ -248,6 +248,7 @@ public class VehicleComponent extends Component{
 			} else if(this.oldDirection.equals(Directions.DOWN) && this.d.equals(Directions.LEFT)) { // TODO tune this
 				entity.translate(arrayCurve.get(5).remove(0));
 			}
+			
 			if(debugCurve)
 				FXGL.entityBuilder()
 				.at(entity.getPosition())

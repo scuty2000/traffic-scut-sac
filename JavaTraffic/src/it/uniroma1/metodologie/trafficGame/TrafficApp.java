@@ -9,9 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -23,19 +21,14 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.audio.Music;
-import com.almasb.fxgl.audio.Sound;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
 import com.almasb.fxgl.entity.SpawnData;
-import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.profile.DataFile;
 import com.almasb.fxgl.time.LocalTimer;
-import com.sun.source.doctree.EntityTree;
-
 import javafx.geometry.Point2D;
 import it.uniroma1.metodologie.trafficGame.components.CrossRoadComponent;
 import it.uniroma1.metodologie.trafficGame.components.PathComponent;
@@ -46,7 +39,6 @@ import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
@@ -54,8 +46,6 @@ import tutorial.AndreaGameApp.EntityType;
 public class TrafficApp extends GameApplication {
 
 	private ArrayList<Entity> incroci;
-
-	private Sound pointersound;
 
 	private Music gameMusic;
 	
@@ -120,8 +110,8 @@ public class TrafficApp extends GameApplication {
 	}
 
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
-
-	private List<Entity> spawnList;
+	
+	private int spawnCount;
 
 	@Override
 	protected void initGame() {
@@ -129,20 +119,14 @@ public class TrafficApp extends GameApplication {
 		GameWorld gw = FXGL.getGameWorld();
 
 		gw.addEntityFactory(new TrafficFactory());
-
+		
 		FXGL.setLevelFromMap(map);
 
 		//		pointersound = FXGL.getAssetLoader().loadSound("pointersound.wav");
-
 		//		gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
-
 		//		FXGL.getAudioPlayer().loopMusic(gameMusic);
 
-		spawnList = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList());
-
-		//getPathTree();
-
-		matrixIncroci = parseIncroci();		//gets the grid of the semafori
+		matrixIncroci = parseIncroci();
 
 		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
 
@@ -158,6 +142,10 @@ public class TrafficApp extends GameApplication {
 		}
 
 		this.SCORE_TIMER = FXGL.newLocalTimer();
+		
+		spawnCount = (int) gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).count();
+		
+		VehicleComponent.creaCurve();
 	}
 
 	private HashMap<Integer, ArrayList<Entity>> parseIncroci() {
@@ -339,11 +327,9 @@ public class TrafficApp extends GameApplication {
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.VEHICLE) {
 
 			Entity carBehind;
-			Entity carInFront;
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				carBehind = findCarBehind(v, i);
-				carInFront = carBehind == v ? i : v;
 				if(carBehind != null)
 					carBehind.getComponent(VehicleComponent.class).slowDown();
 			}
@@ -442,48 +428,35 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void onUpdate(double tpf) {
-		//		if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
-		//			FXGL.getWorldProperties().increment("score", pointsPerSec/5);
-		//			FXGL.getGameScene().clearUINodes();
-		//			Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
-		//			uiText.setFont(Font.font(30));
-		//			// 2. add the UI object to game scene (easy way) at 100, 100
-		//			FXGL.addUINode(uiText, 10, 30);
-		//			SCORE_TIMER.capture();
-		//		}
-		//		if(counter > spawnRate) {
-		//			spawnCar();
-		//			counter = 0;
-		//			if(spawnRate > minSpawnRate)
-		//				spawnRate--;
-		//		}
-		//		counter ++;
+				if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
+					FXGL.getWorldProperties().increment("score", pointsPerSec/5);
+					FXGL.getGameScene().clearUINodes();
+					Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
+					uiText.setFont(Font.font(30));
+					// 2. add the UI object to game scene (easy way) at 100, 100
+					FXGL.addUINode(uiText, 10, 30);
+					SCORE_TIMER.capture();
+				}
+				if(counter > spawnRate) {
+					spawnCar();
+					counter = 0;
+					if(spawnRate > minSpawnRate)
+						spawnRate--;
+				}
+				counter ++;
 	}
 
 	private int pointsPerSec;
 
 	private void spawnCar() {
 		pointsPerSec ++;
-		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(List.of(0,1).get(new Random().nextInt(2)));//new Random().nextInt(spawnList.size()));
+		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnCount));
 		SpawnData vdata = new SpawnData(e.getPosition());
 		vdata.put("spawn", e);
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 		vdata.put("tir", (boolean) e.getPropertyOptional("tir").orElse(false));
 		e.getComponent(SpawnPointComponent.class).registerCar(vdata);
 	}
-
-	//	HashMap<Entity,List<Entity>> pathMap;
-	//
-	//	private HashMap<Entity, List<Entity>> getPathTree() {
-	//		if(pathMap == null) {
-	//			pathMap = new HashMap<>();
-	//			List<Entity> pathList = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH);
-	//			pathList.sort(Comparator.comparing(x -> ((Entity)x).getY()));
-	//			//pathList.forEach(x -> System.out.println(x.getProperties()));
-	//			pathList.forEach(x -> pathMap.put(x, getPathDirections(x)));
-	//		}
-	//		return pathMap;
-	//	}
 
 	/*
 	 * this method returns the paths connected to a path
