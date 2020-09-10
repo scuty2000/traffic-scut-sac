@@ -46,7 +46,7 @@ public class VehicleComponent extends Component{
 
 	private LocalTimer shootTimer;
 
-	private double gapBetweenMove = 0.03;
+	private double gapBetweenMove = 0.01;
 
 	private LocalTimer accSlow;
 

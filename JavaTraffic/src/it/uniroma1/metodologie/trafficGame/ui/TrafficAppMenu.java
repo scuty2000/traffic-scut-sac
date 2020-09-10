@@ -146,6 +146,9 @@ public class TrafficAppMenu extends FXGLMenu {
 				}
 			});
 
+			setOnMouseClicked(e -> {
+				action.run();
+			});
 			
 			setFocusTraversable(true);
 			setAlignment(Pos.CENTER_LEFT);
