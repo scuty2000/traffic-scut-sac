@@ -3,7 +3,7 @@
  <tileset firstgid="1" name="tutorial_tiles" tilewidth="250" tileheight="250" tilecount="42" columns="7">
   <image source="tiles_sheet.png" width="1750" height="1500"/>
  </tileset>
- <layer id="1" name="Livello tile 1" width="10" height="7">
+ <layer id="1" name="Livello tile 1" width="10" height="7" locked="1">
   <data encoding="csv">
 42,42,42,37,5,34,24,32,5,41,
 24,24,24,26,2,6,6,6,4,41,
@@ -14,7 +14,7 @@
 24,24,39,26,5,39,39,39,5,35
 </data>
  </layer>
- <objectgroup id="13" name="Pathways" visible="0" locked="1">
+ <objectgroup id="13" name="Pathways" locked="1">
   <object id="68" name="path" type="path" x="1062.5" y="0" height="250">
    <properties>
     <property name="direzione" value="DOWN"/>
@@ -136,7 +136,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="6" name="incrocio" visible="0" locked="1">
+ <objectgroup id="6" name="incrocio" locked="1">
   <object id="36" type="incrocioA3" x="2000" y="250" width="250" height="250">
    <properties>
     <property name="direzione" value="RIGHT"/>
@@ -150,7 +150,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="3" name="Semafori" visible="0" locked="1">
+ <objectgroup id="3" name="Semafori">
   <object id="2" type="semaforo" x="750" y="0" width="250" height="250">
    <properties>
     <property name="direzione" value="DOWN"/>
@@ -236,7 +236,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="spawnPoint" visible="0" locked="1">
+ <objectgroup id="10" name="spawnPoint" locked="1">
   <object id="39" type="spawn" x="0" y="1188.5">
    <properties>
     <property name="direzione" value="RIGHT"/>
