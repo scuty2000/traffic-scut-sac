@@ -372,9 +372,9 @@ public class TrafficApp extends GameApplication {
 				Entity trafficLight = FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO).stream()
 																	.filter(x -> !x.isColliding(v) && Directions.valueOf((String) x.getPropertyOptional("direzione").orElseThrow()).isOpposite(v.getComponent(VehicleComponent.class).getDirection()))
 																	.min(Comparator.comparing(x -> v.getPosition().distance(x.getPosition()))).orElseThrow();
-				boolean bo = FXGL.getGameWorld().getCollidingEntities(trafficLight).parallelStream().anyMatch(x -> x.getType().equals(EntityType.VEHICLE));
+				
 				if(isTurningLeft(v.getComponent(VehicleComponent.class).getDirection(), Directions.valueOf((String) v.getComponent(VehicleComponent.class).getNextPath().getPropertyOptional("direzione").orElseThrow())) 
-						&& bo)
+						&& FXGL.getGameWorld().getCollidingEntities(trafficLight).parallelStream().anyMatch(x -> x.getType().equals(EntityType.VEHICLE)))
 					v.getComponent(VehicleComponent.class).generateNewStraightPath();
 				turnVehicle(v);
 			}
