@@ -21,7 +21,7 @@ public class PathComponent extends Component{
 		Point2D p = entity.getPosition();
 		double x = p.getX();
 		double y = p.getY();
-		if(x == 0 || x == FXGL.getAppWidth()-250 || y == 0 || y == FXGL.getAppHeight()-250)
+		if(x == 0 || x + entity.getWidth() >= FXGL.getAppWidth()-250 || y == 0 || y + entity.getHeight() >= FXGL.getAppHeight()-250)
 			isOnBorder = true;
 		size = (int) Math.max(entity.getWidth(),entity.getHeight()) - 70; }
 
@@ -29,18 +29,21 @@ public class PathComponent extends Component{
 		if(!carList.contains(e)) {
 			carList.add(e);
 			current += calcWidth(e);
-			System.out.println("size : " + size + "----- this : " + current + "------ car : " + calcWidth(e));
+			//System.out.println("size : " + size + "----- this : " + current + "------ add : " + calcWidth(e));
 		}
 	}
 
 	public void removeCar(Entity e) {
-		System.out.println("size : " + size + "----- this : " + current + "------ car : " + calcWidth(e));
+		
+		if(carList.contains(e)) {
 			current -= calcWidth(e);
-			carList.remove(e); 
+			carList.remove(e);
+			//System.out.println("size : " + size + "----- this : " + current + "------ remove : " + calcWidth(e));
+		}
 	}
 
 	public boolean isFree(Entity e) { 
-		System.out.println("size : " + size + "----- this : " + current + "------ car : " + calcWidth(e));
+		//System.out.println("size : " + size + "----- this : " + current + "------ car : " + calcWidth(e));
 		return size > current + calcWidth(e) || isOnBorder; }
 	
 	private int calcWidth(Entity e) { return (int) (e.getWidth() - sF); }

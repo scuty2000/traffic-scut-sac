@@ -1,6 +1,7 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -131,14 +132,14 @@ public class VehicleComponent extends Component{
 		if(debugCurve)
 			FXGL.entityBuilder().at(entity.getAnchoredPosition()).view(new Rectangle(5,5,Color.GREEN)).buildAndAttach();
 
-		if(entity.getX() < -100 || entity.getX() > 2600 || entity.getY() < -100 || entity.getY() > 2600) {
+		if(entity.getX() < -500 || entity.getX() > FXGL.getAppWidth() + 500 || entity.getY() < -500 || entity.getY() > FXGL.getAppHeight() + 500) {
+			currentPath.getComponent(PathComponent.class).removeCar(entity);
 			entity.removeFromWorld();
-			//System.out.println("Deleted");
 		} else if(shootTimer.elapsed(Duration.seconds(gapBetweenMove)) && !turning) {
 				moveForward();
 			//FXGL.getGameWorld().getEntitiesInRange(new Rectangle2D(entity.getX(), entity.getY(), 40, 40)).stream().filter(x -> x.getType().equals(EntityType.PATH))
-
-			shootTimer.capture();
+				
+				shootTimer.capture();
 		}
 		else if(turning) {
 			blinkArrow();
@@ -370,7 +371,14 @@ public class VehicleComponent extends Component{
 	 * this method has to be used when the vehicle can not turn because it is a tir or because the street is not free
 	 */
 	
-	private void generateNewStraightPath() {
+	public void generateNewStraightPath() {
+		System.out.println("Old Path----" + pathList);
 		List<Entity> paths = TrafficApp.getPathDirections(currentPath);
+		paths.sort(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").orElseThrow()).equals(d) ? 0 : 1));
+		Entity root = paths.get(0);
+		pathList = TrafficApp.pathChooser(root, v.canTurn());
+		System.out.println("New Path----" + pathList);
+		System.out.println();
+		System.out.println();
 	}
 }

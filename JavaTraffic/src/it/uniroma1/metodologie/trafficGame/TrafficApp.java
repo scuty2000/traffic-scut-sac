@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -33,6 +34,8 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.profile.DataFile;
 import com.almasb.fxgl.time.LocalTimer;
+import com.sun.source.doctree.EntityTree;
+
 import javafx.geometry.Point2D;
 import it.uniroma1.metodologie.trafficGame.components.CrossRoadComponent;
 import it.uniroma1.metodologie.trafficGame.components.PathComponent;
@@ -43,6 +46,7 @@ import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
@@ -50,9 +54,9 @@ import tutorial.AndreaGameApp.EntityType;
 public class TrafficApp extends GameApplication {
 
 	private ArrayList<Entity> incroci;
-	
+
 	private Sound pointersound;
-	
+
 	private Music gameMusic;
 
 	@Override
@@ -73,7 +77,7 @@ public class TrafficApp extends GameApplication {
 			public FXGLMenu newMainMenu() {
 				return new TrafficAppMenu(MenuType.MAIN_MENU);
 			}
-			
+
 		});
 	}
 
@@ -84,25 +88,25 @@ public class TrafficApp extends GameApplication {
 	private String map = "map-v3.tmx";
 
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
-	
+
 	private List<Entity> spawnList;
 
 	@Override
 	protected void initGame() {
-		
+
 
 		GameWorld gw = FXGL.getGameWorld();
 
 		gw.addEntityFactory(new TrafficFactory());
 
 		FXGL.setLevelFromMap(map);
-		
-//		pointersound = FXGL.getAssetLoader().loadSound("pointersound.wav");
-		
-//		gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
-		
-//		FXGL.getAudioPlayer().loopMusic(gameMusic);
-		
+
+		//		pointersound = FXGL.getAssetLoader().loadSound("pointersound.wav");
+
+		//		gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
+
+		//		FXGL.getAudioPlayer().loopMusic(gameMusic);
+
 		spawnList = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList());
 
 		//getPathTree();
@@ -112,17 +116,16 @@ public class TrafficApp extends GameApplication {
 		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
 
 		incroci = (ArrayList<Entity>) gw.getEntitiesByType(EntityType.INCROCIO);
-		
+
 		for(Entity i : incroci) {
 			List<Entity> le = getSemaforiAdiacenti(i);
 			le.forEach(x -> x.getComponent(TrafficLightAnimationComponent.class).setCrossRoad(i));
-			System.out.println(i);
 		}
 		for (Entity semaforo : FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO)) {
 			if((semaforo.getProperties().getInt("rotation") == 1 || semaforo.getProperties().getInt("rotation") == 3))
 				semaforo.getComponent(TrafficLightAnimationComponent.class).switchLight();
 		}
-		
+
 		this.SCORE_TIMER = FXGL.newLocalTimer();
 	}
 
@@ -132,7 +135,6 @@ public class TrafficApp extends GameApplication {
 		Double old = -1.0;
 		int c = -1;
 		for(Entity elem : list) {														//creating the HashMap with an integer representing Y as key and an ArrayList<Entity> which contains the elements with the same Y  
-			System.out.println(elem.getY());
 			if(old == elem.getY())
 				matrix.get(c).add(elem);
 			else {
@@ -150,15 +152,15 @@ public class TrafficApp extends GameApplication {
 	//####################################
 	private List<Entity> getSemaforiAdiacenti(Entity p) {
 		return checkSemafori((List<Entity>) FXGL.getGameWorld()
-					.getEntitiesInRange(new Rectangle2D(p.getX(), p.getY(), 252, 252))
-					.stream()
-					.filter(x -> x.getType().equals(EntityType.SEMAFORO))
-					.collect(Collectors.toList()), p);
+				.getEntitiesInRange(new Rectangle2D(p.getX(), p.getY(), 252, 252))
+				.stream()
+				.filter(x -> x.getType().equals(EntityType.SEMAFORO))
+				.collect(Collectors.toList()), p);
 
 	}
-	
+
 	private List<Entity> checkSemafori(List<Entity> sa, Entity e){ return sa.parallelStream().filter(x-> checkPosition(x, e)).collect(Collectors.toList()); }
-	
+
 	private boolean checkPosition(Entity s, Entity e) {
 		switch(Directions.valueOf((String) s.getPropertyOptional("direzione").orElseThrow())) {
 		case UP:
@@ -218,14 +220,14 @@ public class TrafficApp extends GameApplication {
 				spawnCar();
 			}
 		}, KeyCode.SPACE);
-		
+
 		i.addAction(new UserAction("Select and change traffic light") {
 			@Override
 			protected void onActionBegin() {
 				super.onActionBegin();
 				touchMove(i);
 			}
-			
+
 			@Override
 			protected void onActionEnd() {
 				super.onActionEnd();
@@ -233,13 +235,13 @@ public class TrafficApp extends GameApplication {
 			}
 		}, MouseButton.PRIMARY);
 	}
-	
+
 	private void switchSemafori() {
 		for (Entity entity : getSemaforiAdiacenti(player1)) {
 			entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
 		}
 	}
-	
+
 	private void touchMove(Input i) {
 		ArrayList<Entity> selectedIncrocio = (ArrayList<Entity>) FXGL.getGameWorld().getEntitiesByType(EntityType.INCROCIO).stream().filter(x -> (i.getMouseXWorld() - x.getX() >= 0 && i.getMouseXWorld() - x.getX() <= 250)&&(i.getMouseYWorld() - x.getY() >= 0 && i.getMouseYWorld() - x.getY() <= 250 )).collect(Collectors.toList());
 		if(!selectedIncrocio.isEmpty())
@@ -252,7 +254,7 @@ public class TrafficApp extends GameApplication {
 			player1.setProperty("pointerX", (int)player1.getPropertyOptional("pointerX").orElse(0) + d.getX());
 			player1.setProperty("pointerY", (int)player1.getPropertyOptional("pointerY").orElse(0) + d.getY());
 			try {
-			player1.setPosition(matrixIncroci.get((int)player1.getPropertyOptional("pointerY").orElse(0)).get((int) player1.getPropertyOptional("pointerX").orElse(Integer.valueOf(0))).getPosition());
+				player1.setPosition(matrixIncroci.get((int)player1.getPropertyOptional("pointerY").orElse(0)).get((int) player1.getPropertyOptional("pointerX").orElse(Integer.valueOf(0))).getPosition());
 			}
 			catch(IndexOutOfBoundsException e) {
 				player1.setProperty("pointerX", matrixIncroci.get(player1.getPropertyOptional("pointerY").orElseThrow()).size()-1);
@@ -324,7 +326,7 @@ public class TrafficApp extends GameApplication {
 		});
 
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.INCROCIO) {
-		
+
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
 				//				Entity e = FXGL.entityBuilder()
@@ -333,13 +335,37 @@ public class TrafficApp extends GameApplication {
 				//				System.out.println(e.getBoundingBoxComponent().hitBoxesProperty().get(0).getName());
 				//				if(i.isColliding(e))
 				i.getComponent(CrossRoadComponent.class).addCar();
-				if(v.getComponent(VehicleComponent.class).getVehicle().canTurn())
-					turnVehicle(v, i);
+				/*
+				 * recupero il semaforo opposto a quello del veicolo
+				 */
+				Entity trafficLight = FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO).stream()
+																	.filter(x -> !x.isColliding(v) && Directions.valueOf((String) x.getPropertyOptional("direzione").orElseThrow()).isOpposite(v.getComponent(VehicleComponent.class).getDirection()))
+																	.min(Comparator.comparing(x -> v.getPosition().distance(x.getPosition()))).orElseThrow();
+				
+				if(isTurningLeft(v.getComponent(VehicleComponent.class).getDirection(), Directions.valueOf((String) v.getComponent(VehicleComponent.class).getNextPath().getPropertyOptional("direzione").orElseThrow())) 
+						&& FXGL.getGameWorld().getCollidingEntities(trafficLight).parallelStream().anyMatch(x -> x.getType().equals(EntityType.VEHICLE)))
+					v.getComponent(VehicleComponent.class).generateNewStraightPath();
+				turnVehicle(v);
 			}
 			
+			private void turnVehicle(Entity v) {
+				v.getComponent(VehicleComponent.class).nextPath();
+			}
+			
+			private boolean isTurningLeft(Directions oldDir, Directions newDir) {
+				switch(oldDir) {
+				case UP : return newDir.equals(Directions.LEFT);
+				case DOWN: return newDir.equals(Directions.RIGHT);
+				case LEFT: return newDir.equals(Directions.DOWN);
+				case RIGHT: return newDir.equals(Directions.UP);
+				}
+				return false;
+			}
+			
+
 			@Override
 			protected void onCollisionEnd(Entity v, Entity i) { i.getComponent(CrossRoadComponent.class).subCar(); }
-			
+
 		});		
 
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.SEMAFORO) {
@@ -355,34 +381,34 @@ public class TrafficApp extends GameApplication {
 				}
 				else
 					v.getComponent(VehicleComponent.class).getNextPath().getComponent(PathComponent.class).addCar(v);
-				
+
 			}
-			
+
 			@Override
 			protected void onCollisionEnd(Entity v, Entity i) {
 				i.getComponent(TrafficLightAnimationComponent.class).removeCar(v);
 			}
 		});	
-		
+
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.PATH) {
-			
+
 			@Override
 			protected void onCollisionEnd(Entity v, Entity p) {
 				p.getComponent(PathComponent.class).removeCar(v);
 			}
-			
+
 		});
-		
+
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.SPAWN) {
 
 			@Override
 			protected void onCollisionEnd(Entity v, Entity s) {
 				s.getComponent(SpawnPointComponent.class).subCarToFree();;
 			}
-			
+
 		});
 	}
-	
+
 	private static final int EASY = 110;
 	private static final int MEDIUM = 50;
 	private static final int HARD = 30;
@@ -393,29 +419,29 @@ public class TrafficApp extends GameApplication {
 	private LocalTimer SCORE_TIMER;
 	@Override
 	protected void onUpdate(double tpf) {
-		if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
-			FXGL.getWorldProperties().increment("score", pointsPerSec/5);
-			FXGL.getGameScene().clearUINodes();
-			Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
-			uiText.setFont(Font.font(30));
-			// 2. add the UI object to game scene (easy way) at 100, 100
-			FXGL.addUINode(uiText, 10, 30);
-			SCORE_TIMER.capture();
-		}
-		if(counter > spawnRate) {
-			spawnCar();
-			counter = 0;
-			if(spawnRate > minSpawnRate)
-				spawnRate--;
-		}
-		counter ++;
+		//		if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
+		//			FXGL.getWorldProperties().increment("score", pointsPerSec/5);
+		//			FXGL.getGameScene().clearUINodes();
+		//			Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
+		//			uiText.setFont(Font.font(30));
+		//			// 2. add the UI object to game scene (easy way) at 100, 100
+		//			FXGL.addUINode(uiText, 10, 30);
+		//			SCORE_TIMER.capture();
+		//		}
+		//		if(counter > spawnRate) {
+		//			spawnCar();
+		//			counter = 0;
+		//			if(spawnRate > minSpawnRate)
+		//				spawnRate--;
+		//		}
+		//		counter ++;
 	}
-	
+
 	private int pointsPerSec;
-	
+
 	private void spawnCar() {
 		pointsPerSec ++;
-		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnList.size()));
+		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(List.of(0,1).get(new Random().nextInt(2)));//new Random().nextInt(spawnList.size()));
 		SpawnData vdata = new SpawnData(e.getPosition());
 		vdata.put("spawn", e);
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
@@ -423,23 +449,19 @@ public class TrafficApp extends GameApplication {
 		e.getComponent(SpawnPointComponent.class).registerCar(vdata);
 	}
 
-	private void turnVehicle(Entity v, Entity i) {
-		v.getComponent(VehicleComponent.class).nextPath();
-	}
+	//	HashMap<Entity,List<Entity>> pathMap;
+	//
+	//	private HashMap<Entity, List<Entity>> getPathTree() {
+	//		if(pathMap == null) {
+	//			pathMap = new HashMap<>();
+	//			List<Entity> pathList = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH);
+	//			pathList.sort(Comparator.comparing(x -> ((Entity)x).getY()));
+	//			//pathList.forEach(x -> System.out.println(x.getProperties()));
+	//			pathList.forEach(x -> pathMap.put(x, getPathDirections(x)));
+	//		}
+	//		return pathMap;
+	//	}
 
-//	HashMap<Entity,List<Entity>> pathMap;
-//
-//	private HashMap<Entity, List<Entity>> getPathTree() {
-//		if(pathMap == null) {
-//			pathMap = new HashMap<>();
-//			List<Entity> pathList = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH);
-//			pathList.sort(Comparator.comparing(x -> ((Entity)x).getY()));
-//			//pathList.forEach(x -> System.out.println(x.getProperties()));
-//			pathList.forEach(x -> pathMap.put(x, getPathDirections(x)));
-//		}
-//		return pathMap;
-//	}
-	
 	/*
 	 * this method returns the paths connected to a path
 	 */
@@ -454,20 +476,16 @@ public class TrafficApp extends GameApplication {
 	protected static Entity findPath(String x) {
 		return FXGL.getGameWorld().getEntityByID("path", Integer.parseInt(x)).orElse(null);
 	}
-	
-	
+
+
 	/*
 	 * this method generates a list of paths that the car will follow
 	 * if left is false the list generated will not have a left turn
 	 * if right is false the list generated will not have a right turn
 	 */
-
 	public static List<Entity> pathChooser(Entity root, boolean canTurn){	//FXGL.getGameWorld().getEntitiesByType(EntityType.PATH).stream().filter(x -> spawn.isColliding(x)).findFirst().get()
 		LinkedList<Entity> paths = new LinkedList<>();
 		paths.add(root);
-		
-
-
 		while(((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(",").length > 1) {
 			Entity path = nextPathFinder((String) root.getPropertyOptional("direzione").get(), ((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(","), Directions.valueOf((String) paths.get(paths.size() - 1).getPropertyOptional("direzione").orElseThrow()), canTurn);
 			paths.add(path);
@@ -481,16 +499,16 @@ public class TrafficApp extends GameApplication {
 		List<Entity> l = Arrays.stream(strings).map(x -> findPath(x)).filter(x -> x != null).sorted(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").orElseThrow()).equals(oldDir) ? 0 : 1)).collect(Collectors.toList());
 		Random r = new Random();
 		if(l.isEmpty()) return null;
-		int i = r.nextInt(l.size() + 3);
+		int i = r.nextInt(l.size() + 1);
 		return l.get(canTurn ? (i > l.size() - 1 ? 0 : i ): 0);
 	}
-	
+
 	public Music getGameMusic() {
 		return this.gameMusic;
 	}
-	
+
 	@Override
 	protected void initGameVars(Map<String, Object> vars) {
-	    vars.put("score", 0);
+		vars.put("score", 0);
 	}
 }

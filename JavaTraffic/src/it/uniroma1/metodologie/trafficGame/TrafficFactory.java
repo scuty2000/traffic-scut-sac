@@ -99,7 +99,7 @@ public class TrafficFactory implements EntityFactory{
 	public Entity getVehicle(SpawnData data) {
 		Entity vehicle;
 		int random = new Random().nextInt(9);
-		if(random <= -1 && (boolean) data.get("tir"))
+		if(random <= 1 && (boolean) data.get("tir"))
 			vehicle = build(data, Vehicle.TIR);
 		else if(random <= 3)
 			vehicle = build(data, Vehicle.MOTORBIKE);
