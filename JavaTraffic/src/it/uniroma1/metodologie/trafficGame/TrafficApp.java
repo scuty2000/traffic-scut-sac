@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -355,14 +356,27 @@ public class TrafficApp extends GameApplication {
 				/*
 				 * recupero il semaforo opposto a quello del veicolo
 				 */
-				Entity trafficLight = FXGL.getGameWorld().getEntitiesByType(EntityType.SEMAFORO).stream()
-																	.filter(x -> !x.isColliding(v) && Directions.valueOf((String) x.getPropertyOptional("direzione").orElseThrow()).isOpposite(v.getComponent(VehicleComponent.class).getDirection()))
-																	.min(Comparator.comparing(x -> v.getPosition().distance(x.getPosition()))).orElseThrow();
-				
+				int[] infos = whereToCheck(v.getComponent(VehicleComponent.class).getDirection());
+				Optional<Entity> carOnTheOtherSide = FXGL.getGameWorld().getEntitiesInRange(new Rectangle2D(v.getX() + infos[0], v.getY() + infos[1], infos[2], infos[3])).stream().filter(x -> x.getType().equals(EntityType.VEHICLE)).findFirst();
+//						(EntityType.SEMAFORO).stream()
+//																	.filter(x -> !x.isColliding(v) && Directions.valueOf((String) x.getPropertyOptional("direzione").orElseThrow()).isOpposite(v.getComponent(VehicleComponent.class).getDirection()))
+//																	.min(Comparator.comparing(x -> v.getPosition().distance(x.getPosition()))).orElseThrow();
+
 				if(isTurningLeft(v.getComponent(VehicleComponent.class).getDirection(), Directions.valueOf((String) v.getComponent(VehicleComponent.class).getNextPath().getPropertyOptional("direzione").orElseThrow())) 
-						&& FXGL.getGameWorld().getCollidingEntities(trafficLight).parallelStream().anyMatch(x -> x.getType().equals(EntityType.VEHICLE)))
+						&& carOnTheOtherSide.isPresent())
 					v.getComponent(VehicleComponent.class).generateNewStraightPath();
 				turnVehicle(v);
+			}
+			
+			//deve tornare un array con x, y, width e height
+			private int[] whereToCheck(Directions d) {
+				switch(d) {
+				case UP: return new int[] {-125,-400,1,200};
+				case DOWN: return new int[] {125,200,1,200};
+				case LEFT: return new int[] {-400,125,200,1};
+				case RIGHT: return new int[] {200,-125,200,1};
+				}
+				return null;
 			}
 			
 			private void turnVehicle(Entity v) {
@@ -389,7 +403,7 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				if((i.getComponent(TrafficLightAnimationComponent.class).isRed()
+				if((i.getComponent(TrafficLightAnimationComponent.class).isRed() 
 						&& !v.isColliding(v.getComponent(VehicleComponent.class).getNearestIncrocio()))
 						||
 						!v.getComponent(VehicleComponent.class).getNextPath().getComponent(PathComponent.class).isFree(v)) {
@@ -428,29 +442,29 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void onUpdate(double tpf) {
-				if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
-					FXGL.getWorldProperties().increment("score", pointsPerSec/5);
-					FXGL.getGameScene().clearUINodes();
-					Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
-					uiText.setFont(Font.font(30));
-					// 2. add the UI object to game scene (easy way) at 100, 100
-					FXGL.addUINode(uiText, 10, 30);
-					SCORE_TIMER.capture();
-				}
-				if(counter > spawnRate) {
-					spawnCar();
-					counter = 0;
-					if(spawnRate > minSpawnRate)
-						spawnRate--;
-				}
-				counter ++;
+//				if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
+//					FXGL.getWorldProperties().increment("score", pointsPerSec/5);
+//					FXGL.getGameScene().clearUINodes();
+//					Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
+//					uiText.setFont(Font.font(30));
+//					// 2. add the UI object to game scene (easy way) at 100, 100
+//					FXGL.addUINode(uiText, 10, 30);
+//					SCORE_TIMER.capture();
+//				}
+//				if(counter > spawnRate) {
+//					spawnCar();
+//					counter = 0;
+//					if(spawnRate > minSpawnRate)
+//						spawnRate--;
+//				}
+//				counter ++;
 	}
 
 	private int pointsPerSec;
 
 	private void spawnCar() {
 		pointsPerSec ++;
-		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnCount));
+		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(2));//new Random().nextInt(spawnCount));
 		SpawnData vdata = new SpawnData(e.getPosition());
 		vdata.put("spawn", e);
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));

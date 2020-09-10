@@ -29,16 +29,15 @@ public class PathComponent extends Component{
 		if(!carList.contains(e)) {
 			carList.add(e);
 			current += calcWidth(e);
-			//System.out.println("size : " + size + "----- this : " + current + "------ add : " + calcWidth(e));
+			System.out.println("size : " + size + "----- this : " + current + "------ add : " + calcWidth(e));
 		}
 	}
 
 	public void removeCar(Entity e) {
-		
 		if(carList.contains(e)) {
 			current -= calcWidth(e);
 			carList.remove(e);
-			//System.out.println("size : " + size + "----- this : " + current + "------ remove : " + calcWidth(e));
+			System.out.println("size : " + size + "----- this : " + current + "------ remove : " + calcWidth(e));
 		}
 	}
 

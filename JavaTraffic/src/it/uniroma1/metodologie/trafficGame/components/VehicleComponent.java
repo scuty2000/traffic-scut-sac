@@ -348,7 +348,8 @@ public class VehicleComponent extends Component{
 		if(i.getComponentOptional(TrafficLightAnimationComponent.class).orElseThrow().isGreen()
 				|| entity.isColliding(getNearestIncrocio())) {
 			if(!accelerating) {
-				if(nextPath != null && nextPath.getComponent(PathComponent.class).isFree(entity)) {
+				if(nextPath != null 
+						&& nextPath.getComponent(PathComponent.class).isFree(entity)) {
 					nextPath.getComponent(PathComponent.class).addCar(entity);
 					accelerate();
 				}
@@ -373,12 +374,10 @@ public class VehicleComponent extends Component{
 	 */
 	
 	public void generateNewStraightPath() {
-		System.out.println("Old Path----" + pathList);
 		List<Entity> paths = TrafficApp.getPathDirections(currentPath);
 		paths.sort(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").orElseThrow()).equals(d) ? 0 : 1));
 		Entity root = paths.get(0);
 		pathList = TrafficApp.pathChooser(root, v.canTurn());
-		System.out.println("New Path----" + pathList);
 		System.out.println();
 		System.out.println();
 	}
