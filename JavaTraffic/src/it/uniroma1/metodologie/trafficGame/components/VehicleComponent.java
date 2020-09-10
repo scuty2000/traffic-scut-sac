@@ -10,7 +10,9 @@ import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.time.LocalTimer;
 
 import it.uniroma1.metodologie.trafficGame.Directions;
+import it.uniroma1.metodologie.trafficGame.TrafficApp;
 import it.uniroma1.metodologie.trafficGame.Vehicle;
+import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -361,4 +363,12 @@ public class VehicleComponent extends Component{
 	}
 
 	public Entity getCurrentPath() {return currentPath; }
+	
+	/*
+	 * this method has to be used when the vehicle can not turn because it is a tir or because the street is not free
+	 */
+	
+	private void generateNewStraightPath() {
+		List<Entity> paths = TrafficApp.getPathDirections(currentPath);
+	}
 }

@@ -57,7 +57,7 @@ public class TrafficApp extends GameApplication {
 	protected void initSettings(GameSettings settings) {
 		settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
 		settings.setVersion("Alpha 1.0"); // To update periodically
-		settings.setTitle("  Traffic  ");
+		settings.setTitle("Traffic");
 		settings.setWidth(2500);
 		settings.setHeight(1750);
 		settings.setApplicationMode(ApplicationMode.DEVELOPER);
@@ -103,7 +103,7 @@ public class TrafficApp extends GameApplication {
 		
 		spawnList = gw.getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList());
 
-		getPathTree();
+		//getPathTree();
 
 		matrixIncroci = parseIncroci();		//gets the grid of the semafori
 
@@ -363,7 +363,7 @@ public class TrafficApp extends GameApplication {
 	private static final int HARD = 30;
 
 	private int spawnRate = 120;	//fps before spawn of a new car
-	private final int minSpawnRate = MEDIUM;	//min spawn fps
+	private final int minSpawnRate = EASY;	//min spawn fps
 	private int counter;
 	private LocalTimer SCORE_TIMER;
 	@Override
@@ -390,9 +390,9 @@ public class TrafficApp extends GameApplication {
 	
 	private void spawnCar() {
 		pointsPerSec ++;
-		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(0);//new Random().nextInt(spawnList.size()));
+		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnList.size()));
 		SpawnData vdata = new SpawnData(e.getPosition());
-		vdata.put("pathList", pathChooser(e));
+		vdata.put("pathList", pathChooser(e, true, true));
 		vdata.put("direction", Directions.valueOf((String)e.getPropertyOptional("direzione").orElse("RIGHT")));
 		vdata.put("tir", (boolean) e.getPropertyOptional("tir").orElse(false));
 		e.getComponent(SpawnPointComponent.class).registerCar(vdata);
@@ -402,35 +402,48 @@ public class TrafficApp extends GameApplication {
 		v.getComponent(VehicleComponent.class).nextPath();
 	}
 
-	HashMap<Entity,List<Entity>> pathMap;
+//	HashMap<Entity,List<Entity>> pathMap;
+//
+//	private HashMap<Entity, List<Entity>> getPathTree() {
+//		if(pathMap == null) {
+//			pathMap = new HashMap<>();
+//			List<Entity> pathList = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH);
+//			pathList.sort(Comparator.comparing(x -> ((Entity)x).getY()));
+//			//pathList.forEach(x -> System.out.println(x.getProperties()));
+//			pathList.forEach(x -> pathMap.put(x, getPathDirections(x)));
+//		}
+//		return pathMap;
+//	}
+	
+	/*
+	 * this method returns the paths connected to a path
+	 */
 
-	private HashMap<Entity, List<Entity>> getPathTree() {
-		if(pathMap == null) {
-			pathMap = new HashMap<>();
-			List<Entity> pathList = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH);
-			pathList.sort(Comparator.comparing(x -> ((Entity)x).getY()));
-			//pathList.forEach(x -> System.out.println(x.getProperties()));
-			pathList.forEach(x -> pathMap.put(x, getPathDirections(x)));
-		}
-		return pathMap;
-	}
-
-	private List<Entity> getPathDirections(Entity e){
+	public static List<Entity> getPathDirections(Entity e){
 		return Arrays.stream(((String) e.getPropertyOptional("paths").orElse("")).split(","))
 				.filter(s -> s.length() > 0)
 				.map(x -> findPath(x))
 				.collect(Collectors.toList());
 	}
 
-	private Entity findPath(String x) {
+	protected static Entity findPath(String x) {
 		return FXGL.getGameWorld().getEntityByID("path", Integer.parseInt(x)).orElse(null);
 	}
+	
+	
+	/*
+	 * this method generates a list of paths that the car will follow
+	 * if left is false the list generated will not have a left turn
+	 * if right is false the list generated will not have a right turn
+	 */
 
-	public List<Entity> pathChooser(Entity spawn){
+	public static List<Entity> pathChooser(Entity spawn, boolean left, boolean right){
 		LinkedList<Entity> paths = new LinkedList<>();
 
 		Entity root = FXGL.getGameWorld().getEntitiesByType(EntityType.PATH).stream().filter(x -> spawn.isColliding(x)).findFirst().get();
-
+		
+		
+		
 		paths.add(root);
 
 		while(((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(",").length > 1) {
@@ -440,7 +453,7 @@ public class TrafficApp extends GameApplication {
 		return paths;
 	}
 
-	private Entity nextPathFinder(String current, String[] strings, Directions oldDir) {
+	private static Entity nextPathFinder(String current, String[] strings, Directions oldDir) {
 		//lista dei possibili path
 		List<Entity> l = Arrays.stream(strings).map(x -> findPath(x)).filter(x -> x != null).sorted(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").get()).equals(oldDir) ? 0 : 1)).collect(Collectors.toList());
 		Random r = new Random();
