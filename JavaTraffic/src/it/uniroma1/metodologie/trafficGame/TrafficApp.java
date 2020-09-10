@@ -369,7 +369,7 @@ public class TrafficApp extends GameApplication {
 	@Override
 	protected void onUpdate(double tpf) {
 		if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
-			FXGL.getWorldProperties().increment("score", pointsPerSec);
+			FXGL.getWorldProperties().increment("score", pointsPerSec/5);
 			FXGL.getGameScene().clearUINodes();
 			Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
 			uiText.setFont(Font.font(30));

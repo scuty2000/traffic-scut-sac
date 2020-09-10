@@ -14,6 +14,7 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.Separator;
 import javafx.scene.effect.Effect;
 import javafx.scene.input.KeyCode;
@@ -54,9 +55,22 @@ public class TrafficAppMenu extends FXGLMenu {
 		box.setTranslateX(200);
 		box.setTranslateY(1100);
 		
-		getContentRoot().getChildren().addAll(titleBox, box);
+		s = new Text("score : " + FXGL.getWorldProperties().getValueOptional("score").orElse(""));
+		s.setTranslateX(200);
+		s.setTranslateY(200);
+		s.setFont(Font.font(40));
+		s.setFill(Color.LIGHTGRAY);		
+		
+		getContentRoot().getChildren().addAll(titleBox, box, s);
 	}
-
+	
+	Text s;
+	
+	@Override
+	protected void onUpdate(double tpf) {
+		((Text) getContentRoot().getChildren().stream().filter(x -> x == s).findFirst().orElseThrow()).setText("score : " + FXGL.getWorldProperties().getValueOptional("score").orElse(""));
+		
+	}
 
 	@Override
 	protected Button createActionButton(String arg0, Runnable arg1) {
