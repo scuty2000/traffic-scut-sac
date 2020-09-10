@@ -83,10 +83,10 @@ public class TrafficApp extends GameApplication {
 		settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
 		settings.setVersion("Alpha 1.0"); // To update periodically
 		settings.setTitle("Traffic");
-		settings.setWidth(2500);
-		settings.setHeight(1750);
+		settings.setWidth(2000);
+		settings.setHeight(1125);
 		settings.setApplicationMode(ApplicationMode.DEVELOPER);
-		settings.setProfilingEnabled(true);
+		settings.setProfilingEnabled(false);
 		settings.setMainMenuEnabled(true);
 		settings.setManualResizeEnabled(true);
 		settings.setPreserveResizeRatio(true);

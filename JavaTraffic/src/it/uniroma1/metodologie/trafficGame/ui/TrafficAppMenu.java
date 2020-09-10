@@ -49,6 +49,9 @@ public class TrafficAppMenu extends FXGLMenu {
 	
 	private TrafficApp app = (TrafficApp) FXGL.getApp();
 	
+	private final int xMenuPosition = 200;
+	private final int yMenuPosition = 750;
+	
 	private File dir = new File("src/assets/levels");
 	private List<File> files = Arrays.asList(dir.listFiles((FilenameFilter) new FilenameFilter() {
 	    @Override
@@ -78,10 +81,15 @@ public class TrafficAppMenu extends FXGLMenu {
 		btnExtras.setDisable(true);
 		btnCredits.setDisable(true);
 		
-		var titleBox = new VBox(FXGL.texture("logo.png"));
+		Texture logo = FXGL.texture("logo.png");
+		logo.setScaleX(0.5);
+		logo.setScaleY(0.5);
+		logo.setScaleZ(0.5);
+		
+		var titleBox = new VBox(logo);
 		titleBox.setAlignment(Pos.CENTER);
 		titleBox.setTranslateX(FXGL.getAppWidth()/2-1750/2);
-		titleBox.setTranslateY(200);
+		titleBox.setTranslateY(-100);
 		this.box = new VBox(10, 
 				btnPlayGame, 
 				btnOptions,
@@ -89,12 +97,11 @@ public class TrafficAppMenu extends FXGLMenu {
 				btnCredits,
 				btnQuit,
 				new Text(""),
-				new Text(""),
 				new Separator(Orientation.HORIZONTAL),
-				FXGL.getUIFactoryService().newText("Seleziona una voce del menù con le frecce direzionali e premi Invio.", Color.LIGHTGRAY, 40.0)
+				FXGL.getUIFactoryService().newText("Seleziona una voce del menù con le frecce direzionali e premi Invio.", Color.LIGHTGRAY, 20.0)
 				);
-		box.setTranslateX(200);
-		box.setTranslateY(1100);
+		box.setTranslateX(xMenuPosition);
+		box.setTranslateY(yMenuPosition);
 		
 		this.settingsBox = new VBox(10,
 				new TrafficButton("Seleziona Mappa", () -> toggleMap()),
@@ -103,14 +110,13 @@ public class TrafficAppMenu extends FXGLMenu {
 				placeholder3,
 				new TrafficButton("Indietro", () -> toggleSettings()),
 				new Text(""),
-				new Text(""),
 				new Separator(Orientation.HORIZONTAL),
-				FXGL.getUIFactoryService().newText("Modifica le impostazioni del gioco.", Color.LIGHTGRAY, 40.0)
+				FXGL.getUIFactoryService().newText("Modifica le impostazioni del gioco.", Color.LIGHTGRAY, 20.0)
 				);
 		
 		this.settingsBox.setVisible(false);
-		this.settingsBox.setTranslateX(200);
-		this.settingsBox.setTranslateY(1100);
+		this.settingsBox.setTranslateX(xMenuPosition);
+		this.settingsBox.setTranslateY(yMenuPosition);
 
 		this.easyBtn = new TrafficButton("Facile", () -> setDifficulty("EASY"));
 		this.mediumBtn = new TrafficButton("Normale", () -> setDifficulty("MEDIUM"));
@@ -123,20 +129,19 @@ public class TrafficAppMenu extends FXGLMenu {
 				placeholder,
 				new TrafficButton("Indietro", () -> toggleDifficulty()),
 				new Text(""),
-				new Text(""),
 				new Separator(Orientation.HORIZONTAL),
-				FXGL.getUIFactoryService().newText("Seleziona il livello di difficoltà desiderato.", Color.LIGHTGRAY, 40.0)
+				FXGL.getUIFactoryService().newText("Seleziona il livello di difficoltà desiderato.", Color.LIGHTGRAY, 20.0)
 				);
 		
 		this.difficultyBox.setVisible(false);
-		this.difficultyBox.setTranslateX(200);
-		this.difficultyBox.setTranslateY(1100);
+		this.difficultyBox.setTranslateX(xMenuPosition);
+		this.difficultyBox.setTranslateY(yMenuPosition);
 		
-		s = new Text("score : " + FXGL.getWorldProperties().getValueOptional("score").orElse(""));
-		s.setTranslateX(200);
-		s.setTranslateY(200);
-		s.setFont(Font.font(40));
-		s.setFill(Color.LIGHTGRAY);
+//		s = new Text("score : " + FXGL.getWorldProperties().getValueOptional("score").orElse(""));
+//		s.setTranslateX(200);
+//		s.setTranslateY(200);
+//		s.setFont(Font.font(40));
+//		s.setFill(Color.LIGHTGRAY);
 		
 		this.mapBox = new VBox(10);
 		
@@ -150,15 +155,14 @@ public class TrafficAppMenu extends FXGLMenu {
 				placeholder5,
 				new TrafficButton("Indietro", () -> toggleMap()),
 				new Text(""),
-				new Text(""),
 				new Separator(Orientation.HORIZONTAL),
-				FXGL.getUIFactoryService().newText("Seleziona la mappa desiderata.", Color.LIGHTGRAY, 40.0));
+				FXGL.getUIFactoryService().newText("Seleziona la mappa desiderata.", Color.LIGHTGRAY, 20.0));
 		
 		this.mapBox.setVisible(false);
-		this.mapBox.setTranslateX(200);
-		this.mapBox.setTranslateY(1100);
+		this.mapBox.setTranslateX(xMenuPosition);
+		this.mapBox.setTranslateY(yMenuPosition);
 		
-		getContentRoot().getChildren().addAll(titleBox, box, s, settingsBox, difficultyBox, mapBox);
+		getContentRoot().getChildren().addAll(titleBox, box, settingsBox, difficultyBox, mapBox);
 	}
 	
 	private void setMap(String file) {
@@ -216,7 +220,7 @@ public class TrafficAppMenu extends FXGLMenu {
 	
 	@Override
 	protected void onUpdate(double tpf) {
-		((Text) getContentRoot().getChildren().stream().filter(x -> x == s).findFirst().orElseThrow()).setText("score : " + FXGL.getWorldProperties().getValueOptional("score").orElse(""));
+		//((Text) getContentRoot().getChildren().stream().filter(x -> x == s).findFirst().orElseThrow()).setText("score : " + FXGL.getWorldProperties().getValueOptional("score").orElse(""));
 	}
 
 	@Override
@@ -247,7 +251,7 @@ public class TrafficAppMenu extends FXGLMenu {
 
 	@Override
 	protected Node createVersionView(String arg0) {
-		Text text = FXGL.getUIFactoryService().newText("This game is in Alpha stage. A LOT of bugs have to be expected.", Color.WHITE, 40.0);
+		Text text = FXGL.getUIFactoryService().newText("This game is in Alpha stage. A LOT of bugs have to be expected.", Color.WHITE, 10.0);
 		
 		VBox versionBox = new VBox(
 				text
@@ -270,9 +274,9 @@ public class TrafficAppMenu extends FXGLMenu {
 		private Rectangle icon;
 		
 		public TrafficButton(String text, Runnable action) {
-			name = FXGL.getUIFactoryService().newText(text, FOCUSED_COLOR, 45.0);
-			icon = new Rectangle(15, 40, FOCUSED_COLOR);
-			icon.setTranslateX(-60);
+			name = FXGL.getUIFactoryService().newText(text, FOCUSED_COLOR, 25.0);
+			icon = new Rectangle(7.5, 20, FOCUSED_COLOR);
+			icon.setTranslateX(-30);
 			icon.visibleProperty().bind(focusedProperty());
 			
 			name.fillProperty().bind(
