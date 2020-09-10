@@ -11,7 +11,6 @@ import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
-import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficLightAnimationComponent extends Component {
 

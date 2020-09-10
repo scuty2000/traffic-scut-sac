@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="left-up" width="16" height="9" tilewidth="125" tileheight="125" infinite="0" nextlayerid="5" nextobjectid="62">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="left-up" width="16" height="9" tilewidth="125" tileheight="125" infinite="0" nextlayerid="6" nextobjectid="66">
  <tileset firstgid="1" name="rsz_tiles_sheet" tilewidth="125" tileheight="125" tilecount="42" columns="7">
   <image source="../textures/rsz_tiles_sheet.png" trans="41ffef" width="875" height="750"/>
  </tileset>
@@ -74,7 +74,7 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="3" name="paths">
+ <objectgroup id="3" name="paths" locked="1">
   <object id="10" name="path" type="path" x="593.75" y="875" height="250">
    <properties>
     <property name="direzione" value="UP"/>
@@ -84,7 +84,7 @@
   <object id="11" name="path" type="path" x="593.75" y="375" height="375">
    <properties>
     <property name="direzione" value="UP"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="29,12,38"/>
    </properties>
   </object>
   <object id="12" name="path" type="path" x="593.75" y="0" height="250">
@@ -102,25 +102,25 @@
   <object id="14" name="path" type="path" x="1593.75" y="375" height="375">
    <properties>
     <property name="direzione" value="UP"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="30,13,26"/>
    </properties>
   </object>
   <object id="15" name="path" type="path" x="1593.75" y="875" height="250">
    <properties>
     <property name="direzione" value="UP"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="36,14,32"/>
    </properties>
   </object>
   <object id="19" name="path" type="path" x="531.25" y="0" height="250">
    <properties>
     <property name="direzione" value="DOWN"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="38,20,29"/>
    </properties>
   </object>
   <object id="20" name="path" type="path" x="531.25" y="375" height="375">
    <properties>
     <property name="direzione" value="DOWN"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="25,21,35"/>
    </properties>
   </object>
   <object id="21" name="path" type="path" x="531.25" y="875" height="250">
@@ -132,13 +132,13 @@
   <object id="22" name="path" type="path" x="1531.25" y="0" height="250">
    <properties>
     <property name="direzione" value="DOWN"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="26,23,30"/>
    </properties>
   </object>
   <object id="23" name="path" type="path" x="1531.25" y="375" height="375">
    <properties>
     <property name="direzione" value="DOWN"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="32,24,36"/>
    </properties>
   </object>
   <object id="24" name="path" type="path" x="1531.25" y="875" height="250">
@@ -156,25 +156,25 @@
   <object id="26" name="path" type="path" x="625" y="281.25" width="875">
    <properties>
     <property name="direzione" value="LEFT"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="12,38,20"/>
    </properties>
   </object>
   <object id="27" name="path" type="path" x="1625" y="281.25" width="375">
    <properties>
     <property name="direzione" value="LEFT"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="13,26,23"/>
    </properties>
   </object>
   <object id="28" name="path" type="path" x="0" y="343.75" width="500">
    <properties>
     <property name="direzione" value="RIGHT"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="20,29,12"/>
    </properties>
   </object>
   <object id="29" name="path" type="path" x="625" y="343.75" width="875">
    <properties>
     <property name="direzione" value="RIGHT"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="23,30,13"/>
    </properties>
   </object>
   <object id="30" name="path" type="path" x="1625" y="343.75" width="375">
@@ -186,25 +186,25 @@
   <object id="31" name="path" type="path" x="1625" y="781.25" width="375">
    <properties>
     <property name="direzione" value="LEFT"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="14,32,24"/>
    </properties>
   </object>
   <object id="32" name="path" type="path" x="625" y="781.25" width="875">
    <properties>
     <property name="direzione" value="LEFT"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="11,25,21"/>
    </properties>
   </object>
   <object id="33" name="path" type="path" x="0" y="843.75" width="500">
    <properties>
     <property name="direzione" value="RIGHT"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="10,35,11"/>
    </properties>
   </object>
   <object id="35" name="path" type="path" x="625" y="843.75" width="875">
    <properties>
     <property name="direzione" value="RIGHT"/>
-    <property name="paths" value=""/>
+    <property name="paths" value="24,36,14"/>
    </properties>
   </object>
   <object id="36" name="path" type="path" x="1625" y="843.75" width="375">
@@ -219,6 +219,12 @@
     <property name="paths" value=""/>
    </properties>
   </object>
+ </objectgroup>
+ <objectgroup id="5" name="Incroci">
+  <object id="62" type="incrocioA4" x="500" y="250" width="125" height="125"/>
+  <object id="63" type="incrocioA4" x="1500" y="250" width="125" height="125"/>
+  <object id="64" type="incrocioA4" x="500" y="750" width="125" height="125"/>
+  <object id="65" type="incrocioA4" x="1500" y="750" width="125" height="125"/>
  </objectgroup>
  <objectgroup id="4" name="trafficLight" locked="1">
   <object id="42" type="semaforo" x="375" y="125" width="125" height="125">

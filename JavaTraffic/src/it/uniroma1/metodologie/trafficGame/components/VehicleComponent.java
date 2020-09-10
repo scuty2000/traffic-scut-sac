@@ -11,13 +11,13 @@ import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.time.LocalTimer;
 
 import it.uniroma1.metodologie.trafficGame.Directions;
+import it.uniroma1.metodologie.trafficGame.EntityType;
 import it.uniroma1.metodologie.trafficGame.TrafficApp;
 import it.uniroma1.metodologie.trafficGame.Vehicle;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import tutorial.AndreaGameApp.EntityType;
 
 public class VehicleComponent extends Component{
 	

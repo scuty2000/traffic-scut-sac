@@ -44,7 +44,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import tutorial.AndreaGameApp.EntityType;
 
 public class TrafficApp extends GameApplication {
 
@@ -85,8 +84,8 @@ public class TrafficApp extends GameApplication {
 		settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
 		settings.setVersion("Alpha 1.0"); // To update periodically
 		settings.setTitle("Traffic");
-		settings.setWidth(2000);
-		settings.setHeight(1125);
+		settings.setWidth(2500);
+		settings.setHeight(1500);
 		settings.setApplicationMode(ApplicationMode.DEVELOPER);
 		settings.setProfilingEnabled(false);
 		settings.setMainMenuEnabled(true);

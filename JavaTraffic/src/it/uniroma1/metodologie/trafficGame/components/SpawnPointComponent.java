@@ -26,7 +26,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import tutorial.AndreaGameApp.EntityType;
 
 public class SpawnPointComponent extends Component{
 	
