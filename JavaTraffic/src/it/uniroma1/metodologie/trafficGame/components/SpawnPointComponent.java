@@ -57,12 +57,9 @@ public class SpawnPointComponent extends Component{
 		spawnCar();
 		if(hasLost) {
 			//saving			
-			
 			FXGL.getGameScene().clearUINodes();//delete the score text
-			
 			FXGL.getGameController().gotoMainMenu();
 			TrafficApp mainApp = (TrafficApp) FXGL.getApp();
-			FXGL.getAudioPlayer().stopMusic(mainApp.getGameMusic());
 		}
 		if(counterTimer == null)
 			counterTimer = FXGL.newLocalTimer();
