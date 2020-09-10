@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="left-up" width="16" height="9" tilewidth="125" tileheight="125" infinite="0" nextlayerid="5" nextobjectid="62">
+ <tileset firstgid="1" name="rsz_tiles_sheet" tilewidth="125" tileheight="125" tilecount="42" columns="7">
+  <image source="../textures/rsz_tiles_sheet.png" trans="41ffef" width="875" height="750"/>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="16" height="9" locked="1">
+  <data encoding="csv">
+24,24,24,26,5,28,24,24,24,24,24,26,5,28,24,24,
+25,25,25,32,5,34,25,25,25,25,25,32,5,34,25,25,
+6,6,6,6,7,6,6,6,6,6,6,6,7,6,6,6,
+27,27,27,33,5,21,13,13,13,13,13,19,5,35,27,27,
+24,24,24,26,5,14,10,10,10,10,10,12,5,28,24,24,
+25,25,25,32,5,20,11,11,11,11,11,18,5,34,25,25,
+6,6,6,6,7,6,6,6,6,6,6,6,7,6,6,6,
+27,27,27,33,5,35,27,27,27,27,27,33,5,35,27,27,
+24,24,24,26,5,28,24,24,24,24,24,26,5,28,24,24
+</data>
+ </layer>
+ <objectgroup id="2" name="spawnpoints" locked="1">
+  <object id="1" type="spawn" x="0" y="843.75">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="tir" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="2" type="spawn" x="2000" y="781.25">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="tir" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="3" type="spawn" x="593.75" y="1125">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="tir" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="4" type="spawn" x="1593.75" y="1125">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="tir" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="5" type="spawn" x="1531.25" y="0">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="tir" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="6" type="spawn" x="531.25" y="0">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="tir" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="37" type="spawn" x="2000" y="281.25">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="tir" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="39" type="spawn" x="0" y="343.75">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="tir" type="bool" value="true"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="3" name="paths">
+  <object id="10" name="path" type="path" x="593.75" y="875" height="250">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="paths" value="35,11,25"/>
+   </properties>
+  </object>
+  <object id="11" name="path" type="path" x="593.75" y="375" height="375">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="12" name="path" type="path" x="593.75" y="0" height="250">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="13" name="path" type="path" x="1593.75" y="0" height="250">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="14" name="path" type="path" x="1593.75" y="375" height="375">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="15" name="path" type="path" x="1593.75" y="875" height="250">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="19" name="path" type="path" x="531.25" y="0" height="250">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="20" name="path" type="path" x="531.25" y="375" height="375">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="21" name="path" type="path" x="531.25" y="875" height="250">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="22" name="path" type="path" x="1531.25" y="0" height="250">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="23" name="path" type="path" x="1531.25" y="375" height="375">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="24" name="path" type="path" x="1531.25" y="875" height="250">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="25" name="path" type="path" x="0" y="781.25" width="500">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="26" name="path" type="path" x="625" y="281.25" width="875">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="27" name="path" type="path" x="1625" y="281.25" width="375">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="28" name="path" type="path" x="0" y="343.75" width="500">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="29" name="path" type="path" x="625" y="343.75" width="875">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="30" name="path" type="path" x="1625" y="343.75" width="375">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="31" name="path" type="path" x="1625" y="781.25" width="375">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="32" name="path" type="path" x="625" y="781.25" width="875">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="33" name="path" type="path" x="0" y="843.75" width="500">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="35" name="path" type="path" x="625" y="843.75" width="875">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="36" name="path" type="path" x="1625" y="843.75" width="375">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+  <object id="38" name="path" type="path" x="0" y="281.25" width="500">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="paths" value=""/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="trafficLight" locked="1">
+  <object id="42" type="semaforo" x="375" y="125" width="125" height="125">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="rotation" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="43" type="semaforo" x="375" y="625" width="125" height="125">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="rotation" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="44" type="semaforo" x="1375" y="625" width="125" height="125">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="rotation" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="46" type="semaforo" x="1375" y="125" width="125" height="125">
+   <properties>
+    <property name="direzione" value="DOWN"/>
+    <property name="rotation" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="47" type="semaforo" x="375" y="875" width="125" height="125">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="rotation" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="50" type="semaforo" x="1375" y="875" width="125" height="125">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="rotation" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="51" type="semaforo" x="375" y="375" width="125" height="125">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="rotation" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="53" type="semaforo" x="1375" y="375" width="125" height="125">
+   <properties>
+    <property name="direzione" value="RIGHT"/>
+    <property name="rotation" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="54" type="semaforo" x="625" y="375" width="125" height="125">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="rotation" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="55" type="semaforo" x="625" y="875" width="125" height="125">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="rotation" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="56" type="semaforo" x="1625" y="875" width="125" height="125">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="rotation" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="57" type="semaforo" x="1625" y="375" width="125" height="125">
+   <properties>
+    <property name="direzione" value="UP"/>
+    <property name="rotation" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="58" type="semaforo" x="625" y="125" width="125" height="125">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="rotation" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="59" type="semaforo" x="625" y="625" width="125" height="125">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="rotation" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="60" type="semaforo" x="1625" y="625" width="125" height="125">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="rotation" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="61" type="semaforo" x="1625" y="125" width="125" height="125">
+   <properties>
+    <property name="direzione" value="LEFT"/>
+    <property name="rotation" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
