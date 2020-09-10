@@ -25,13 +25,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.layout.HBox;
 
 public class TrafficAppMenu extends FXGLMenu {
-
+	
 	public TrafficAppMenu(MenuType type) {
 		super(type);
-		
 		TrafficButton btnPlayGame = new TrafficButton("Avvia una partita", () -> fireNewGame());
 		TrafficButton btnOptions = new TrafficButton("Impostazioni", () -> {});
 		TrafficButton btnQuit = new TrafficButton("Esci dal gioco", () -> fireExit());
@@ -40,7 +41,6 @@ public class TrafficAppMenu extends FXGLMenu {
 		titleBox.setAlignment(Pos.CENTER);
 		titleBox.setTranslateX(FXGL.getAppWidth()/2-1750/2);
 		titleBox.setTranslateY(200);
-		
 		var box = new VBox(10, 
 				btnPlayGame, 
 				btnOptions,
@@ -56,6 +56,7 @@ public class TrafficAppMenu extends FXGLMenu {
 		
 		getContentRoot().getChildren().addAll(titleBox, box);
 	}
+
 
 	@Override
 	protected Button createActionButton(String arg0, Runnable arg1) {
@@ -122,22 +123,20 @@ public class TrafficAppMenu extends FXGLMenu {
 			name.fillProperty().bind(
 					
 					Bindings.when(focusedProperty()).then(FOCUSED_COLOR).otherwise(NOT_FOCUSED_COLOR)
-					
+
 					);
-			
+
 			setOnKeyPressed(e -> {
 				if(e.getCode() == KeyCode.ENTER) {
 					action.run();
 				}
 			});
+
 			
 			setFocusTraversable(true);
 			setAlignment(Pos.CENTER_LEFT);
 			
 			getChildren().addAll(icon, name);
 		}
-		
-		
 	}
-
 }

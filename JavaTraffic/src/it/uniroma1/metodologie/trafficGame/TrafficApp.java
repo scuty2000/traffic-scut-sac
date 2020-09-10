@@ -1,11 +1,14 @@
 package it.uniroma1.metodologie.trafficGame;
 
+import javafx.scene.text.Font;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -13,6 +16,7 @@ import java.util.stream.Collectors;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.MenuItem;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.app.scene.SceneFactory;
@@ -26,6 +30,7 @@ import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.profile.DataFile;
 import com.almasb.fxgl.time.LocalTimer;
 import javafx.geometry.Point2D;
 import it.uniroma1.metodologie.trafficGame.components.CrossRoadComponent;
@@ -36,6 +41,7 @@ import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import tutorial.AndreaGameApp.EntityType;
 
@@ -59,11 +65,13 @@ public class TrafficApp extends GameApplication {
 		settings.setMainMenuEnabled(true);
 		settings.setManualResizeEnabled(true);
 		settings.setPreserveResizeRatio(true);
+		settings.setEnabledMenuItems(EnumSet.allOf(MenuItem.class));
 		settings.setSceneFactory(new SceneFactory() {
 			@Override
 			public FXGLMenu newMainMenu() {
 				return new TrafficAppMenu(MenuType.MAIN_MENU);
 			}
+			
 		});
 	}
 
@@ -71,7 +79,7 @@ public class TrafficApp extends GameApplication {
 	private Entity player1;
 	//private Entity player2;
 
-	private String map = "level02.tmx";
+	private String map = "map-v3.tmx";
 
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
 	
@@ -79,6 +87,7 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void initGame() {
+		
 
 		GameWorld gw = FXGL.getGameWorld();
 
@@ -111,6 +120,8 @@ public class TrafficApp extends GameApplication {
 			if((semaforo.getProperties().getInt("rotation") == 1 || semaforo.getProperties().getInt("rotation") == 3))
 				semaforo.getComponent(TrafficLightAnimationComponent.class).switchLight();
 		}
+		
+		this.SCORE_TIMER = FXGL.newLocalTimer();
 	}
 
 	private HashMap<Integer, ArrayList<Entity>> parseIncroci() {
@@ -230,10 +241,10 @@ public class TrafficApp extends GameApplication {
 	@Override
 	protected void initUI() {
 		// 1. create any JavaFX or FXGL UI object
-		//Text uiText = new Text("Hello World!");
-
+		Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
+		uiText.setFont(javafx.scene.text.Font.font(30));
 		// 2. add the UI object to game scene (easy way) at 100, 100
-		//FXGL.addUINode(uiText, 100, 100);
+		FXGL.addUINode(uiText, 10, 30);
 	}
 
 	public static void main(String[] args) {
@@ -338,12 +349,7 @@ public class TrafficApp extends GameApplication {
 		});
 		
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.SPAWN) {
-//			
-//			@Override
-//			protected void onCollisionBegin(Entity v, Entity s) {
-//				s.getComponent(SpawnPointComponent.class).addCarToFree();;
-//			}
-//			
+
 			@Override
 			protected void onCollisionEnd(Entity v, Entity s) {
 				s.getComponent(SpawnPointComponent.class).subCarToFree();;
@@ -359,18 +365,31 @@ public class TrafficApp extends GameApplication {
 	private int spawnRate = 120;	//fps before spawn of a new car
 	private final int minSpawnRate = MEDIUM;	//min spawn fps
 	private int counter;
+	private LocalTimer SCORE_TIMER;
 	@Override
 	protected void onUpdate(double tpf) {
-//		if(counter > spawnRate) {
-//			spawnCar();
-//			counter = 0;
-//			if(spawnRate > minSpawnRate)
-//				spawnRate--;
-//		}
-//		counter ++;
+		if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
+			FXGL.getWorldProperties().increment("score", pointsPerSec);
+			FXGL.getGameScene().clearUINodes();
+			Text uiText = new Text("Score : " + FXGL.getWorldProperties().getInt("score"));
+			uiText.setFont(Font.font(30));
+			// 2. add the UI object to game scene (easy way) at 100, 100
+			FXGL.addUINode(uiText, 10, 30);
+			SCORE_TIMER.capture();
+		}
+		if(counter > spawnRate) {
+			spawnCar();
+			counter = 0;
+			if(spawnRate > minSpawnRate)
+				spawnRate--;
+		}
+		counter ++;
 	}
 	
+	private int pointsPerSec;
+	
 	private void spawnCar() {
+		pointsPerSec ++;
 		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(0);//new Random().nextInt(spawnList.size()));
 		SpawnData vdata = new SpawnData(e.getPosition());
 		vdata.put("pathList", pathChooser(e));
@@ -433,5 +452,9 @@ public class TrafficApp extends GameApplication {
 	public Music getGameMusic() {
 		return this.gameMusic;
 	}
-
+	
+	@Override
+	protected void initGameVars(Map<String, Object> vars) {
+	    vars.put("score", 0);
+	}
 }

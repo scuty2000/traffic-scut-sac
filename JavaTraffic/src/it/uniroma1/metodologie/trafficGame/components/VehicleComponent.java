@@ -23,7 +23,7 @@ public class VehicleComponent extends Component{
 	 * DEBUG
 	 */
 	
-	private boolean debugCurve = true;
+	private boolean debugCurve = false;
 	
 	/*
 	 * speed of the veichle
