@@ -58,6 +58,34 @@ public class TrafficApp extends GameApplication {
 	private Sound pointersound;
 
 	private Music gameMusic;
+	
+	private static final int EASY = 110;
+	private static final int MEDIUM = 50;
+	private static final int HARD = 30;
+
+	private int spawnRate = 120;	//fps before spawn of a new car
+	private int minSpawnRate = MEDIUM;	//min spawn fps
+	
+	public String getMinSpawnRate() {
+		return switch(this.minSpawnRate) {
+		case EASY -> "EASY";
+		case MEDIUM -> "MEDIUM";
+		case HARD -> "HARD";
+		default -> null;
+		};
+	}
+
+	public void setMinSpawnRate(String difficulty) {
+		this.minSpawnRate = switch(difficulty) {
+			case "EASY" -> EASY;
+			case "MEDIUM" -> MEDIUM;
+			case "HARD" -> HARD;
+			default -> throw new IllegalArgumentException("Unexpected value: " + difficulty);
+		};
+	}
+
+	private int counter;
+	private LocalTimer SCORE_TIMER;
 
 	@Override
 	protected void initSettings(GameSettings settings) {
@@ -85,7 +113,11 @@ public class TrafficApp extends GameApplication {
 	private Entity player1;
 	//private Entity player2;
 
-	private String map = "map-v3.tmx";
+	private String map = "Mappa_02.tmx";
+
+	public void setMap(String map) {
+		this.map = map;
+	}
 
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
 
@@ -93,7 +125,6 @@ public class TrafficApp extends GameApplication {
 
 	@Override
 	protected void initGame() {
-
 
 		GameWorld gw = FXGL.getGameWorld();
 
@@ -409,14 +440,6 @@ public class TrafficApp extends GameApplication {
 		});
 	}
 
-	private static final int EASY = 110;
-	private static final int MEDIUM = 50;
-	private static final int HARD = 30;
-
-	private int spawnRate = 120;	//fps before spawn of a new car
-	private final int minSpawnRate = EASY;	//min spawn fps
-	private int counter;
-	private LocalTimer SCORE_TIMER;
 	@Override
 	protected void onUpdate(double tpf) {
 		//		if(SCORE_TIMER.elapsed(Duration.seconds(1))) {
