@@ -374,6 +374,7 @@ public class VehicleComponent extends Component{
 	 */
 	
 	public void generateNewStraightPath() {
+		getNextPath().getComponent(PathComponent.class).removeCar(entity);
 		List<Entity> paths = TrafficApp.getPathDirections(currentPath);
 		paths.sort(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").orElseThrow()).equals(d) ? 0 : 1));
 		Entity root = paths.get(0);

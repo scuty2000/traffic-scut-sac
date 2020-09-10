@@ -1,6 +1,8 @@
 package it.uniroma1.metodologie.trafficGame;
 
 import javafx.scene.text.Font;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -347,11 +349,6 @@ public class TrafficApp extends GameApplication {
 
 			@Override
 			protected void onCollisionBegin(Entity v, Entity i) {
-				//				Entity e = FXGL.entityBuilder()
-				//						.bbox(v.getBoundingBoxComponent().hitBoxesProperty().stream().filter(x -> x.getName().equals("__VIEW__")).findFirst().orElse(v.getBoundingBoxComponent().hitBoxesProperty().get(0)))
-				//						.build();
-				//				System.out.println(e.getBoundingBoxComponent().hitBoxesProperty().get(0).getName());
-				//				if(i.isColliding(e))
 				i.getComponent(CrossRoadComponent.class).addCar();
 				/*
 				 * recupero il semaforo opposto a quello del veicolo
@@ -369,7 +366,7 @@ public class TrafficApp extends GameApplication {
 			}
 			
 			//deve tornare un array con x, y, width e height
-			private int[] whereToCheck(Directions d) {
+			private int[] whereToCheck(Directions d){
 				switch(d) {
 				case UP: return new int[] {-125,-400,1,200};
 				case DOWN: return new int[] {125,200,1,200};
@@ -377,6 +374,7 @@ public class TrafficApp extends GameApplication {
 				case RIGHT: return new int[] {200,-125,200,1};
 				}
 				return null;
+				
 			}
 			
 			private void turnVehicle(Entity v) {
