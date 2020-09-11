@@ -32,34 +32,70 @@ public class VehicleComponent extends Component{
 	 */
 	private double speed = 2.4;
 	
+	/**
+	 * acceleration of the vehicle
+	 */
 	private double acceleration = speed/6;
 	
+	/**
+	 * maximum speed of the vehicle
+	 */
 	private final double MAX_SPEED = speed;
-
+	
+	/**
+	 * type of the vehicle
+	 */
 	private Vehicle v;
-
+	/**
+	 * if this field is true, the car is turning
+	 */
 	private boolean turning;
-	
+	/**
+	 * if this field is true, the car is accelerating
+	 */
 	private boolean accelerating = true;
-
+	/**
+	 * field that oints to the current path followed by the car
+	 */
 	private Entity currentPath;
-
+	/**
+	 * Timer used to see when the car has to move forward
+	 */
 	private LocalTimer shootTimer;
-
+	/**
+	 * time that has to pass before a new move of the car
+	 */
 	private double gapBetweenMove = 0.01;
-
+	/**
+	 * timer used for acceleration and deceleration
+	 */
 	private LocalTimer accSlow;
-
+	/**
+	 * current direction of the car
+	 */
 	private Directions d;
-	
+	/**
+	 * old direction of the car
+	 */
 	private Directions oldDirection;
-
+	/**
+	 * list of the path
+	 */
 	private List<Entity> pathList;
-	
+	/**
+	 * backup of arrayCurve
+	 */
 	private static ArrayList<ArrayList<Point2D>> arrayCurveBCK = new ArrayList<>();
-	
+	/**
+	 * Arraylist of arraylist that contains the points used for turnig animation
+	 */
 	private ArrayList<ArrayList<Point2D>> arrayCurve = new ArrayList<>();
-
+	/**
+	 * constructor of the VehicleComponent
+	 * @param v vehicle type
+	 * @param d start direction
+	 * @param pathList list of paths
+	 */
 	public VehicleComponent(Vehicle v, Directions d, List<Entity> pathList) {
 		this.v = v;
 		this.d = d;
@@ -81,9 +117,14 @@ public class VehicleComponent extends Component{
 			this.arrayCurve.add((ArrayList<Point2D>) arrayList.clone());
 		}
 	}
-	
+	/**
+	 * constant used by the curve generator
+	 */
 	private static final double COST = 4.5;
 	
+	/**
+	 * method that creates the curve
+	 */
 	public static void creaCurve() {
 	    for(int j = 0; j < 8; j++) {
 	    	arrayCurveBCK.add(new ArrayList<Point2D>());
@@ -114,6 +155,13 @@ public class VehicleComponent extends Component{
 		
 	}
 	
+	/**
+	 * method that calculate a point of a curve
+	 * @param angle angle
+	 * @param number1 n1
+	 * @param number2 n2
+	 * @param i i
+	 */
 	private static void calculatePoint(double angle, int number1, int number2, int i) {
 		arrayCurveBCK.get(number1).add(new Point2D(
 		        Math.cos(angle) * COST, 
@@ -161,22 +209,41 @@ public class VehicleComponent extends Component{
 			//System.out.println("X changed to " + entity.getPosition().getX() + "        -     current path x = " + currentPath.getX());
 		}
 	}
-	
+	/**
+	 * multiplier used for rotation
+	 */
 	private double mul;
+	/**
+	 * value of the rotation
+	 */
 	private int rot;
-	
+	/**
+	 * method that returns the nearest TrafficLight
+	 * @return the nearest TrafficLight
+	 */
 	public Entity getNearestSemaforo() {
 		return getNearestByClass(EntityType.SEMAFORO);
 	}
-	
+	/**
+	 * method that returns the nearest CrossRoad
+	 * @return the nearest CrossRoad
+	 */
 	public Entity getNearestIncrocio() {
 		return getNearestByClass(EntityType.INCROCIO);
 	}
-	
+	/**
+	 * method that returns the nearest EntityType passed as parameter
+	 * @param t EntityTyper to find
+	 * @return the entity
+	 */
 	private Entity getNearestByClass(EntityType t) {
 		return FXGL.getGameWorld().getEntitiesByType(t).stream().sorted((x, y) -> (int)(x.distance(entity)-y.distance(entity))).collect(Collectors.toList()).get(0);
 	}
-
+	
+	/**
+	 * method that sets some variables when the car has to turn
+	 * @param d
+	 */
 	private void turn(Directions d) {
 		if(!d.equals(this.d)) {
 			switch(this.d) {
@@ -222,10 +289,18 @@ public class VehicleComponent extends Component{
 			this.turning = true;			
 		}
 	}
-	
+	/**
+	 * dime that has to be elapsed before the next oint of the turn animation
+	 */
 	private double TURN_GAP;
+	/**
+	 * timer used in the turnAnimation
+	 */
 	private LocalTimer turnTimer;
 	
+	/**
+	 * animation used when the vehicle is turning
+	 */
 	@SuppressWarnings("unchecked")
 	private void turnAnimation() {
 		if(turnTimer.elapsed(Duration.seconds(TURN_GAP))){
@@ -270,7 +345,10 @@ public class VehicleComponent extends Component{
 	}
 
 	public Directions getDirection() { return this.d; }
-
+	
+	/**
+	 * method used to make the vehicle turn
+	 */
 	public void nextPath() {
 		Entity oldPath = currentPath;
 		currentPath = pathList.remove(0);
@@ -278,7 +356,11 @@ public class VehicleComponent extends Component{
 		if(oldPath != null)
 			setArrow(oldPath, currentPath);
 	}
-	
+	/**
+	 * method that sets the arrow of the vehicle
+	 * @param op old path
+	 * @param np new path
+	 */
 	private void setArrow(Entity op, Entity np) {
 		Directions npd = Directions.valueOf((String) np.getPropertyOptional("direzione").orElseThrow());
 		switch(Directions.valueOf((String) op.getPropertyOptional("direzione").orElseThrow())) {
@@ -298,9 +380,16 @@ public class VehicleComponent extends Component{
 	}
 
 	public Vehicle getVehicle() { return v; }
-
+	
+	/**
+	 * method that return the isTurning field
+	 * @return
+	 */
 	public boolean isTurning() { return turning; }
-
+	
+	/**
+	 * method used to slow down the car
+	 */
 	public void slowDown() {
 		//this.speed = 0;
 		this.accelerating = false;
@@ -310,7 +399,10 @@ public class VehicleComponent extends Component{
 		}
 		speed = speed < 0 ? 0 : speed;
 	}
-
+	
+	/**
+	 * method used to acelerate the car
+	 */
 	public void accelerate() {
 		//this.speed = 2.0;
 		this.accelerating = true;
@@ -323,25 +415,47 @@ public class VehicleComponent extends Component{
 	public double getSpeed() {
 		return this.speed;
 	}
-	
+	/**
+	 * pointer to the right arrow
+	 */
 	private Rectangle ra;
+	/**
+	 * pointer to the left arrow
+	 */
 	private Rectangle la;
-	private final double BLINK_TIME = 0.3;
+	/**
+	 * time that has to be elapsed before the blik
+	 */
+	private final double BLINK_TIME = 0.4;
+	/**
+	 * current arrow used
+	 */
 	private Rectangle currentArrow;
+	/**
+	 * timer used by the arrows
+	 */
 	private LocalTimer blinkTimer = FXGL.newLocalTimer();
-	
+	/**
+	 * method used to set the arrows
+	 * @param la left arrow
+	 * @param ra right arrow
+	 */
 	public void addArrows(Rectangle la, Rectangle ra) {
 		this.ra = ra;
 		this.la = la;
 	}
-	
+	/**
+	 * animation of the arrow
+	 */
 	private void blinkArrow() {
 		if(isTurning() && blinkTimer.elapsed(Duration.seconds(BLINK_TIME))) {
 			currentArrow.setVisible(currentArrow.isVisible() == true ? false : true);
 			blinkTimer.capture();
 		}
 	}
-	
+	/**
+	 * method used by the Traffic light to say that it is green and the vehicle has to check if he cal pass
+	 */
 	public void updateTrafficLights() {
 		Entity i = FXGL.getGameWorld().getCollidingEntities(entity).parallelStream().filter(x -> x.getType().equals(EntityType.SEMAFORO)).findFirst().orElseThrow();
 		Entity nextPath = getNextPath();
@@ -360,19 +474,28 @@ public class VehicleComponent extends Component{
 		else
 			slowDown();
 	}
-
+	/**
+	 * return the next path
+	 * @return the next path
+	 */
 	public Entity getNextPath() {
 		return pathList.size() > 0 ? pathList.get(0) : null;
 	}
-
+	/**
+	 * return the current path
+	 * @return the current path
+	 */
 	public Entity getCurrentPath() {return currentPath; }
-	
+	/**
+	 * return the pathlist
+	 * @return
+	 */
 	public List<Entity> getPathList() { return pathList; }
 	
-	/*
-	 * this method has to be used when the vehicle can not turn because it is a tir or because the street is not free
+	/**
+	 * this method has to be used when the vehicle can not turn because the street is occupated
+	 * it generates a new path
 	 */
-	
 	public void generateNewStraightPath() {
 		getNextPath().getComponent(PathComponent.class).removeCar(entity);
 		List<Entity> paths = TrafficApp.getPathDirections(currentPath);
