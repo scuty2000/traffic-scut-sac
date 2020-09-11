@@ -8,14 +8,45 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
 import javafx.geometry.Point2D;
 
+/**
+ * This represents the path object on the map
+ */
 public class PathComponent extends Component{
-
+	
+	/**
+	 * This is the number of cars
+	 * that can be contained in the path
+	 */
 	private int size;
+	/**
+	 * This represents the number of cars
+	 * that are on the path
+	 */
 	private int current;
+	/**
+	 * This is the car list that contains
+	 * the cars that are transiting on the
+	 * path
+	 */
 	private List<Entity> carList = new LinkedList<>();
-	private int sF = 30; //devo togliere dalla width ella macchina lo spazio di frenata perch� se venisse aggiunto a current il path si saturerebbe troppo presto rispetto alla sua attuale capacit�
+	/**
+	 * Those are the pixels we have to account for the
+	 * car to stop and not crash
+	 */
+	private int sF = 30;
+	/**
+	 * Show if a path is on the border
+	 * of the map
+	 */
 	private boolean isOnBorder;
 	
+	/**
+	 * When the path is added to the
+	 * content root, this gets its
+	 * position and checks if is
+	 * on the border of the map and
+	 * it's properties
+	 */
 	@Override
 	public void onAdded() { 
 		Point2D p = entity.getPosition();
@@ -27,26 +58,44 @@ public class PathComponent extends Component{
 		FXGL.newLocalTimer();
 	}
 	
+	/**
+	 * This adds a car to the path
+	 * @param e
+	 */
 	public void addCar(Entity e) {
 		if(!carList.contains(e)) {
 			carList.add(e);
 			current += calcWidth(e);
-			//System.out.println("size : " + size + "----- this : " + current + "------ add : " + calcWidth(e));
 		}
 	}
 
+	/**
+	 * This removes a car to the path
+	 * @param e
+	 */
 	public void removeCar(Entity e) {
 		if(carList.contains(e)) {
 			current -= calcWidth(e);
 			carList.remove(e);
-			//System.out.println("size : " + size + "----- this : " + current + "------ remove : " + calcWidth(e));
 		}
 	}
 
+	/**
+	 * This returns if the path can get
+	 * on itself other cars
+	 * @param e
+	 * @return
+	 */
 	public boolean isFree(Entity e) { 
-		//System.out.println("size : " + size + "----- this : " + current + "------ car : " + calcWidth(e));
 		return size > current + calcWidth(e) || isOnBorder; }
 	
+	/**
+	 * This calculates the real width of the path,
+	 * keeping in mind the pixel necessary to the car
+	 * to stop safely
+	 * @param e
+	 * @return
+	 */
 	private int calcWidth(Entity e) { return (int) (e.getWidth() - sF); }
 
 }
