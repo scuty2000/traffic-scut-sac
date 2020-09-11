@@ -41,6 +41,7 @@ import it.uniroma1.metodologie.trafficGame.ui.TrafficAppMenu;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -425,7 +426,9 @@ public class TrafficApp extends GameApplication {
 //						(EntityType.SEMAFORO).stream()
 //																	.filter(x -> !x.isColliding(v) && Directions.valueOf((String) x.getPropertyOptional("direzione").orElseThrow()).isOpposite(v.getComponent(VehicleComponent.class).getDirection()))
 //																	.min(Comparator.comparing(x -> v.getPosition().distance(x.getPosition()))).orElseThrow();
-
+//				FXGL.entityBuilder()
+//					.at(v.getCenter().getX() + infos[0], v.getCenter().getY() + infos[1])
+//					.view(new Rectangle(infos[2], infos[3])).buildAndAttach();
 				if(isTurningLeft(v.getComponent(VehicleComponent.class).getDirection(), Directions.valueOf((String) v.getComponent(VehicleComponent.class).getNextPath().getPropertyOptional("direzione").orElseThrow())) 
 						&& carOnTheOtherSide.isPresent())
 					v.getComponent(VehicleComponent.class).generateNewStraightPath();
@@ -439,9 +442,9 @@ public class TrafficApp extends GameApplication {
 			 */
 			private int[] whereToCheck(Directions d){
 				switch(d) {
-				case UP: return new int[] {-125,-500,10,350};
-				case DOWN: return new int[] {125,200,10,350};
-				case LEFT: return new int[] {-500,125,350,10};
+				case UP: return new int[] {-150,-600,10,350};
+				case DOWN: return new int[] {100,200,10,350};
+				case LEFT: return new int[] {-600,125,350,10};
 				case RIGHT: return new int[] {200,-125,350,10};
 				}
 				return null;
