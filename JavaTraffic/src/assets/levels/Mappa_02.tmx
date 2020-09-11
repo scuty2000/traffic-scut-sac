@@ -14,7 +14,7 @@
 24,24,39,26,5,39,39,39,5,35
 </data>
  </layer>
- <objectgroup id="13" name="Pathways" locked="1">
+ <objectgroup id="13" name="Pathways">
   <object id="68" name="path" type="path" x="1062.5" y="0" height="250">
    <properties>
     <property name="direzione" value="DOWN"/>
@@ -150,7 +150,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="3" name="Semafori">
+ <objectgroup id="3" name="Semafori" locked="1">
   <object id="2" type="semaforo" x="750" y="0" width="250" height="250">
    <properties>
     <property name="direzione" value="DOWN"/>

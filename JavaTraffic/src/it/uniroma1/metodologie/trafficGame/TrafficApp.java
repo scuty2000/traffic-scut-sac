@@ -45,16 +45,34 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class TrafficApp extends GameApplication {
-
+	/**
+	 * field where the CrossRoads will be stored
+	 */
 	private ArrayList<Entity> incroci;
-
+	
 	private Music gameMusic;
 	
+	/**
+	 * easy mode
+	 */
 	private static final int EASY = 110;
+	/**
+	 * medium mode
+	 */
 	private static final int MEDIUM = 50;
+	/**
+	 * hard mode
+	 */
 	private static final int HARD = 30;
-
+	
+	/**
+	 * initial spawn rate
+	 */
 	private int spawnRate = 120;	//fps before spawn of a new car
+	
+	/**
+	 * field that contains the difficulty of the game
+	 */
 	private int minSpawnRate = MEDIUM;	//min spawn fps
 	
 	public String getMinSpawnRate() {
@@ -74,10 +92,15 @@ public class TrafficApp extends GameApplication {
 			default -> throw new IllegalArgumentException("Unexpected value: " + difficulty);
 		};
 	}
-
+	/**
+	 * a counter used to see when the update method has to spawn a car
+	 */
 	private int counter;
+	/**
+	 * LocalTimer used for the score
+	 */
 	private LocalTimer SCORE_TIMER;
-
+	
 	@Override
 	protected void initSettings(GameSettings settings) {
 		settings.setDeveloperMenuEnabled(true); // Use 1 and 2 keys to access variables values and in-game console //TODO remove before production
@@ -100,18 +123,30 @@ public class TrafficApp extends GameApplication {
 		});
 	}
 
-
+	/**
+	 * field where the player is stored
+	 */
 	private Entity player1;
 	//private Entity player2;
-
+	/**
+	 * field where the name of the map is stored
+	 */
 	private String map = "Mappa_01.tmx";
-
+	
+	/**
+	 * method that sets the map
+	 * @param map String. the name of the map
+	 */
 	public void setMap(String map) {
 		this.map = map;
 	}
-
+	/**
+	 * Map where there will be a matrix of CorssRoads (the keys will be the rows and the entries will contain a list of CrossRoads)
+	 */
 	private HashMap<Integer, ArrayList<Entity>> matrixIncroci;
-	
+	/**
+	 * counter of spawns. it is used for the score
+	 */
 	private int spawnCount;
 
 	@Override
@@ -149,6 +184,10 @@ public class TrafficApp extends GameApplication {
 		VehicleComponent.creaCurve();
 	}
 
+	/**
+	 * method that scns the map and returns the matrix of CrossRoads
+	 * @return
+	 */
 	private HashMap<Integer, ArrayList<Entity>> parseIncroci() {
 		List<Entity> list = getListaIncroci();
 		HashMap<Integer, ArrayList<Entity>> matrix = new HashMap<>();
@@ -165,11 +204,19 @@ public class TrafficApp extends GameApplication {
 		matrix.forEach((k,v) -> v.sort((e1,e2) -> (int)((long)e1.getX() - e2.getX())));	//ordering the Lists
 		return matrix;
 	}
-
+	/**
+	 * this method returns the list of crossroads
+	 * @return
+	 */
 	private List<Entity> getListaIncroci(){
 		return FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.INCROCIO)).sorted((s1,s2) ->(int) s1.getY() - (int)s2.getY()).collect(Collectors.toCollection(LinkedList::new));
 	}
 	//####################################
+	/**
+	 * this method returns the Traffic lights near to the entity passed as parameter
+	 * @param p entity
+	 * @return List of traffic lights (Entity)
+	 */
 	private List<Entity> getSemaforiAdiacenti(Entity p) {
 		return checkSemafori((List<Entity>) FXGL.getGameWorld()
 				.getEntitiesInRange(new Rectangle2D(p.getX(), p.getY(), 252, 252))
@@ -178,7 +225,13 @@ public class TrafficApp extends GameApplication {
 				.collect(Collectors.toList()), p);
 
 	}
-
+	
+	/**
+	 * this method takes a list of TrafficLights and an entity (a CrossRoad) . it filters the list returning only the traffic lights that have the right position and orientation
+	 * @param sa
+	 * @param e
+	 * @return
+	 */
 	private List<Entity> checkSemafori(List<Entity> sa, Entity e){ return sa.parallelStream().filter(x-> checkPosition(x, e)).collect(Collectors.toList()); }
 
 	private boolean checkPosition(Entity s, Entity e) {
@@ -255,19 +308,32 @@ public class TrafficApp extends GameApplication {
 			}
 		}, MouseButton.PRIMARY);
 	}
-
+	
+	/**
+	 * this method switches the TrafficLights close to the player
+	 */
 	private void switchSemafori() {
 		for (Entity entity : getSemaforiAdiacenti(player1)) {
 			entity.getComponent(TrafficLightAnimationComponent.class).switchLight();
 		}
 	}
-
+	
+	/**
+	 * this method allows touch for CrossRoads
+	 * @param i
+	 */
 	private void touchMove(Input i) {
 		ArrayList<Entity> selectedIncrocio = (ArrayList<Entity>) FXGL.getGameWorld().getEntitiesByType(EntityType.INCROCIO).stream().filter(x -> (i.getMouseXWorld() - x.getX() >= 0 && i.getMouseXWorld() - x.getX() <= 250)&&(i.getMouseYWorld() - x.getY() >= 0 && i.getMouseYWorld() - x.getY() <= 250 )).collect(Collectors.toList());
 		if(!selectedIncrocio.isEmpty())
 			player1.setPosition(selectedIncrocio.get(0).getPosition());
 	}
-
+	
+	/**
+	 * this method is used by the player when it moves.
+	 * @param d direction of the movement
+	 * @param p a predicate used to check if the movement is valid
+	 * @param pointer the strig that refers to the x or the y proprrty of the player
+	 */
 	private void move(Directions d, Predicate<Integer> p, String pointer) {
 		int i = (int) player1.getPropertyOptional(pointer).orElse(0);
 		if(p.test(i)) {
@@ -297,7 +363,13 @@ public class TrafficApp extends GameApplication {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
+	
+	/**
+	 * given two vehicle, this method returns the car behind
+	 * @param e1 vehicle 1
+	 * @param e2 vehicle 2
+	 * @return the car behind
+	 */
 	private Entity findCarBehind(Entity e1, Entity e2) {
 		Directions direction = e1.getComponent(VehicleComponent.class).getDirection();
 		//		if(!direction.equals(e2.getComponent(VehicleComponent.class).getDirection()))
@@ -315,15 +387,12 @@ public class TrafficApp extends GameApplication {
 		}
 		return r;
 	}
-
+	
+	/**
+	 * this method creates the physics in the game
+	 */
 	@Override
 	protected void initPhysics() {
-
-
-
-		/**
-		 * Qui inizia il proto-collision dei veicoli. Fa altamente cagare e mi sento male solo a leggerlo, poi funziona pure male.
-		 */
 
 		FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.VEHICLE) {
 
@@ -363,22 +432,36 @@ public class TrafficApp extends GameApplication {
 				turnVehicle(v);
 			}
 			
-			//deve tornare un array con x, y, width e height
+			/**
+			 * this method is used to find the zone that a car has to check before turning left
+			 * @param d a direction
+			 * @return an array of four integers (x,y,width,height)
+			 */
 			private int[] whereToCheck(Directions d){
 				switch(d) {
-				case UP: return new int[] {-125,-500,1,350};
-				case DOWN: return new int[] {125,200,1,350};
-				case LEFT: return new int[] {-500,125,350,1};
-				case RIGHT: return new int[] {200,-125,350,1};
+				case UP: return new int[] {-125,-500,10,350};
+				case DOWN: return new int[] {125,200,10,350};
+				case LEFT: return new int[] {-500,125,350,10};
+				case RIGHT: return new int[] {200,-125,350,10};
 				}
 				return null;
 				
 			}
 			
+			/**
+			 * this method gets a vehicle and says to the vehicle to turn
+			 * @param v the vehicle that has to turn
+			 */
 			private void turnVehicle(Entity v) {
 				v.getComponent(VehicleComponent.class).nextPath();
 			}
 			
+			/**
+			 * this method gets the old and the new direction of a car and returns true if the car is turning left
+			 * @param oldDir old direction of the car
+			 * @param newDir new direction
+			 * @return true if the car is turning left
+			 */
 			private boolean isTurningLeft(Directions oldDir, Directions newDir) {
 				switch(oldDir) {
 				case UP : return newDir.equals(Directions.LEFT);
@@ -455,9 +538,14 @@ public class TrafficApp extends GameApplication {
 				}
 				counter ++;
 	}
-
+	/**
+	 * field with the points that will be added every second to the score
+	 */
 	private int pointsPerSec;
-
+	
+	/**
+	 * this method generates a car and gives it to a random spawner
+	 */
 	private void spawnCar() {
 		pointsPerSec ++;
 		Entity e = FXGL.getGameWorld().getEntities().stream().filter(x -> x.getType().equals(EntityType.SPAWN)).collect(Collectors.toList()).get(new Random().nextInt(spawnCount));
@@ -468,10 +556,9 @@ public class TrafficApp extends GameApplication {
 		e.getComponent(SpawnPointComponent.class).registerCar(vdata);
 	}
 
-	/*
+	/**
 	 * this method returns the paths connected to a path
 	 */
-
 	public static List<Entity> getPathDirections(Entity e){
 		return Arrays.stream(((String) e.getPropertyOptional("paths").orElse("")).split(","))
 				.filter(s -> s.length() > 0)
@@ -484,10 +571,9 @@ public class TrafficApp extends GameApplication {
 	}
 
 
-	/*
+	/**
 	 * this method generates a list of paths that the car will follow
-	 * if left is false the list generated will not have a left turn
-	 * if right is false the list generated will not have a right turn
+	 * if canTurn is true the path generated will contains turns
 	 */
 	public static List<Entity> pathChooser(Entity root, boolean canTurn){	//FXGL.getGameWorld().getEntitiesByType(EntityType.PATH).stream().filter(x -> spawn.isColliding(x)).findFirst().get()
 		LinkedList<Entity> paths = new LinkedList<>();
@@ -496,10 +582,17 @@ public class TrafficApp extends GameApplication {
 			Entity path = nextPathFinder((String) root.getPropertyOptional("direzione").get(), ((String) paths.getLast().getPropertyOptional("paths").orElse("")).split(","), Directions.valueOf((String) paths.get(paths.size() - 1).getPropertyOptional("direzione").orElseThrow()), canTurn);
 			paths.add(path);
 		}
-
 		return paths;
 	}
-
+	
+	/**
+	 * this method return a random path took from the list given using alse the old direction of the vehicle and the canTurn parameter
+	 * @param current current path (root)
+	 * @param strings string containing the ids of the possible next paths
+	 * @param oldDir old direction
+	 * @param canTurn boolean that says if there can be turns
+	 * @return the path chosen randomly
+	 */
 	private static Entity nextPathFinder(String current, String[] strings, Directions oldDir, boolean canTurn) {
 		//lista dei possibili path
 		List<Entity> l = Arrays.stream(strings).map(x -> findPath(x)).filter(x -> x != null).sorted(Comparator.comparing(x -> Directions.valueOf((String) ((Entity)x).getPropertyOptional("direzione").orElseThrow()).equals(oldDir) ? 0 : 1)).collect(Collectors.toList());
@@ -508,7 +601,11 @@ public class TrafficApp extends GameApplication {
 		int i = r.nextInt(l.size() + 1);
 		return l.get(canTurn ? (i > l.size() - 1 ? 0 : i ): 0);
 	}
-
+	/**
+	 * not used
+	 * @return Music
+	 * @deprecated
+	 */
 	public Music getGameMusic() {
 		return this.gameMusic;
 	}
