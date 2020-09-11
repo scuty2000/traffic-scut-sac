@@ -50,7 +50,7 @@ public class TrafficAppMenu extends FXGLMenu {
 	private TrafficApp app = (TrafficApp) FXGL.getApp();
 	
 	private final int xMenuPosition = 300;
-	private final int yMenuPosition = 950;
+	private final int yMenuPosition = 1200;
 	
 	private File dir = new File("src/assets/levels");
 	private List<File> files = Arrays.asList(dir.listFiles((FilenameFilter) new FilenameFilter() {
