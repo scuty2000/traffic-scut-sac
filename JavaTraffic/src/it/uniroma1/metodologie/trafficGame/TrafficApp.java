@@ -85,7 +85,7 @@ public class TrafficApp extends GameApplication {
 		settings.setVersion("Alpha 1.0"); // To update periodically
 		settings.setTitle("Traffic");
 		settings.setWidth(2500);
-		settings.setHeight(1500);
+		settings.setHeight(1750);
 		settings.setApplicationMode(ApplicationMode.DEVELOPER);
 		settings.setProfilingEnabled(false);
 		settings.setMainMenuEnabled(true);
@@ -105,7 +105,7 @@ public class TrafficApp extends GameApplication {
 	private Entity player1;
 	//private Entity player2;
 
-	private String map = "Mappa_02.tmx";
+	private String map = "Mappa_01.tmx";
 
 	public void setMap(String map) {
 		this.map = map;

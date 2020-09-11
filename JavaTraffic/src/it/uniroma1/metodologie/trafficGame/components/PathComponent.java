@@ -16,7 +16,7 @@ public class PathComponent extends Component{
 	private int size;
 	private int current;
 	private List<Entity> carList = new LinkedList<>();
-	private int sF = 35; //devo togliere dalla width ella macchina lo spazio di frenata perché se venisse aggiunto a current il path si saturerebbe troppo presto rispetto alla sua attuale capacità
+	private int sF = 30; //devo togliere dalla width ella macchina lo spazio di frenata perché se venisse aggiunto a current il path si saturerebbe troppo presto rispetto alla sua attuale capacità
 	private boolean isOnBorder;
 	private LocalTimer updateTimer;
 	
@@ -27,7 +27,7 @@ public class PathComponent extends Component{
 		double y = p.getY();
 		if(x == 0 || x + entity.getWidth() >= FXGL.getAppWidth()-250 || y == 0 || y + entity.getHeight() >= FXGL.getAppHeight()-250)
 			isOnBorder = true;
-		size = (int) Math.max(entity.getWidth(),entity.getHeight()) - 70;
+		size = (int) Math.max(entity.getWidth(),entity.getHeight()) - 100;
 		updateTimer = FXGL.newLocalTimer();
 	}
 	
