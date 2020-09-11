@@ -2,10 +2,8 @@ package it.uniroma1.metodologie.trafficGame.ui;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
@@ -33,26 +31,60 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+/**
+ * This class represents the MainMenu used by TrafficApp.
+ */
 public class TrafficAppMenu extends FXGLMenu {
 	
+	/**
+	 * Box that contains the bottons for the
+	 * main menu.
+	 */
 	private VBox box;
+	/**
+	 * Box that contains the bottons for the
+	 * main menu settings.
+	 */
 	private VBox settingsBox;
+	/**
+	 * Box that contains the bottons used to
+	 * select game difficulty.
+	 */
 	private VBox difficultyBox;
+	/**
+	 * Box that contains the bottons for the
+	 * map selection.
+	 */
 	private VBox mapBox;
 	
+	/**
+	 * Buttons used to select the difficulty of
+	 * the game.
+	 */
 	private TrafficButton easyBtn;
 	private TrafficButton mediumBtn;
 	private TrafficButton hardBtn;
 	
+	/**
+	 * Main App.
+	 */
 	private TrafficApp app = (TrafficApp) FXGL.getApp();
 	
+	/**
+	 * Translation factors for the menu elements.
+	 */
 	private final int xMenuPosition = 300;
 	private final int yMenuPosition = 1200;
 	
+	/**
+	 * Directory of maps.
+	 */
 	private File dir = new File("src/assets/levels");
+	/**
+	 * List of maps found in the directory.
+	 */
 	private List<File> files = Arrays.asList(dir.listFiles((FilenameFilter) new FilenameFilter() {
 	    @Override
 	    public boolean accept(File dir, String name) {
@@ -60,6 +92,15 @@ public class TrafficAppMenu extends FXGLMenu {
 	    }
 	}));
 	
+	/**
+	 * 
+	 * This is the constructor of the menu.
+	 * This creates all the buttons and Nodes,
+	 * that are then collected and added to the
+	 * content root. 
+	 * 
+	 * @param type
+	 */
 	public TrafficAppMenu(MenuType type) {
 		super(type);
 		TrafficButton btnPlayGame = new TrafficButton("Avvia una partita", () -> fireNewGame());
@@ -166,18 +207,27 @@ public class TrafficAppMenu extends FXGLMenu {
 		getContentRoot().getChildren().addAll(titleBox, box, settingsBox, difficultyBox, mapBox);
 	}
 	
+	/**
+	 * This sets the map to be used.
+	 * @param file
+	 */
 	private void setMap(String file) {
 		app.setMap(file);
 		toggleMap();
 		toggleSettings();
 	}
-
 	
+	/**
+	 * This toggles the setting secondary menu.
+	 */
 	private void toggleSettings() {
 		this.box.setVisible(this.settingsBox.isVisible());
 		this.settingsBox.setVisible(!this.box.isVisible());
 	}
 	
+	/**
+	 * This toggles the difficulty selection secondary menu.
+	 */
 	private void toggleDifficulty() {
 		this.settingsBox.setVisible(this.difficultyBox.isVisible());
 		this.difficultyBox.setVisible(!this.settingsBox.isVisible());
@@ -185,16 +235,28 @@ public class TrafficAppMenu extends FXGLMenu {
 			focusSelectedOption();
 	}
 	
+	/**
+	 * This toggles the map selection secondary menu.
+	 */
 	private void toggleMap() {
 		this.settingsBox.setVisible(this.mapBox.isVisible());
 		this.mapBox.setVisible(!this.settingsBox.isVisible());
 	}
 	
+	/**
+	 * This sets the difficulty of the game choosen in
+	 * TrafficApp.
+	 * @param difficulty
+	 */
 	private void setDifficulty(String difficulty) {
 		app.setMinSpawnRate(difficulty);
 		focusSelectedOption();
 	}
 	
+	/**
+	 * This highlights the selected difficulty
+	 * option in settings.
+	 */
 	private void focusSelectedOption() {
 		switch(app.getMinSpawnRate()) {
 			case "EASY":
@@ -217,11 +279,8 @@ public class TrafficAppMenu extends FXGLMenu {
 		};
 	}
 	
-	Text s;
-	
 	@Override
 	protected void onUpdate(double tpf) {
-		//((Text) getContentRoot().getChildren().stream().filter(x -> x == s).findFirst().orElseThrow()).setText("score : " + FXGL.getWorldProperties().getValueOptional("score").orElse(""));
 	}
 
 	@Override
@@ -234,6 +293,9 @@ public class TrafficAppMenu extends FXGLMenu {
 		return new Button();
 	}
 
+	/**
+	 * This sets the menu background.
+	 */
 	@Override
 	protected Node createBackground(double arg0, double arg1) {
 		Texture texture = FXGL.texture("bg.jpg");
@@ -250,9 +312,13 @@ public class TrafficAppMenu extends FXGLMenu {
 		return new Rectangle();
 	}
 
+	/**
+	 * This method provides a banner warning about the alpha stage
+	 * of this game.
+	 */
 	@Override
 	protected Node createVersionView(String arg0) {
-		Text text = FXGL.getUIFactoryService().newText("This game is in Alpha stage. A LOT of bugs have to be expected.", Color.WHITE, 25.0);
+		Text text = FXGL.getUIFactoryService().newText("This game is in Alpha stage. Some bugs have to be expected.", Color.WHITE, 25.0);
 		
 		VBox versionBox = new VBox(
 				text
@@ -267,13 +333,42 @@ public class TrafficAppMenu extends FXGLMenu {
 		return versionBox;
 	}
 	
+	/**
+	 * This class represents the button used in the menu
+	 * and its style and actions.
+	 */
 	private class TrafficButton extends StackPane {
+		/**
+		 * This is the color used when the button is
+		 * focused
+		 */
 		private final Color FOCUSED_COLOR = Color.WHITE;
+		/**
+		 * This is the color used when the button is
+		 * not focused
+		 */
 		private final Color NOT_FOCUSED_COLOR = Color.LIGHTGRAY;
 		
+		/**
+		 * This is the name of the button
+		 */
 		private Text name;
+		/**
+		 * This is the shape of the button
+		 */
 		private Rectangle icon;
 		
+		/**
+		 * 
+		 * This is the constructor of the button, that binds
+		 * his color and visibility to other properties, like
+		 * being focused or disabled/enabled.
+		 * 
+		 * It also executes the actions of the button.
+		 * 
+		 * @param text
+		 * @param action
+		 */
 		public TrafficButton(String text, Runnable action) {
 			name = FXGL.getUIFactoryService().newText(text, FOCUSED_COLOR, 40.0);
 			icon = new Rectangle(7.5, 40, FOCUSED_COLOR);

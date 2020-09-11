@@ -15,30 +15,85 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+/**
+ * This class represents a SpawnPoint on the map.
+ * It is responsible for the end of the game and
+ * for the spawning of the Vehicles.
+ */
 public class SpawnPointComponent extends Component{
 	
+	/**
+	 * Number of vehicles in queue
+	 */
 	private int vehicles = 0;
+	/**
+	 *  Local Timer used for spawn
+	 */
 	private LocalTimer counterTimer;
+	/**
+	 * Entity that show the number
+	 * of vehicles in queue
+	 */
 	private Entity queueCounter;
 	
+	/**
+	 * Shows if a spawnpoint is free
+	 */
 	private int isFree;
 
+	/**
+	 * List that contains all the entities waiting
+	 * to be spawned
+	 */
 	private LinkedList<SpawnData> spawnDataList;
+	/**
+	 * Limit of vehicles that can be in queue
+	 */
 	private static final int DEATH = 6;
+	/**
+	 * Position of the spawnpoint on the map
+	 */
 	private Point2D spawnPointPosition;
 	
+	/**
+	 * Used to indicate if the player
+	 * has lost
+	 */
 	private boolean hasLost;
 	
+	/**
+	 * Color used to indicate that the spawnpoint is ok
+	 */
 	private static final Color NP_COLOR = Color.LIGHTBLUE;
+	/**
+	 * Color used to indicate that the spawnpoint is
+	 * a little bit full
+	 */
 	private static final Color WARNING_COLOR = Color.DARKGOLDENROD;
+	/**
+	 * Color used to indicate that the spawnpoint is
+	 * dangerously full
+	 */
 	private static final Color DANGER_COLOR = Color.DARKRED;
 	
+	/**
+	 * Instantiates the list and gets
+	 * the position of the spawnpoint
+	 * when it gets added
+	 */
 	@Override
 	public void onAdded() { 
 		spawnDataList = new LinkedList<>();
 		spawnPointPosition = entity.getPosition();
 	}
 	
+	/**
+	 * Here the counter gets updated and
+	 * checks if the player has lost the play
+	 * 
+	 * In that case it show a message box
+	 * reporting the final score
+	 */
 	@Override
 	public void onUpdate(double tps) {
 		spawnCar();
@@ -55,12 +110,21 @@ public class SpawnPointComponent extends Component{
 		}
 	}
 	
+	/**
+	 * This registers every car to the list
+	 * of cars
+	 * @param sd
+	 */
 	public void registerCar(SpawnData sd) { 
 		vehicles ++;
 		spawnDataList.add(sd);
 		hasLost = vehicles >= DEATH;
 	}
 	
+	/**
+	 * This spawns the cars waiting in queue if 
+	 * the spawnpoint is free
+	 */
 	public void spawnCar() {
 		if(vehicles > 0 && isFree()) {
 			Entity e = FXGL.getGameWorld().spawn("vehicle", spawnDataList.remove(0));
@@ -71,6 +135,12 @@ public class SpawnPointComponent extends Component{
 	}
 	
 
+	/**
+	 * This sets the position and the text
+	 * shown to the user reporting the cars
+	 * that are waiting in a particular
+	 * spawnpoint
+	 */
 	private void spawnQueuedCount() {
 		if(queueCounter != null)
 			queueCounter.removeFromWorld();
@@ -124,6 +194,10 @@ public class SpawnPointComponent extends Component{
 		
 	}
 	
+	/**
+	 * This method sets isFree
+	 * @return
+	 */
 	private boolean isFree() { return isFree <= 0; }
 	
 	public void addCarToFree() { isFree ++; }

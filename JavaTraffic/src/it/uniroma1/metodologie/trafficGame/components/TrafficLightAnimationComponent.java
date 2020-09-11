@@ -11,35 +11,68 @@ import com.almasb.fxgl.texture.AnimationChannel;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
+/**
+ * This is the animation used to make TrafficLights
+ * go from green to red on the user input.
+ */
 public class TrafficLightAnimationComponent extends Component {
 
+	/**
+	 * This field indicates that the TrafficLight is red
+	 */
 	private boolean isRed = true;
+	/**
+	 * This field indicates that the TrafficLight
+	 * needs to be switched
+	 */
 	private boolean toSwitch = false;	
 	/*
 	 * this field is false if a car is turning left on the other side of the cross. It becomes true when the car has finished turning
 	 */
 	private boolean canPass = true;
 	
+	/**
+	 * This is the animated texture used
+	 * for the animation
+	 */
 	private AnimatedTexture texture;
+	/**
+	 * This is the animation channel used
+	 * to reproduce the animated texture.
+	 */
 	private AnimationChannel animRed, animGreen;
 	
+	/**
+	 * This is the crossRoad associated to the
+	 * TrafficLight
+	 */
 	private Entity crossRoad;
-	
+
+	/**
+	 * This constructor assings the right texture to 
+	 * the right TrafficLight given its position
+	 * and rotation.
+	 * @param tileID
+	 */
 	public TrafficLightAnimationComponent(int tileID) {
-		
-		// parameters: sprite sheet image, number of frames per row, single frame width, single frame height, duration of the animation channel, start frame and end frame (c'ho messo un ora a capirlo dio santo non è scritto da nessuna parte)
 		animRed = new AnimationChannel(FXGL.image("semaforoRosso-0"+tileID+".png"), 1, 250, 250, Duration.seconds(1), 0, 0);
 		animGreen = new AnimationChannel(FXGL.image("semaforoVerde-0"+tileID+".png"), 1, 250, 250, Duration.seconds(1), 0, 0);
-		
 		texture = new AnimatedTexture(animRed);
 	}
 	
+	/**
+	 * This adds the animation to the view
+	 * component of the entity.
+	 */
 	@Override
 	public void onAdded() {
 		entity.getTransformComponent().setScaleOrigin(new Point2D(16,21));
 		entity.getViewComponent().addChild(texture);
 	}
 	
+	/**
+	 * This updated the TrafficLight status.
+	 */
 	@Override
 	public void onUpdate(double tpf) {
 		if(isRed && toSwitch) {
@@ -58,6 +91,10 @@ public class TrafficLightAnimationComponent extends Component {
 		
 	}
 	
+	/**
+	 * Returns if the TrafficLight is red.
+	 * @return
+	 */
 	public boolean isRed() {
 		return isRed;
 	}
@@ -70,7 +107,7 @@ public class TrafficLightAnimationComponent extends Component {
 			isCrossRoadFree = isCrossRoadFree();
 		return !isRed && canPass && isCrossRoadFree;
 	}
-	
+
 	public void waitACar() {
 		canPass = false;
 	}
@@ -85,12 +122,21 @@ public class TrafficLightAnimationComponent extends Component {
 		toSwitch = true;
 	}
 	
+	/**
+	 * Returns if the crossroad is free
+	 * @return
+	 */
 	public boolean isCrossRoadFree() { return crossRoad.getComponent(CrossRoadComponent.class).isFree(); }
 	
-	public void setCrossRoad(Entity cr) { this.crossRoad = cr; System.out.println("semaforo"); }
+	/**
+	 * Sets the crossroad
+	 * @param cr
+	 */
+	public void setCrossRoad(Entity cr) { this.crossRoad = cr; }
 	
-	///////////////////////////////////////
-	//this part is used when the trafficLight has to communicate with the car
+	/**
+	 * This part is used to communicate with cars.
+	 */
 	
 	private List<Entity> cars = new LinkedList<>();
 	
