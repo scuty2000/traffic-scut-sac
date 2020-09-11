@@ -49,8 +49,8 @@ public class TrafficAppMenu extends FXGLMenu {
 	
 	private TrafficApp app = (TrafficApp) FXGL.getApp();
 	
-	private final int xMenuPosition = 200;
-	private final int yMenuPosition = 750;
+	private final int xMenuPosition = 300;
+	private final int yMenuPosition = 950;
 	
 	private File dir = new File("src/assets/levels");
 	private List<File> files = Arrays.asList(dir.listFiles((FilenameFilter) new FilenameFilter() {
@@ -82,9 +82,10 @@ public class TrafficAppMenu extends FXGLMenu {
 		btnCredits.setDisable(true);
 		
 		Texture logo = FXGL.texture("logo.png");
-		logo.setScaleX(0.5);
-		logo.setScaleY(0.5);
-		logo.setScaleZ(0.5);
+		logo.setTranslateY(150);
+		logo.setScaleX(0.8);
+		logo.setScaleY(0.8);
+		logo.setScaleZ(0.8);
 		
 		var titleBox = new VBox(logo);
 		titleBox.setAlignment(Pos.CENTER);
@@ -251,7 +252,7 @@ public class TrafficAppMenu extends FXGLMenu {
 
 	@Override
 	protected Node createVersionView(String arg0) {
-		Text text = FXGL.getUIFactoryService().newText("This game is in Alpha stage. A LOT of bugs have to be expected.", Color.WHITE, 10.0);
+		Text text = FXGL.getUIFactoryService().newText("This game is in Alpha stage. A LOT of bugs have to be expected.", Color.WHITE, 25.0);
 		
 		VBox versionBox = new VBox(
 				text
@@ -274,8 +275,8 @@ public class TrafficAppMenu extends FXGLMenu {
 		private Rectangle icon;
 		
 		public TrafficButton(String text, Runnable action) {
-			name = FXGL.getUIFactoryService().newText(text, FOCUSED_COLOR, 25.0);
-			icon = new Rectangle(7.5, 20, FOCUSED_COLOR);
+			name = FXGL.getUIFactoryService().newText(text, FOCUSED_COLOR, 40.0);
+			icon = new Rectangle(7.5, 40, FOCUSED_COLOR);
 			icon.setTranslateX(-30);
 			icon.visibleProperty().bind(focusedProperty());
 			
