@@ -20,11 +20,16 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class SpawnPointComponent extends Component{
@@ -55,10 +60,10 @@ public class SpawnPointComponent extends Component{
 	public void onUpdate(double tps) {
 		spawnCar();
 		if(hasLost) {
-			//saving			
 			FXGL.getGameScene().clearUINodes();//delete the score text
-			FXGL.getGameController().gotoMainMenu();
-			TrafficApp mainApp = (TrafficApp) FXGL.getApp();
+//			FXGL.getDialogService().showBox("Hai perso!\nIl tuo punteggio finale è:", FXGL.getUIFactoryService().newText("--< "+FXGL.getWorldProperties().getInt("score")+" >--", Color.DARKRED, 50.0), new Button("Torna al menù principale"));
+//			FXGL.getGameController().gotoMainMenu();
+			FXGL.getDialogService().showMessageBox("Hai perso!\nIl tuo punteggio finale è:\n\n"+"--< "+FXGL.getWorldProperties().getInt("score")+" >--", () -> FXGL.getGameController().gotoMainMenu());
 		}
 		if(counterTimer == null)
 			counterTimer = FXGL.newLocalTimer();
@@ -135,8 +140,6 @@ public class SpawnPointComponent extends Component{
 				.buildAndAttach();
 		
 	}
-	
-	
 	
 	private boolean isFree() { return isFree <= 0; }
 	
