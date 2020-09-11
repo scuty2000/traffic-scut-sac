@@ -2,7 +2,6 @@ package it.uniroma1.metodologie.trafficGame;
 
 import javafx.scene.text.Font;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;

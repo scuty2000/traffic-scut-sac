@@ -6,19 +6,15 @@ import java.util.List;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.component.Component;
-import com.almasb.fxgl.time.LocalTimer;
-
 import javafx.geometry.Point2D;
-import javafx.util.Duration;
 
 public class PathComponent extends Component{
 
 	private int size;
 	private int current;
 	private List<Entity> carList = new LinkedList<>();
-	private int sF = 30; //devo togliere dalla width ella macchina lo spazio di frenata perché se venisse aggiunto a current il path si saturerebbe troppo presto rispetto alla sua attuale capacità
+	private int sF = 30; //devo togliere dalla width ella macchina lo spazio di frenata perchï¿½ se venisse aggiunto a current il path si saturerebbe troppo presto rispetto alla sua attuale capacitï¿½
 	private boolean isOnBorder;
-	private LocalTimer updateTimer;
 	
 	@Override
 	public void onAdded() { 
@@ -28,7 +24,7 @@ public class PathComponent extends Component{
 		if(x == 0 || x + entity.getWidth() >= FXGL.getAppWidth()-250 || y == 0 || y + entity.getHeight() >= FXGL.getAppHeight()-250)
 			isOnBorder = true;
 		size = (int) Math.max(entity.getWidth(),entity.getHeight()) - 100;
-		updateTimer = FXGL.newLocalTimer();
+		FXGL.newLocalTimer();
 	}
 	
 	public void addCar(Entity e) {

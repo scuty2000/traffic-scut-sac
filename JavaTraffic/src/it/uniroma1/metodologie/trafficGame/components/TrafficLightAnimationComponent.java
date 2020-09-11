@@ -1,6 +1,5 @@
 package it.uniroma1.metodologie.trafficGame.components;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 

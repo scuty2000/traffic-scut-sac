@@ -3,19 +3,14 @@ package it.uniroma1.metodologie.trafficGame;
 import java.util.List;
 import java.util.Random;
 
-import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.dsl.FXGLForKtKt;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
-import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
-import com.almasb.fxgl.ui.FXGLCheckBox;
-
 import it.uniroma1.metodologie.trafficGame.components.CrossRoadComponent;
 import it.uniroma1.metodologie.trafficGame.components.PathComponent;
 import it.uniroma1.metodologie.trafficGame.components.PlayerAnimationComponent;
@@ -24,7 +19,6 @@ import it.uniroma1.metodologie.trafficGame.components.TrafficLightAnimationCompo
 import it.uniroma1.metodologie.trafficGame.components.VehicleComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 public class TrafficFactory implements EntityFactory{
@@ -58,7 +52,6 @@ public class TrafficFactory implements EntityFactory{
 	}
 	
 	private Entity build(SpawnData data, Vehicle v) {
-		//TODO a method that spawns cars, tirs and motorbikes based on the data passed (heigh, width, direction..
 		Entity spawn = data.get("spawn");
 		Entity e = FXGL.entityBuilder(data)
 					.type(EntityType.VEHICLE)
