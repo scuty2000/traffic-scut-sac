@@ -65,7 +65,7 @@ public class VehicleComponent extends Component{
 	/**
 	 * time that has to pass before a new move of the car
 	 */
-	private double gapBetweenMove = 0.01;
+	private double gapBetweenMove = 0.03;
 	/**
 	 * timer used for acceleration and deceleration
 	 */
