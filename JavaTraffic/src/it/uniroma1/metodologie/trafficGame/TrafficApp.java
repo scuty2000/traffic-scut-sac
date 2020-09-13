@@ -23,6 +23,7 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.audio.Music;
+import com.almasb.fxgl.audio.Sound;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.GameWorld;
@@ -144,6 +145,8 @@ public class TrafficApp extends GameApplication {
 	 */
 	private int spawnCount;
 
+	private Sound pointersound;
+
 	@Override
 	protected void initGame() {
 
@@ -153,10 +156,10 @@ public class TrafficApp extends GameApplication {
 		
 		FXGL.setLevelFromMap(map);
 
-//				pointersound = FXGL.getAssetLoader().loadSound("pointersound.wav");
-//				gameMusic = FXGL.getAssetLoader().loadMusic("mainsound.wav");
-//				FXGL.getAudioPlayer().loopMusic(gameMusic);
-
+		pointersound = FXGL.getAssetLoader().loadSound("pointersound.wav");
+		gameMusic = FXGL.getAssetLoader().loadMusic("gameMusic.wav");
+		FXGL.getAudioPlayer().loopMusic(gameMusic);
+		
 		matrixIncroci = parseIncroci();
 
 		player1 = FXGL.spawn("player",new SpawnData(matrixIncroci.get(0).get(0).getPosition()).put("player", "player1"));
@@ -252,6 +255,7 @@ public class TrafficApp extends GameApplication {
 			@Override
 			protected void onActionBegin() {
 				switchSemafori();
+				FXGL.getAudioPlayer().playSound(pointersound);
 			}			
 		}, KeyCode.F);
 
