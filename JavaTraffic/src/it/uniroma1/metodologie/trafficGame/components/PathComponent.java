@@ -33,7 +33,7 @@ public class PathComponent extends Component{
 	 * Those are the pixels we have to account for the
 	 * car to stop and not crash
 	 */
-	private int sF = 30;
+	private int sF = 20;
 	/**
 	 * Show if a path is on the border
 	 * of the map
@@ -54,7 +54,7 @@ public class PathComponent extends Component{
 		double y = p.getY();
 		if(x == 0 || x + entity.getWidth() >= FXGL.getAppWidth()-250 || y == 0 || y + entity.getHeight() >= FXGL.getAppHeight()-250)
 			isOnBorder = true;
-		size = (int) Math.max(entity.getWidth(),entity.getHeight()) - 100;
+		size = (int) Math.max(entity.getWidth(),entity.getHeight()) - 80;
 		FXGL.newLocalTimer();
 	}
 	
