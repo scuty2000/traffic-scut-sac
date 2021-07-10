@@ -1,0 +1,12 @@
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/ui/TrafficAppMenu.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/components/CrossRoadComponent.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/components/VehicleComponent.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/components/PathComponent.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/components/PlayerAnimationComponent.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/components/TrafficLightAnimationComponent.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/TrafficApp.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/Directions.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/components/SpawnPointComponent.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/TrafficFactory.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/EntityType.java
+/home/scutigliani/Scrivania/traffic-scut-sac/TrafficGame-scut-sac/src/main/java/it/uniroma1/metodologie/trafficGame/Vehicle.java
