@@ -128,7 +128,7 @@ public class TrafficAppMenu extends FXGLMenu {
 		var titleBox = new VBox(logo);
 		titleBox.setAlignment(Pos.CENTER);
 		titleBox.setTranslateX(FXGL.getAppWidth()/2-1750/2);
-		titleBox.setTranslateY(-100);
+		titleBox.setTranslateY(150);
 		this.box = new VBox(10, 
 				btnPlayGame, 
 				btnOptions,
